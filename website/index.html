@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MacUpgraded.com - 130 Native Power Utilities for macOS</title>
-    <meta name="description" content="Supercharge your Mac with 130 independent, lightweight native macOS apps. Direct secure download, Apple Pay, Stripe, and Homebrew ready.">
+    <meta name="description" content="Supercharge your Mac with 130 independent, lightweight native macOS apps. Direct secure download, Apple Pay, Stripe, and Multi-App Cart ready.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Ambient Background Glows -->
+    <!-- Ambient Liquid Gradient Refractions -->
     <div class="ambient-glow glow-1"></div>
     <div class="ambient-glow glow-2"></div>
     <div class="ambient-glow glow-3"></div>
@@ -36,10 +36,13 @@
             <nav class="nav-links">
                 <a href="#apps">All Apps (130)</a>
                 <a href="#pricing">Pricing & Bundles</a>
-                <a href="#security">Security & Token Gate</a>
+                <a href="#security">Security & License Gate</a>
                 <a href="#homebrew">Terminal / Brew</a>
             </nav>
             <div class="nav-actions">
+                <button onclick="openCartModal()" class="btn btn-secondary btn-sm" id="navCartBtn">
+                    🛒 Cart (<span class="nav-cart-count">0</span>)
+                </button>
                 <button onclick="openCheckoutModal('all-access')" class="btn btn-primary btn-sm">Get All-Access ($129)</button>
             </div>
         </div>
@@ -110,7 +113,7 @@
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title">The Complete 130-App Catalog</h2>
-                    <p class="section-subtitle">Pay once per app from $3 or unlock the entire suite forever with the Lifetime Master Pass.</p>
+                    <p class="section-subtitle">Add individual apps to your cart or unlock the entire suite forever with the Lifetime Master Pass.</p>
                 </div>
 
                 <div class="catalog-controls">
@@ -143,21 +146,21 @@
         <section id="pricing" class="pricing-section">
             <div class="container">
                 <div class="section-header">
-                    <h2 class="section-title">Simple, Honest Pricing</h2>
+                    <h2 class="section-title">Simple, Transparent Pricing</h2>
                     <p class="section-subtitle">Zero recurring subscriptions. Pay once, own forever on up to 5 Macs.</p>
                 </div>
 
                 <div class="pricing-grid">
                     <!-- Individual App Card -->
                     <div class="pricing-card">
-                        <div class="pricing-badge">Single Apps</div>
+                        <div class="pricing-badge">Single Apps / Multi-Cart</div>
                         <h3 class="pricing-name">Individual App License</h3>
                         <div class="pricing-price">
                             <span class="currency">$</span>
                             <span class="amount">3 - 19</span>
                             <span class="period">/ one-time</span>
                         </div>
-                        <p class="pricing-desc">Pick any specific utility tailored to your daily workflow.</p>
+                        <p class="pricing-desc">Pick any specific utilities and bundle them in your shopping cart.</p>
                         <ul class="pricing-features">
                             <li>✓ Lifetime license for 3 Macs</li>
                             <li>✓ Unlimited updates forever</li>
@@ -186,7 +189,7 @@
                             <li>✓ Instant Apple Pay, Stripe, PayPal checkout</li>
                             <li>✓ 30-day money-back guarantee</li>
                         </ul>
-                        <button id="buySuiteBtn" class="btn btn-primary btn-block btn-lg">Get All 130 Apps for $129</button>
+                        <button onclick="openCheckoutModal('all-access')" class="btn btn-primary btn-block btn-lg">Get All 130 Apps for $129</button>
                     </div>
                 </div>
             </div>
@@ -251,35 +254,66 @@
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container footer-content">
-            <div class="footer-brand">
-                <span class="logo-icon"></span>
-                <span class="logo-text">Mac<strong>Upgraded</strong>.com</span>
-                <p>Crafted for the modern macOS power user. 130 independent native apps shipped directly.</p>
-            </div>
-            <div class="footer-links">
-                <div>
-                    <h4>Distribution</h4>
-                    <a href="#apps">Direct DMG Downloads (130 Apps)</a>
-                    <a href="#homebrew">Homebrew Cask Tap</a>
-                    <a href="#security">Security & License Gate</a>
-                </div>
-                <div>
-                    <h4>Developer</h4>
-                    <a href="https://github.com/GopiKrishnaRakesh/indiesuite-mac" target="_blank">GitHub Monorepo</a>
-                    <a href="#pricing">Commercial Licenses</a>
-                    <a href="#">Support & Contact</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <!-- Floating Shopping Cart Button -->
+    <div id="floatingCartBtn" class="floating-cart-pill" onclick="openCartModal()" style="display: none;">
+        <span style="font-size: 1.2rem;">🛒</span>
+        <span class="cart-badge-count" id="floatingCartCount">0</span>
+        <span class="cart-total-text" id="floatingCartTotal">$0</span>
+        <span style="font-size: 0.8rem; color: var(--primary); font-weight: 700;">View Cart →</span>
+    </div>
 
-    <!-- Interactive Payment & Secure Download Modal -->
+    <!-- Multi-App Shopping Cart Drawer Modal -->
+    <div id="cartModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <button onclick="closeCartModal()" class="modal-close" title="Close Cart">&times;</button>
+            <div class="modal-header">
+                <span class="modal-icon">🛒</span>
+                <h3>Your Shopping Cart</h3>
+                <p id="cartItemsCountText" style="color: var(--text-secondary); font-size: 0.9rem;">0 apps selected</p>
+            </div>
+
+            <div class="cart-items-list" id="cartItemsContainer">
+                <!-- Populated dynamically via app.js -->
+            </div>
+
+            <div class="cart-summary-box">
+                <div class="cart-summary-row">
+                    <span style="color: var(--text-secondary);">Subtotal:</span>
+                    <span id="cartSubtotalVal" style="font-weight: 700;">$0</span>
+                </div>
+                <div class="cart-summary-row total">
+                    <span>Total Due:</span>
+                    <span id="cartTotalVal" style="color: var(--primary);">$0</span>
+                </div>
+            </div>
+
+            <div class="checkout-form">
+                <label for="cartCheckoutEmail" class="form-label">Deliver License Keys to:</label>
+                <input type="email" id="cartCheckoutEmail" placeholder="your-email@domain.com" class="form-input" required value="founder@macupgraded.com">
+            </div>
+
+            <div class="payment-buttons-stack">
+                <button onclick="checkoutCart('Apple Pay')" id="cartPayAppleBtn" class="btn btn-apple-pay btn-block">
+                    <span> Checkout All with Apple Pay</span>
+                </button>
+                <button onclick="checkoutCart('Card')" id="cartPayCardBtn" class="btn btn-primary btn-block">
+                    <span>💳 Checkout All with Card (Stripe)</span>
+                </button>
+                <button onclick="checkoutCart('PayPal')" id="cartPayPaypalBtn" class="btn btn-paypal btn-block">
+                    <span>🅿️ Checkout with PayPal</span>
+                </button>
+            </div>
+
+            <button onclick="closeCartModal()" class="btn-cancel-modal">
+                ← Cancel & Continue Shopping
+            </button>
+        </div>
+    </div>
+
+    <!-- Interactive Payment Modal -->
     <div id="paymentModal" class="modal-overlay hidden">
         <div class="modal-card">
-            <button id="closePaymentModalBtn" class="modal-close">&times;</button>
+            <button onclick="closePaymentModal()" class="modal-close" title="Cancel">&times;</button>
             
             <!-- Step 1: Checkout Form & Payment Portals -->
             <div id="checkoutStep1">
@@ -305,6 +339,10 @@
                             <span>🅿️ Pay with PayPal</span>
                         </button>
                     </div>
+
+                    <button onclick="closePaymentModal()" class="btn-cancel-modal">
+                        ← Cancel & Return to Store
+                    </button>
 
                     <div class="checkout-guarantee">
                         <span>🔒 256-Bit SSL Encrypted Checkout • Instant Download Access</span>
@@ -332,12 +370,37 @@
                     </a>
                 </div>
 
-                <p class="modal-hint" style="margin-top: 14px; font-size: 0.8rem; color: var(--text-muted);">
-                    🛡️ This signed download link is secured by cryptographic token and expires in 15 minutes.
-                </p>
+                <button onclick="closePaymentModal()" class="btn-cancel-modal" style="margin-top: 16px;">
+                    ✓ Done & Return to Store
+                </button>
             </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <span class="logo-icon"></span>
+                <span class="logo-text">Mac<strong>Upgraded</strong>.com</span>
+                <p>Crafted for the modern macOS power user. 130 independent native apps shipped directly.</p>
+            </div>
+            <div class="footer-links">
+                <div>
+                    <h4>Distribution</h4>
+                    <a href="#apps">Direct DMG Downloads (130 Apps)</a>
+                    <a href="#homebrew">Homebrew Cask Tap</a>
+                    <a href="#security">Security & License Gate</a>
+                </div>
+                <div>
+                    <h4>Developer</h4>
+                    <a href="https://github.com/GopiKrishnaRakesh/indiesuite-mac" target="_blank">GitHub Monorepo</a>
+                    <a href="#pricing">Commercial Licenses</a>
+                    <a href="#">Support & Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="app.js"></script>
 </body>

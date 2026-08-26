@@ -1,4 +1,4 @@
-// MacUpgraded.com - Complete Catalog for 130 Native macOS Apps
+// MacUpgraded.com - Complete Catalog & Multi-App Cart Engine
 const apps = [
     {
         "id": "01-whispertap",
@@ -2212,15 +2212,26 @@ const apps = [
     }
 ];
 
+// State
+let activeCategory = "all";
+let searchTerm = "";
+let currentSelectedApp = null;
+let cart = JSON.parse(localStorage.getItem("macupgraded_cart") || "[]");
+
 // DOM Elements
 const appsGrid = document.getElementById("appsGrid");
 const searchInput = document.getElementById("appSearchInput");
 const categoryPills = document.querySelectorAll(".pill");
-const buySuiteBtn = document.getElementById("buySuiteBtn");
 const paymentModal = document.getElementById("paymentModal");
-const closePaymentModalBtn = document.getElementById("closePaymentModalBtn");
+const cartModal = document.getElementById("cartModal");
 
-// Modal checkout elements
+// Floating Cart Elements
+const floatingCartBtn = document.getElementById("floatingCartBtn");
+const floatingCartCount = document.getElementById("floatingCartCount");
+const floatingCartTotal = document.getElementById("floatingCartTotal");
+const navCartCountElements = document.querySelectorAll(".nav-cart-count");
+
+// Single App Modal Elements
 const modalAppName = document.getElementById("modalAppName");
 const modalAppPrice = document.getElementById("modalAppPrice");
 const modalAppDesc = document.getElementById("modalAppDesc");
@@ -2234,9 +2245,36 @@ const licenseKeyDisplay = document.getElementById("licenseKeyDisplay");
 const downloadLinkBtn = document.getElementById("downloadLinkBtn");
 const copyLicenseBtn = document.getElementById("copyLicenseBtn");
 
-let activeCategory = "all";
-let searchTerm = "";
-let currentSelectedApp = null;
+// Cart Modal Elements
+const cartItemsContainer = document.getElementById("cartItemsContainer");
+const cartItemsCountText = document.getElementById("cartItemsCountText");
+const cartSubtotalVal = document.getElementById("cartSubtotalVal");
+const cartTotalVal = document.getElementById("cartTotalVal");
+const cartCheckoutEmail = document.getElementById("cartCheckoutEmail");
+
+function saveCart() {
+    localStorage.setItem("macupgraded_cart", JSON.stringify(cart));
+    updateCartUI();
+}
+
+function updateCartUI() {
+    const totalCount = cart.length;
+    const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
+
+    navCartCountElements.forEach(el => el.textContent = totalCount);
+    
+    if (floatingCartBtn) {
+        if (totalCount > 0) {
+            floatingCartBtn.style.display = "flex";
+            floatingCartCount.textContent = totalCount;
+            floatingCartTotal.textContent = "$" + totalPrice;
+        } else {
+            floatingCartBtn.style.display = "none";
+        }
+    }
+
+    renderCartItems();
+}
 
 function renderApps() {
     const filtered = apps.filter(app => {
@@ -2258,41 +2296,122 @@ function renderApps() {
         return;
     }
 
-    appsGrid.innerHTML = filtered.map(app => `
-        <div class="app-card" data-category="${app.cat}">
-            <div>
-                <div class="app-card-top">
-                    <img src="assets/icons/${app.id}.svg" alt="${app.name}" class="app-vector-icon" loading="lazy" onerror="this.src='assets/icons/01-whispertap.svg'"/>
-                    <div class="app-meta">
-                        <div class="app-title-row">
-                            <h3 class="app-name">${app.name}</h3>
-                            <span class="app-cat-badge">${app.catName}</span>
+    appsGrid.innerHTML = filtered.map(app => {
+        const inCart = cart.some(item => item.slug === app.slug);
+        return `
+            <div class="app-card" data-category="${app.cat}">
+                <div>
+                    <div class="app-card-top">
+                        <img src="assets/icons/${app.id}.svg" alt="${app.name}" class="app-vector-icon" loading="lazy" onerror="this.src='assets/icons/01-whispertap.svg'"/>
+                        <div class="app-meta">
+                            <div class="app-title-row">
+                                <h3 class="app-name">${app.name}</h3>
+                                <span class="app-cat-badge">${app.catName}</span>
+                            </div>
+                            <div class="app-hotkey">${app.hotkey}</div>
                         </div>
-                        <div class="app-hotkey">${app.hotkey}</div>
+                    </div>
+
+                    <p class="app-desc">${app.desc}</p>
+
+                    <ul class="app-features">
+                        ${app.features.map(f => `<li>${f}</li>`).join("")}
+                    </ul>
+                </div>
+
+                <div class="app-card-footer">
+                    <div class="app-price-tag">
+                        <span class="price-val">${app.price}</span>
+                        <span class="price-type">one-time</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-cart btn-sm" onclick="toggleCartItem('${app.slug}')">
+                            ${inCart ? '✓ In Cart' : '+ Cart'}
+                        </button>
+                        <button class="btn btn-primary btn-sm" onclick="openCheckoutModal('${app.slug}')">
+                            Buy Now
+                        </button>
                     </div>
                 </div>
-
-                <p class="app-desc">${app.desc}</p>
-
-                <ul class="app-features">
-                    ${app.features.map(f => `<li>${f}</li>`).join("")}
-                </ul>
             </div>
-
-            <div class="app-card-footer">
-                <div class="app-price-tag">
-                    <span class="price-val">${app.price}</span>
-                    <span class="price-type">one-time</span>
-                </div>
-                <button class="btn btn-primary btn-sm" onclick="openCheckoutModal('${app.slug}')">
-                    Buy & Download
-                </button>
-            </div>
-        </div>
-    `).join("");
+        `;
+    }).join("");
 }
 
-// Open checkout modal for individual app or all-access suite
+// Add / Remove from Cart
+window.toggleCartItem = function(slug) {
+    const app = apps.find(a => a.slug === slug);
+    if (!app) return;
+
+    const idx = cart.findIndex(i => i.slug === slug);
+    if (idx >= 0) {
+        cart.splice(idx, 1);
+    } else {
+        cart.push({
+            slug: app.slug,
+            id: app.id,
+            name: app.name,
+            price: app.priceNum
+        });
+    }
+    saveCart();
+    renderApps();
+};
+
+window.removeFromCart = function(slug) {
+    cart = cart.filter(i => i.slug !== slug);
+    saveCart();
+    renderApps();
+};
+
+// Render Cart Drawer
+function renderCartItems() {
+    if (!cartItemsContainer) return;
+
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = `
+            <div style="text-align: center; padding: 32px 10px; color: var(--text-muted);">
+                <p style="font-size: 1.1rem; margin-bottom: 6px;">Your cart is empty</p>
+                <p style="font-size: 0.85rem;">Click "+ Cart" on any app to bundle utilities together.</p>
+            </div>
+        `;
+        cartItemsCountText.textContent = "0 apps selected";
+        cartSubtotalVal.textContent = "$0";
+        cartTotalVal.textContent = "$0";
+        return;
+    }
+
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+    cartItemsContainer.innerHTML = cart.map(item => `
+        <div class="cart-item-row">
+            <div class="cart-item-info">
+                <img src="assets/icons/${item.id || ('01-' + item.slug)}.svg" class="cart-item-icon" onerror="this.src='assets/icons/01-whispertap.svg'"/>
+                <div>
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-price">$${item.price}</div>
+                </div>
+            </div>
+            <button class="cart-item-remove" onclick="removeFromCart('${item.slug}')" title="Remove">&times;</button>
+        </div>
+    `).join("");
+
+    cartItemsCountText.textContent = `${cart.length} app(s) in cart`;
+    cartSubtotalVal.textContent = `$${total}`;
+    cartTotalVal.textContent = `$${total}`;
+}
+
+// Open & Close Cart Modal
+window.openCartModal = function() {
+    updateCartUI();
+    cartModal.classList.remove("hidden");
+};
+
+window.closeCartModal = function() {
+    cartModal.classList.add("hidden");
+};
+
+// Open Single App Checkout Modal
 window.openCheckoutModal = function(appSlug) {
     if (appSlug === "all-access") {
         currentSelectedApp = {
@@ -2300,7 +2419,7 @@ window.openCheckoutModal = function(appSlug) {
             name: "All-Access 130-App Lifetime Pass (Special Promo)",
             price: "$129",
             priceNum: 129,
-            desc: "Instant lifetime access to ALL 130 native macOS applications + Universal Master License Key on 5 Macs (90% OFF regular $1,290+ value)."
+            desc: "Instant lifetime access to ALL 130 native macOS applications + Universal Master License Key for up to 5 Macs (90% OFF regular $1,290+ value)."
         };
     } else {
         currentSelectedApp = apps.find(a => a.slug === appSlug);
@@ -2312,13 +2431,62 @@ window.openCheckoutModal = function(appSlug) {
     modalAppPrice.textContent = currentSelectedApp.price;
     modalAppDesc.textContent = currentSelectedApp.desc;
     
-    // Reset view to payment step 1
     checkoutStep1.classList.remove("hidden");
     checkoutStep2.classList.add("hidden");
     paymentModal.classList.remove("hidden");
 };
 
-// Process payment via real Stripe or PayPal gateway
+window.closePaymentModal = function() {
+    paymentModal.classList.add("hidden");
+};
+
+// Checkout Multi-App Cart
+window.checkoutCart = async function(paymentMethod) {
+    if (cart.length === 0) {
+        alert("Your cart is empty. Please add apps before checking out.");
+        return;
+    }
+
+    const email = cartCheckoutEmail.value.trim();
+    if (!email || !email.includes("@")) {
+        alert("Please enter a valid email address for license key delivery.");
+        cartCheckoutEmail.focus();
+        return;
+    }
+
+    const btn = paymentMethod === "Apple Pay" ? document.getElementById("cartPayAppleBtn") : document.getElementById("cartPayCardBtn");
+    const origText = btn.innerHTML;
+    btn.innerHTML = "Connecting to Secure Gateway...";
+    btn.disabled = true;
+
+    try {
+        const response = await fetch("api/create_stripe_checkout.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email: email,
+                items: cart
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success && result.checkoutUrl) {
+            window.location.href = result.checkoutUrl;
+        } else if (result.requires_config) {
+            alert("⚠️ Payment Setup Required:\n\n" + result.error + "\n\nPaste your live Stripe API key into website/config.php on your Hostinger server.");
+        } else {
+            alert("Payment Gateway Error: " + (result.error || "Unable to initiate checkout session."));
+        }
+    } catch (e) {
+        alert("⚠️ Backend Gateway Notice:\n\nTo process real payments, your website must be uploaded to your Hostinger server (macupgraded.com) with PHP support.");
+    } finally {
+        btn.innerHTML = origText;
+        btn.disabled = false;
+    }
+};
+
+// Process Single App Payment
 async function processPayment(paymentMethod) {
     const email = checkoutEmail.value.trim();
     if (!email || !email.includes("@")) {
@@ -2327,14 +2495,12 @@ async function processPayment(paymentMethod) {
         return;
     }
     
-    // Animate button processing
     const activeBtn = paymentMethod === "Apple Pay" ? payAppleBtn : (paymentMethod === "PayPal" ? payPaypalBtn : payCardBtn);
     const origText = activeBtn.innerHTML;
     activeBtn.innerHTML = "Connecting to Secure Gateway...";
     activeBtn.disabled = true;
 
     try {
-        // Call backend Stripe Checkout API
         const response = await fetch("api/create_stripe_checkout.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -2350,7 +2516,6 @@ async function processPayment(paymentMethod) {
         const result = await response.json();
 
         if (result.success && result.checkoutUrl) {
-            // Redirect customer directly to official Stripe Checkout page (Apple Pay / Card)
             window.location.href = result.checkoutUrl;
         } else if (result.requires_config) {
             alert("⚠️ Payment Setup Required:\n\n" + result.error + "\n\nTo accept real payments into your bank account, simply paste your live Stripe API key into website/config.php on your Hostinger server.");
@@ -2358,7 +2523,7 @@ async function processPayment(paymentMethod) {
             alert("Payment Gateway Error: " + (result.error || "Unable to initiate checkout session. Please try again."));
         }
     } catch (e) {
-        alert("⚠️ Backend Gateway Notice:\n\nTo process real payments, your website must be uploaded to your Hostinger server (macupgraded.com) with PHP support, where Stripe/PayPal will process live transactions.");
+        alert("⚠️ Backend Gateway Notice:\n\nTo process real payments, your website must be uploaded to your Hostinger server (macupgraded.com) with PHP support.");
     } finally {
         activeBtn.innerHTML = origText;
         activeBtn.disabled = false;
@@ -2369,16 +2534,14 @@ payAppleBtn.addEventListener("click", () => processPayment("Apple Pay"));
 payCardBtn.addEventListener("click", () => processPayment("Credit/Debit Card (Stripe)"));
 payPaypalBtn.addEventListener("click", () => processPayment("PayPal"));
 
-closePaymentModalBtn.addEventListener("click", () => {
-    paymentModal.classList.add("hidden");
-});
-
-copyLicenseBtn.addEventListener("click", () => {
-    navigator.clipboard.writeText(licenseKeyDisplay.textContent).then(() => {
-        copyLicenseBtn.textContent = "✓ Copied!";
-        setTimeout(() => { copyLicenseBtn.textContent = "Copy Key"; }, 1500);
+if (copyLicenseBtn) {
+    copyLicenseBtn.addEventListener("click", () => {
+        navigator.clipboard.writeText(licenseKeyDisplay.textContent).then(() => {
+            copyLicenseBtn.textContent = "✓ Copied!";
+            setTimeout(() => { copyLicenseBtn.textContent = "Copy Key"; }, 1500);
+        });
     });
-});
+}
 
 // Category filter
 categoryPills.forEach(pill => {
@@ -2400,9 +2563,6 @@ searchInput.addEventListener("input", (e) => {
     }, 150);
 });
 
-buySuiteBtn.addEventListener("click", () => {
-    openCheckoutModal("all-access");
-});
-
 // Initialize
 renderApps();
+updateCartUI();

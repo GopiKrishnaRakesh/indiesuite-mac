@@ -2,4 +2,7 @@
 .DS_Store
 *.swp
 *.log
+dist/dmgs/
 dist/*.dmg
+website/downloads/
+__pycache__/

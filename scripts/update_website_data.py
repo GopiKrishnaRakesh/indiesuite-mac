@@ -305,10 +305,10 @@ window.openCheckoutModal = function(appSlug) {{
     if (appSlug === "all-access") {{
         currentSelectedApp = {{
             slug: "all-access",
-            name: "All-Access 130-App Lifetime Pass",
-            price: "$49",
-            priceNum: 49,
-            desc: "Instant lifetime access to ALL 130 native macOS applications + Universal Master License Key on 5 Macs."
+            name: "All-Access 130-App Lifetime Pass (Special Promo)",
+            price: "$129",
+            priceNum: 129,
+            desc: "Instant lifetime access to ALL 130 native macOS applications + Universal Master License Key on 5 Macs (90% OFF regular $1,290+ value)."
         }};
     }} else {{
         currentSelectedApp = apps.find(a => a.slug === appSlug);

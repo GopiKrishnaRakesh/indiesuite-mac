@@ -16,6 +16,15 @@
     <div class="ambient-glow glow-2"></div>
     <div class="ambient-glow glow-3"></div>
 
+    <!-- Promotional Announcement Bar -->
+    <div class="promo-bar">
+        <div class="container promo-content">
+            <span class="promo-badge">🔥 LIMITED LAUNCH PROMO</span>
+            <span class="promo-text">Get the <strong>All-Access 130-App Lifetime Pass</strong> for <strong>$129</strong> <span class="old-price">$1,290</span> — Save 90% Today!</span>
+            <button onclick="openCheckoutModal('all-access')" class="btn btn-sm btn-promo">Claim $129 Deal →</button>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <header class="navbar">
         <div class="nav-container">
@@ -31,7 +40,7 @@
                 <a href="#homebrew">Terminal / Brew</a>
             </nav>
             <div class="nav-actions">
-                <button onclick="openCheckoutModal('all-access')" class="btn btn-primary btn-sm">Get All-Access ($49)</button>
+                <button onclick="openCheckoutModal('all-access')" class="btn btn-primary btn-sm">Get All-Access ($129)</button>
             </div>
         </div>
     </header>
@@ -59,7 +68,7 @@
                     </a>
                     <button onclick="openCheckoutModal('all-access')" class="btn btn-secondary btn-lg">
                         <span>👑</span>
-                        <span>Unlock All 130 for $49</span>
+                        <span>Unlock All 130 for $129 <span style="text-decoration: line-through; opacity: 0.6; font-size: 0.85em; margin-left: 4px;">$1,290</span></span>
                     </button>
                 </div>
 
@@ -160,12 +169,13 @@
 
                     <!-- All Access Card -->
                     <div class="pricing-card featured">
-                        <div class="pricing-badge popular">Best Value • 96% Savings</div>
+                        <div class="pricing-badge popular">Special Promo • 90% Savings</div>
                         <h3 class="pricing-name">All-Access 130-App Pass</h3>
                         <div class="pricing-price">
                             <span class="currency">$</span>
-                            <span class="amount">49</span>
+                            <span class="amount">129</span>
                             <span class="period">/ lifetime</span>
+                            <span style="font-size: 0.95rem; text-decoration: line-through; color: var(--text-muted); margin-left: 8px;">$1,290</span>
                         </div>
                         <p class="pricing-desc">Instant access to all 130 apps + all future utilities we ship.</p>
                         <ul class="pricing-features">
@@ -176,7 +186,7 @@
                             <li>✓ Instant Apple Pay, Stripe, PayPal checkout</li>
                             <li>✓ 30-day money-back guarantee</li>
                         </ul>
-                        <button id="buySuiteBtn" class="btn btn-primary btn-block btn-lg">Get All 130 Apps for $49</button>
+                        <button id="buySuiteBtn" class="btn btn-primary btn-block btn-lg">Get All 130 Apps for $129</button>
                     </div>
                 </div>
             </div>

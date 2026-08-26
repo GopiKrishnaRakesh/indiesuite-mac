@@ -2249,7 +2249,7 @@ function renderApps() {
         <div class="app-card" data-category="${app.cat}">
             <div>
                 <div class="app-card-top">
-                    <div class="app-icon" style="background: rgba(255, 255, 255, 0.05); font-size: 1.5rem;">${app.icon}</div>
+                    <img src="assets/icons/${app.id}.svg" alt="${app.name}" class="app-vector-icon" onerror="this.outerHTML='<div class=\'app-icon\'>${app.icon}</div>'"/>
                     <div class="app-meta">
                         <div class="app-title-row">
                             <h3 class="app-name">${app.name}</h3>

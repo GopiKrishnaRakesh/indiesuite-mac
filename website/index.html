@@ -7,11 +7,11 @@
     <meta name="description" content="Supercharge your Mac with 130 independent, lightweight native macOS apps. Direct secure download, Apple Pay, Stripe, and Multi-App Cart ready.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;850&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Ambient Liquid Gradient Refractions -->
+    <!-- Fluid Liquid Background Refractions -->
     <div class="ambient-glow glow-1"></div>
     <div class="ambient-glow glow-2"></div>
     <div class="ambient-glow glow-3"></div>
@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    <!-- Navigation -->
+    <!-- Navigation - Pure Liquid Glass Header -->
     <header class="navbar">
         <div class="nav-container">
             <a href="#" class="logo">
@@ -48,21 +48,54 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero Section - Apple Keynote Caliber Layout -->
     <main>
         <section class="hero-section">
             <div class="container hero-content">
-                <div class="hero-tag">
-                    <span class="pulse-dot"></span>
-                    <span>100% Native Swift • 130 Standalone Utilities • MacUpgraded.com</span>
-                </div>
+                <div class="hero-overline">Native macOS Ecosystem • Apple Silicon Optimized</div>
+                
                 <h1 class="hero-title">
-                    130 Hyper-Fast Native Apps.<br>
-                    <span class="text-gradient">Zero Sandboxing Limits.</span>
+                    Supercharge your Mac.<br>
+                    <span class="text-gradient">130 hyper-fast native tools.</span>
                 </h1>
+                
                 <p class="hero-subtitle">
-                    The ultimate independent macOS powerhouse. Interactive desktop pets, deep focus blockers, offline AI speech dictation, developer power tools, and hardware optimizers.
+                    A hand-crafted suite of lightweight, standalone utilities designed without subscription lock-in. From local Whisper dictation and interactive desktop pets to per-app audio routing and developer tooling.
                 </p>
+
+                <!-- Interactive Liquid Glass Control Dock (Inspired by Apple VisionOS & Camera Toolbar) -->
+                <div class="hero-liquid-dock">
+                    <button class="dock-item active" onclick="searchAppHero('Whisper')">
+                        <span>🎙️</span>
+                        <span>WhisperTap</span>
+                        <code style="font-size: 0.72rem; color: var(--primary); opacity: 0.8;">⌥ Space</code>
+                    </button>
+                    <button class="dock-item" onclick="searchAppHero('Hamster')">
+                        <span>🐹</span>
+                        <span>PixelHamster</span>
+                        <span style="font-size: 0.72rem; color: #10b981;">Running</span>
+                    </button>
+                    <button class="dock-item" onclick="searchAppHero('ChargeGuard')">
+                        <span>🔋</span>
+                        <span>ChargeGuard</span>
+                        <span style="font-size: 0.72rem; color: #d97706;">80% Cap</span>
+                    </button>
+                    <button class="dock-item" onclick="searchAppHero('AudioMix')">
+                        <span>🎛️</span>
+                        <span>AudioMix</span>
+                        <span style="font-size: 0.72rem; color: #6366f1;">CoreAudio</span>
+                    </button>
+                    <button class="dock-item" onclick="searchAppHero('SnapTile')">
+                        <span>🧩</span>
+                        <span>SnapTile</span>
+                        <code style="font-size: 0.72rem; color: #475569;">⌃⌥ Arrows</code>
+                    </button>
+                    <button class="dock-item" onclick="searchAppHero('OCR')">
+                        <span>🔍</span>
+                        <span>LocalLens</span>
+                        <span style="font-size: 0.72rem; color: #059669;">Neural OCR</span>
+                    </button>
+                </div>
 
                 <div class="hero-cta-group">
                     <a href="#apps" class="btn btn-primary btn-lg">
@@ -135,7 +168,7 @@
                     </div>
                 </div>
 
-                <!-- Apps Grid -->
+                <!-- Apps Grid (Populated with ultra-transparent Liquid Glass Cards) -->
                 <div class="apps-grid" id="appsGrid">
                     <!-- Populated dynamically via app.js -->
                 </div>

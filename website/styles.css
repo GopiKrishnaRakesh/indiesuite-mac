@@ -742,6 +742,140 @@ body {
 .license-box code { font-family: var(--font-mono); font-size: 1.1rem; color: #a5b4fc; font-weight: 700; }
 .modal-hint { font-size: 0.85rem; color: var(--text-muted); }
 
+/* Trust Ribbon */
+.trust-ribbon {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+}
+.trust-pill {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-subtle);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+/* Payment Modal Specifics */
+.modal-price-badge {
+    display: inline-block;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: #a5b4fc;
+    font-size: 1.8rem;
+    font-weight: 800;
+    padding: 4px 18px;
+    border-radius: 12px;
+    margin: 10px 0;
+}
+.modal-desc-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+.checkout-form {
+    margin-top: 20px;
+    text-align: left;
+}
+.form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    display: block;
+}
+.form-input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    color: #fff;
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+}
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+.payment-buttons-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+}
+.btn-apple-pay {
+    background: #000;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-apple-pay:hover {
+    background: #18181b;
+    border-color: rgba(255, 255, 255, 0.4);
+}
+.btn-paypal {
+    background: #ffc439;
+    color: #003087;
+    border: none;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-paypal:hover {
+    background: #f4bb34;
+}
+.checkout-guarantee {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Security Section */
+.security-section {
+    padding: 80px 0;
+    border-top: 1px solid var(--border-subtle);
+}
+.security-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+.security-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+}
+.security-icon {
+    font-size: 2.2rem;
+    margin-bottom: 14px;
+}
+.security-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+}
+.security-card p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
 /* Footer */
 .footer {
     padding: 60px 0 40px;

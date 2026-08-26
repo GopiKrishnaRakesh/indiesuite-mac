@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IndieSuite Mac - 130 Native Power Utilities for macOS</title>
-    <meta name="description" content="A curated suite of 130 lightweight, zero-bloat native macOS applications designed for developers, creators, productivity, pets, and power users. Direct download and Homebrew ready.">
+    <title>MacUpgraded.com - 130 Native Power Utilities for macOS</title>
+    <meta name="description" content="Supercharge your Mac with 130 independent, lightweight native macOS apps. Direct secure download, Apple Pay, Stripe, and Homebrew ready.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,17 +21,17 @@
         <div class="nav-container">
             <a href="#" class="logo">
                 <span class="logo-icon"></span>
-                <span class="logo-text">Indie<strong>Suite</strong></span>
+                <span class="logo-text">Mac<strong>Upgraded</strong></span>
                 <span class="badge-pill">130 Native Apps</span>
             </a>
             <nav class="nav-links">
                 <a href="#apps">All Apps (130)</a>
                 <a href="#pricing">Pricing & Bundles</a>
+                <a href="#security">Security & Token Gate</a>
                 <a href="#homebrew">Terminal / Brew</a>
-                <a href="#architecture">Architecture</a>
             </nav>
             <div class="nav-actions">
-                <a href="#pricing" class="btn btn-primary btn-sm">Get All-Access ($49)</a>
+                <button onclick="openCheckoutModal('all-access')" class="btn btn-primary btn-sm">Get All-Access ($49)</button>
             </div>
         </div>
     </header>
@@ -42,14 +42,14 @@
             <div class="container hero-content">
                 <div class="hero-tag">
                     <span class="pulse-dot"></span>
-                    <span>100% Native Swift • 130 Standalone Utilities • Direct Distribution</span>
+                    <span>100% Native Swift • 130 Standalone Utilities • MacUpgraded.com</span>
                 </div>
                 <h1 class="hero-title">
                     130 Hyper-Fast Native Apps.<br>
                     <span class="text-gradient">Zero Sandboxing Limits.</span>
                 </h1>
                 <p class="hero-subtitle">
-                    The ultimate independent macOS ecosystem. From interactive desktop pets and deep focus blockers to local AI dictation, developer power tools, and hardware optimizers.
+                    The ultimate independent macOS powerhouse. Interactive desktop pets, deep focus blockers, offline AI speech dictation, developer power tools, and hardware optimizers.
                 </p>
 
                 <div class="hero-cta-group">
@@ -57,10 +57,18 @@
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                         Explore 130 Apps
                     </a>
-                    <a href="#homebrew" class="btn btn-secondary btn-lg">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
-                        <code>brew tap indiesuite/apps</code>
-                    </a>
+                    <button onclick="openCheckoutModal('all-access')" class="btn btn-secondary btn-lg">
+                        <span>👑</span>
+                        <span>Unlock All 130 for $49</span>
+                    </button>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="trust-ribbon">
+                    <span class="trust-pill">🔒 256-Bit SSL Encrypted</span>
+                    <span class="trust-pill"> Apple Pay & Stripe Ready</span>
+                    <span class="trust-pill">⚡️ M1 / M2 / M3 / M4 Apple Silicon</span>
+                    <span class="trust-pill">🛡️ 100% Offline & Private</span>
                 </div>
 
                 <!-- Live Metrics Ribbon -->
@@ -82,7 +90,7 @@
                     <div class="metric-divider"></div>
                     <div class="metric-item">
                         <span class="metric-value">100%</span>
-                        <span class="metric-label">Apple Silicon MLX</span>
+                        <span class="metric-label">Direct DMG Downloads</span>
                     </div>
                 </div>
             </div>
@@ -93,13 +101,13 @@
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title">The Complete 130-App Catalog</h2>
-                    <p class="section-subtitle">Download any utility individually or unlock the entire suite forever.</p>
+                    <p class="section-subtitle">Pay once per app from $3 or unlock the entire suite forever with the Lifetime Master Pass.</p>
                 </div>
 
                 <div class="catalog-controls">
                     <div class="search-box">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <input type="text" id="appSearchInput" placeholder="Search across all 130 apps (e.g. Hamster, Bonsai, Duck, Focus, Water, Git, SQL, Docker)...">
+                        <input type="text" id="appSearchInput" placeholder="Search across all 130 apps (e.g. Whisper, Hamster, Duck, Focus, Git, SQL, Docker)...">
                     </div>
 
                     <div class="category-pills" id="categoryPills">
@@ -126,28 +134,28 @@
         <section id="pricing" class="pricing-section">
             <div class="container">
                 <div class="section-header">
-                    <h2 class="section-title">Direct-to-Consumer Pricing</h2>
-                    <p class="section-subtitle">Pay once. Keep forever. Free lifetime updates across all 130 apps.</p>
+                    <h2 class="section-title">Simple, Honest Pricing</h2>
+                    <p class="section-subtitle">Zero recurring subscriptions. Pay once, own forever on up to 5 Macs.</p>
                 </div>
 
                 <div class="pricing-grid">
                     <!-- Individual App Card -->
                     <div class="pricing-card">
-                        <div class="pricing-badge">Pay As You Go</div>
-                        <h3 class="pricing-name">Single App License</h3>
+                        <div class="pricing-badge">Single Apps</div>
+                        <h3 class="pricing-name">Individual App License</h3>
                         <div class="pricing-price">
                             <span class="currency">$</span>
-                            <span class="amount">9</span>
+                            <span class="amount">3 - 19</span>
                             <span class="period">/ one-time</span>
                         </div>
-                        <p class="pricing-desc">Pick any single app from our 130-app catalog.</p>
+                        <p class="pricing-desc">Pick any specific utility tailored to your daily workflow.</p>
                         <ul class="pricing-features">
                             <li>✓ Lifetime license for 3 Macs</li>
                             <li>✓ Unlimited updates forever</li>
-                            <li>✓ Direct DMG & Homebrew download</li>
-                            <li>✓ Offline license key activation</li>
+                            <li>✓ Instant signed cryptographic DMG download</li>
+                            <li>✓ Offline HMAC license key validation</li>
                         </ul>
-                        <a href="#apps" class="btn btn-secondary btn-block">Choose App</a>
+                        <a href="#apps" class="btn btn-secondary btn-block">Browse Catalog</a>
                     </div>
 
                     <!-- All Access Card -->
@@ -159,16 +167,43 @@
                             <span class="amount">49</span>
                             <span class="period">/ lifetime</span>
                         </div>
-                        <p class="pricing-desc">Instant access to all 130 apps + every future utility we ship.</p>
+                        <p class="pricing-desc">Instant access to all 130 apps + all future utilities we ship.</p>
                         <ul class="pricing-features">
                             <li>✓ <strong>All 130 Native macOS Apps</strong> included</li>
                             <li>✓ Single Universal Master Key for all 130 apps</li>
                             <li>✓ Future new apps added for free</li>
-                            <li>✓ Priority feature requests & beta access</li>
                             <li>✓ Commercial & personal use on 5 Macs</li>
+                            <li>✓ Instant Apple Pay, Stripe, PayPal checkout</li>
                             <li>✓ 30-day money-back guarantee</li>
                         </ul>
                         <button id="buySuiteBtn" class="btn btn-primary btn-block btn-lg">Get All 130 Apps for $49</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security & Anti-Theft Architecture Section -->
+        <section id="security" class="security-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">🔒 Military-Grade Download Security</h2>
+                    <p class="section-subtitle">How MacUpgraded.com protects your purchases and prevents piracy and tampering.</p>
+                </div>
+                <div class="security-grid">
+                    <div class="security-card">
+                        <div class="security-icon">🛡️</div>
+                        <h3>HMAC-SHA256 Token Streamer</h3>
+                        <p>Raw DMG files are never exposed to the public web. Downloads are served via cryptographic, 15-minute expiring signed tokens.</p>
+                    </div>
+                    <div class="security-card">
+                        <div class="security-icon">⚡️</div>
+                        <h3>Anti-Scraping & Hotlink Lock</h3>
+                        <p>Direct HTTP requests to binaries are blocked at the server level via hardened Apache/LiteSpeed rules, preventing bot scraping.</p>
+                    </div>
+                    <div class="security-card">
+                        <div class="security-icon">🔑</div>
+                        <h3>Offline Cryptographic Keys</h3>
+                        <p>Every purchase issues an offline cryptographic license key evaluated locally on Apple Silicon without cloud ping latency.</p>
                     </div>
                 </div>
             </div>
@@ -189,16 +224,15 @@
                     <div class="terminal-body">
                         <div class="terminal-line">
                             <span class="prompt">$</span>
-                            <span class="command">brew tap indiesuite/apps</span>
+                            <span class="command">brew tap macupgraded/apps</span>
                         </div>
                         <div class="terminal-line">
                             <span class="prompt">$</span>
-                            <span class="command">brew install --cask whispertap pixelhamster-desktop cybergochi deskduck</span>
+                            <span class="command">brew install --cask whispertap pixelhamster-desktop cybergochi</span>
                         </div>
                         <div class="terminal-output">
-                            ==> Downloading https://indiesuite.app/downloads/whispertap-1.0.0.dmg<br>
+                            ==> Downloading https://macupgraded.com/downloads/whispertap-1.0.0.dmg<br>
                             ==> Installing Cask whispertap<br>
-                            ==> Installing Cask pixelhamster-desktop<br>
                             🍺 All 130 apps available via Homebrew!
                         </div>
                     </div>
@@ -212,7 +246,7 @@
         <div class="container footer-content">
             <div class="footer-brand">
                 <span class="logo-icon"></span>
-                <span class="logo-text">Indie<strong>Suite</strong></span>
+                <span class="logo-text">Mac<strong>Upgraded</strong>.com</span>
                 <p>Crafted for the modern macOS power user. 130 independent native apps shipped directly.</p>
             </div>
             <div class="footer-links">
@@ -220,32 +254,78 @@
                     <h4>Distribution</h4>
                     <a href="#apps">Direct DMG Downloads (130 Apps)</a>
                     <a href="#homebrew">Homebrew Cask Tap</a>
-                    <a href="#">Sparkle Appcast Feeds</a>
+                    <a href="#security">Security & License Gate</a>
                 </div>
                 <div>
                     <h4>Developer</h4>
-                    <a href="#">Architecture & SPM</a>
-                    <a href="#">GitHub Monorepo</a>
-                    <a href="#">Changelog</a>
+                    <a href="https://github.com/GopiKrishnaRakesh/indiesuite-mac" target="_blank">GitHub Monorepo</a>
+                    <a href="#pricing">Commercial Licenses</a>
+                    <a href="#">Support & Contact</a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Interactive License Modal -->
-    <div id="licenseModal" class="modal-overlay hidden">
+    <!-- Interactive Payment & Secure Download Modal -->
+    <div id="paymentModal" class="modal-overlay hidden">
         <div class="modal-card">
-            <button id="closeModalBtn" class="modal-close">&times;</button>
-            <div class="modal-header">
-                <span class="modal-icon">🎉</span>
-                <h3 id="modalTitle">All-Access 130-App License Generated!</h3>
-                <p id="modalSubtitle">Use this license key inside any of your 130 apps for instant offline activation.</p>
+            <button id="closePaymentModalBtn" class="modal-close">&times;</button>
+            
+            <!-- Step 1: Checkout Form & Payment Portals -->
+            <div id="checkoutStep1">
+                <div class="modal-header">
+                    <span class="modal-icon">🛍️</span>
+                    <h3 id="modalAppName">Application Checkout</h3>
+                    <div class="modal-price-badge" id="modalAppPrice">$9</div>
+                    <p id="modalAppDesc" class="modal-desc-text">One-time payment for lifetime personal & commercial license on 3 Macs.</p>
+                </div>
+
+                <div class="checkout-form">
+                    <label for="checkoutEmail" class="form-label">Your License Email Address:</label>
+                    <input type="email" id="checkoutEmail" placeholder="your-email@domain.com" class="form-input" required value="founder@macupgraded.com">
+                    
+                    <div class="payment-buttons-stack">
+                        <button id="payAppleBtn" class="btn btn-apple-pay btn-block">
+                            <span> Pay with Apple Pay</span>
+                        </button>
+                        <button id="payCardBtn" class="btn btn-primary btn-block">
+                            <span>💳 Credit or Debit Card (Stripe)</span>
+                        </button>
+                        <button id="payPaypalBtn" class="btn btn-paypal btn-block">
+                            <span>🅿️ Pay with PayPal</span>
+                        </button>
+                    </div>
+
+                    <div class="checkout-guarantee">
+                        <span>🔒 256-Bit SSL Encrypted Checkout • Instant Download Access</span>
+                    </div>
+                </div>
             </div>
-            <div class="license-box">
-                <code id="generatedKey">SUITE-PRO-PASS-8F2A-9901</code>
-                <button id="copyKeyBtn" class="btn btn-sm btn-secondary">Copy Key</button>
+
+            <!-- Step 2: Order Confirmed, License Key & 1-Click Secure Download -->
+            <div id="checkoutStep2" class="hidden">
+                <div class="modal-header">
+                    <span class="modal-icon">🎉</span>
+                    <h3>Payment Successful!</h3>
+                    <p>Your license key and secure download token have been generated.</p>
+                </div>
+
+                <div class="license-box">
+                    <label class="form-label" style="text-align: left; display: block; margin-bottom: 4px;">Offline License Key:</label>
+                    <code id="licenseKeyDisplay">SUITE-PRO-PASS-8F2A-9901</code>
+                    <button id="copyLicenseBtn" class="btn btn-sm btn-secondary" style="margin-top: 8px;">Copy Key</button>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <a id="downloadLinkBtn" href="#" class="btn btn-primary btn-block btn-lg">
+                        📥 Download Protected .dmg (Expires in 15m)
+                    </a>
+                </div>
+
+                <p class="modal-hint" style="margin-top: 14px; font-size: 0.8rem; color: var(--text-muted);">
+                    🛡️ This signed download link is secured by cryptographic token and expires in 15 minutes.
+                </p>
             </div>
-            <p class="modal-hint">Registered to: <strong id="userEmailDisplay">founder@macsuite.io</strong></p>
         </div>
     </div>
 

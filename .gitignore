@@ -4,5 +4,7 @@
 *.log
 dist/dmgs/
 dist/*.dmg
+dist/*.zip
 website/downloads/
+website/protected_dmgs/*.dmg
 __pycache__/

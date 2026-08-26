@@ -1,0 +1,54 @@
+# ==============================================================================
+# MacUpgraded.com - High Security Server Configuration (Hostinger Apache / LiteSpeed)
+# ==============================================================================
+
+# 1. Prevent Directory Browsing
+Options -Indexes -MultiViews
+
+# 2. Enforce UTF-8 Encoding
+AddDefaultCharset UTF-8
+
+# 3. Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# 4. Anti-Theft: Deny Direct Access to Protected DMGs & Config Files
+<FilesMatch "\.(dmg|pkg|sh|py|log|md|env|git|bak|sql)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# 5. Block Injection Attacks & Malicious Query Strings
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Block Directory Traversal
+    RewriteCond %{QUERY_STRING} (\.\./|\.\.\\) [NC,OR]
+    
+    # Block Remote File Inclusion / Script Injections
+    RewriteCond %{QUERY_STRING} (http|https|ftp):/ [NC,OR]
+    RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} (GLOBALS|_REQUEST|proc/self/environ) [NC,OR]
+    RewriteCond %{QUERY_STRING} (base64_encode|base64_decode|eval\(|union.*select) [NC]
+    RewriteRule .* - [F,L]
+
+    # Force HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# 6. Block Sensitive Dotfiles (.git, .env, .htaccess)
+<Files ".*">
+    Order Deny,Allow
+    Deny from all
+</Files>
+<Files ".htaccess">
+    Order Deny,Allow
+    Deny from all
+</Files>

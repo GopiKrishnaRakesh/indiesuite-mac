@@ -1,4 +1,4 @@
-// Complete Catalog for all 80 Native macOS Apps
+// Complete Catalog for all 130 Native macOS Apps
 const apps = [
     {
         "id": "01-whispertap",
@@ -1359,6 +1359,856 @@ const apps = [
         "brew": "brew install --cask memorypurge-pro",
         "dmg": "downloads/memorypurge-pro-1.0.0.dmg",
         "price": "$9"
+    },
+    {
+        "id": "81-pixelhamster-desktop",
+        "name": "PixelHamsterDesktop",
+        "cat": "pets",
+        "catName": "Pets & Habits",
+        "icon": "Hamster",
+        "hotkey": "Menu Bar",
+        "desc": "Animated pixel hamster running on a wheel in your menu bar, speeding up with typing and commits.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask pixelhamster-desktop",
+        "dmg": "downloads/pixelhamster-desktop-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "82-cybergochi",
+        "name": "CyberGochi",
+        "cat": "pets",
+        "catName": "Pets & Habits",
+        "icon": "Gochi",
+        "hotkey": "Menu Bar",
+        "desc": "Retro Tamagotchi virtual pet that eats completed to-do items and evolves through productivity streaks.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask cybergochi",
+        "dmg": "downloads/cybergochi-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "83-deskduck",
+        "name": "DeskDuck",
+        "cat": "pets",
+        "catName": "Pets & Habits",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "\u2325 D",
+        "desc": "Floating rubber duck debugger that asks Socratic prompts when you're stuck coding or writing.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask deskduck",
+        "dmg": "downloads/deskduck-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "84-plantnursery-hud",
+        "name": "PlantNurseryHUD",
+        "cat": "pets",
+        "catName": "Pets & Habits",
+        "icon": "Nursery",
+        "hotkey": "HUD",
+        "desc": "Virtual greenhouse where rare succulents grow based on your hydration and focus check-ins.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask plantnursery-hud",
+        "dmg": "downloads/plantnursery-hud-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "85-focussloth",
+        "name": "FocusSloth",
+        "cat": "pets",
+        "catName": "Pets & Habits",
+        "icon": "Sloth",
+        "hotkey": "Notch",
+        "desc": "Animated sloth climbing a branch in the notch during continuous deep focus time.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask focussloth",
+        "dmg": "downloads/focussloth-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "86-zenpanda",
+        "name": "ZenPanda",
+        "cat": "pets",
+        "catName": "Pets & Habits",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Breathe",
+        "desc": "Meditating panda companion guiding 60-second box-breathing exercises between meetings.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask zenpanda",
+        "dmg": "downloads/zenpanda-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "87-codeotter",
+        "name": "CodeOtter",
+        "cat": "pets",
+        "catName": "Pets & Habits",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Window Edge",
+        "desc": "Playful otter swimming along window edges, catching fish on successful test runs.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask codeotter",
+        "dmg": "downloads/codeotter-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "88-brainwave-sync",
+        "name": "BrainWaveSync",
+        "cat": "focus",
+        "catName": "Focus & Flow",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Audio",
+        "desc": "Binaural 40Hz Gamma and Alpha wave generator for memory consolidation and hyper-focus.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask brainwave-sync",
+        "dmg": "downloads/brainwave-sync-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "89-singletask-spotlight",
+        "name": "SingleTaskSpotlight",
+        "cat": "focus",
+        "catName": "Focus & Flow",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "\u2325 S",
+        "desc": "Forces 1 single active window, completely hiding dock and menu bar until current task is checked off.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask singletask-spotlight",
+        "dmg": "downloads/singletask-spotlight-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "90-antiprocrastinate-friction",
+        "name": "AntiProcrastinateFriction",
+        "cat": "focus",
+        "catName": "Focus & Flow",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Auto",
+        "desc": "Adds a 10-second deliberate breathing countdown before opening selected addictive URLs/apps.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask antiprocrastinate-friction",
+        "dmg": "downloads/antiprocrastinate-friction-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "91-whitenoise-mixer",
+        "name": "WhiteNoiseMixer",
+        "cat": "focus",
+        "catName": "Focus & Flow",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Audio",
+        "desc": "Multi-track customizable soundscape mixer (Rain + Campfire + Ocean Waves + Wind Chimes).",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask whitenoise-mixer",
+        "dmg": "downloads/whitenoise-mixer-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "92-tablimiter-pro",
+        "name": "TabLimiterPro",
+        "cat": "focus",
+        "catName": "Focus & Flow",
+        "icon": "Tabs",
+        "hotkey": "Safari/Chrome",
+        "desc": "Restricts open tabs to max 5 per window, auto-archiving overflowing tabs to a reading list.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask tablimiter-pro",
+        "dmg": "downloads/tablimiter-pro-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "93-eyeblink-coach",
+        "name": "EyeBlinkCoach",
+        "cat": "focus",
+        "catName": "Focus & Flow",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Subtle Pulse",
+        "desc": "Subtly flashes a soft screen border halo every 15 seconds to remind power users to blink.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask eyeblink-coach",
+        "dmg": "downloads/eyeblink-coach-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "94-focusheatmap",
+        "name": "FocusHeatmap",
+        "cat": "focus",
+        "catName": "Focus & Flow",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Overlay",
+        "desc": "Live visual heatmap overlay showing which apps and windows consumed your attention today.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask focusheatmap",
+        "dmg": "downloads/focusheatmap-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "95-morningkickoff-hud",
+        "name": "MorningKickoffHUD",
+        "cat": "routine",
+        "catName": "Routine & Wellness",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "9:00 AM",
+        "desc": "3-minute morning launchpad popup showing today's top 3 MITs, calendar, and weather overview.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask morningkickoff-hud",
+        "dmg": "downloads/morningkickoff-hud-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "96-microjournal-bar",
+        "name": "MicroJournalBar",
+        "cat": "routine",
+        "catName": "Routine & Wellness",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Menu Bar",
+        "desc": "1-line micro-journaling in the menu bar to log quick thoughts, gratitude, and wins.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask microjournal-bar",
+        "dmg": "downloads/microjournal-bar-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "97-sugar-fasting-tracker",
+        "name": "SugarFastingTracker",
+        "cat": "routine",
+        "catName": "Routine & Wellness",
+        "icon": "Fasting",
+        "hotkey": "Status Bar",
+        "desc": "Visual intermittent fasting timer in status bar with ketosis stage and metabolic alerts.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask sugar-fasting-tracker",
+        "dmg": "downloads/sugar-fasting-tracker-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "98-sleephygiene-nudge",
+        "name": "SleepHygieneNudge",
+        "cat": "routine",
+        "catName": "Routine & Wellness",
+        "icon": "Bedtime",
+        "hotkey": "Night Shift",
+        "desc": "Automatically warms screen temperature and locks distraction apps 1 hour before scheduled bedtime.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask sleephygiene-nudge",
+        "dmg": "downloads/sleephygiene-nudge-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "99-meetingprep-countdown",
+        "name": "MeetingPrepCountdown",
+        "cat": "routine",
+        "catName": "Routine & Wellness",
+        "icon": "Meeting",
+        "hotkey": "Pre-Alarm",
+        "desc": "Popover chime 2 minutes before Google Meet/Zoom calls with direct 1-click join link.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask meetingprep-countdown",
+        "dmg": "downloads/meetingprep-countdown-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "100-stepcounter-sync",
+        "name": "StepCounterSync",
+        "cat": "routine",
+        "catName": "Routine & Wellness",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Health Sync",
+        "desc": "Apple Watch / Health synced step counter progress bar right in the menu bar.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask stepcounter-sync",
+        "dmg": "downloads/stepcounter-sync-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "101-caffeinedecay-curve",
+        "name": "CaffeineDecayCurve",
+        "cat": "routine",
+        "catName": "Routine & Wellness",
+        "icon": "Caffeine",
+        "hotkey": "Decay Model",
+        "desc": "Calculates and plots active caffeine in bloodstream with sleep cutoff time warnings.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask caffeinedecay-curve",
+        "dmg": "downloads/caffeinedecay-curve-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "102-cliptomarkdown-thread",
+        "name": "ClipToMarkdownThread",
+        "cat": "social",
+        "catName": "Social & Creator",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "1-Click",
+        "desc": "Converts X, Reddit, and LinkedIn posts into clean Obsidian/Notion markdown.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask cliptomarkdown-thread",
+        "dmg": "downloads/cliptomarkdown-thread-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "103-podcastchapter-marker",
+        "name": "PodcastChapterMarker",
+        "cat": "social",
+        "catName": "Social & Creator",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "ID3 Tags",
+        "desc": "Audio waveform scrubber to drop timestamped chapter markers and export ID3 tags.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask podcastchapter-marker",
+        "dmg": "downloads/podcastchapter-marker-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "104-teleprompter-hud",
+        "name": "TeleprompterHUD",
+        "cat": "social",
+        "catName": "Social & Creator",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Transparent",
+        "desc": "Translucent scrolling teleprompter for presentations and recorded video.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask teleprompter-hud",
+        "dmg": "downloads/teleprompter-hud-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "105-quickpoll-creator",
+        "name": "QuickPollCreator",
+        "cat": "social",
+        "catName": "Social & Creator",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "HUD",
+        "desc": "Generates formatted poll layouts for Twitter, LinkedIn, and Slack with 1-click copy.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask quickpoll-creator",
+        "dmg": "downloads/quickpoll-creator-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "106-videothumbnail-tester",
+        "name": "VideoThumbnailTester",
+        "cat": "social",
+        "catName": "Social & Creator",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Preview",
+        "desc": "Previews YouTube and Twitter thumbnails on light/dark mode social feed mocks.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask videothumbnail-tester",
+        "dmg": "downloads/videothumbnail-tester-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "107-discordrole-autoping",
+        "name": "DiscordRoleAutoPing",
+        "cat": "social",
+        "catName": "Social & Creator",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Embed",
+        "desc": "Quick organizer for Discord markdown formatting, roles, and embed payloads.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask discordrole-autoping",
+        "dmg": "downloads/discordrole-autoping-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "108-watermarkmaster",
+        "name": "WatermarkMaster",
+        "cat": "social",
+        "catName": "Social & Creator",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Batch",
+        "desc": "Applies customizable dynamic logos and watermarks to batches of images.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask watermarkmaster",
+        "dmg": "downloads/watermarkmaster-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "109-whispersubtitles-srt",
+        "name": "WhisperSubtitlesSRT",
+        "cat": "ai",
+        "catName": "AI & Voice",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "WhisperKit",
+        "desc": "Generates timestamped .srt and .vtt subtitles locally via WhisperKit in seconds.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask whispersubtitles-srt",
+        "dmg": "downloads/whispersubtitles-srt-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "110-summarizeurl-ai",
+        "name": "SummarizeURLAI",
+        "cat": "ai",
+        "catName": "AI & Voice",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "\u2325 U",
+        "desc": "Offline webpage and article summarizer with 3 bullet takeaways.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask summarizeurl-ai",
+        "dmg": "downloads/summarizeurl-ai-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "111-sqlquery-ai",
+        "name": "SqlQueryAI",
+        "cat": "ai",
+        "catName": "AI & Dev",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Natural Lang",
+        "desc": "Translates plain English requests into optimized SQL queries.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask sqlquery-ai",
+        "dmg": "downloads/sqlquery-ai-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "112-localembeddings-search",
+        "name": "LocalEmbeddingsSearch",
+        "cat": "ai",
+        "catName": "AI & Dev",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Semantic",
+        "desc": "Semantic vector search across local folders using local CoreML embeddings.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask localembeddings-search",
+        "dmg": "downloads/localembeddings-search-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "113-diffexplainer-ai",
+        "name": "DiffExplainerAI",
+        "cat": "ai",
+        "catName": "AI & Dev",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Changelog",
+        "desc": "Analyzes git diffs to generate clean release notes and changelogs.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask diffexplainer-ai",
+        "dmg": "downloads/diffexplainer-ai-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "114-readaloud-tts",
+        "name": "ReadAloudTTS",
+        "cat": "ai",
+        "catName": "AI & Voice",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Speech",
+        "desc": "Ultra-natural text-to-speech voice reader for selected articles and code comments.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask readaloud-tts",
+        "dmg": "downloads/readaloud-tts-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "115-regexgenerator-ai",
+        "name": "RegexGeneratorAI",
+        "cat": "ai",
+        "catName": "AI & Dev",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "AI Gen",
+        "desc": "Converts plain English descriptions into tested, production-ready regular expressions.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask regexgenerator-ai",
+        "dmg": "downloads/regexgenerator-ai-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "116-kubecluster-quick",
+        "name": "KubeClusterQuick",
+        "cat": "dev",
+        "catName": "Developer",
+        "icon": "K8s",
+        "hotkey": "Menu Bar",
+        "desc": "Minimalist Kubernetes cluster status watcher with 1-click pod log viewing.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask kubecluster-quick",
+        "dmg": "downloads/kubecluster-quick-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "117-redislens",
+        "name": "RedisLens",
+        "cat": "dev",
+        "catName": "Developer",
+        "icon": "Redis",
+        "hotkey": "Menu Bar",
+        "desc": "Menu bar Redis key-value browser, TTL inspector, and memory analyzer.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask redislens",
+        "dmg": "downloads/redislens-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "118-gitstash-manager",
+        "name": "GitStashManager",
+        "cat": "dev",
+        "catName": "Developer",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "\u2325 S",
+        "desc": "Visual UI for viewing, comparing, applying, and dropping local git stashes.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask gitstash-manager",
+        "dmg": "downloads/gitstash-manager-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "119-portforwarder-pro",
+        "name": "PortForwarderPro",
+        "cat": "dev",
+        "catName": "Developer",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Tunnel",
+        "desc": "SSH tunnel and local port forwarding manager with auto-reconnect.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask portforwarder-pro",
+        "dmg": "downloads/portforwarder-pro-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "120-apimock-server",
+        "name": "ApiMockServer",
+        "cat": "dev",
+        "catName": "Developer",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": ":4000",
+        "desc": "1-click local mock HTTP server with custom latency and status simulation.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask apimock-server",
+        "dmg": "downloads/apimock-server-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "121-dotenv-diff",
+        "name": "DotEnvDiff",
+        "cat": "dev",
+        "catName": "Developer",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Verify",
+        "desc": "Compares .env.example against actual .env and flags missing keys before push.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask dotenv-diff",
+        "dmg": "downloads/dotenv-diff-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "122-dnslookup-hud",
+        "name": "DnsLookupHUD",
+        "cat": "dev",
+        "catName": "Developer",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "DNS",
+        "desc": "Instant DNS record inspector (A, CNAME, MX, TXT) with global node propagation test.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask dnslookup-hud",
+        "dmg": "downloads/dnslookup-hud-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "123-httpheader-inspector",
+        "name": "HttpHeaderInspector",
+        "cat": "dev",
+        "catName": "Developer",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "CORS/SSL",
+        "desc": "Tests HTTP/HTTPS response headers, CORS policies, and SSL handshakes.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask httpheader-inspector",
+        "dmg": "downloads/httpheader-inspector-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "124-icongrid-overlay",
+        "name": "IconGridOverlay",
+        "cat": "media",
+        "catName": "Creative & Design",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Grid",
+        "desc": "Pixel-perfect icon grid overlay for designing 512x512 and 1024x1024 app icons.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask icongrid-overlay",
+        "dmg": "downloads/icongrid-overlay-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "125-contrastpalette-studio",
+        "name": "ContrastPaletteStudio",
+        "cat": "media",
+        "catName": "Creative & Design",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "WCAG AAA",
+        "desc": "Creates accessible, harmonious color systems meeting WCAG AAA requirements.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask contrastpalette-studio",
+        "dmg": "downloads/contrastpalette-studio-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "126-gradientmesh-maker",
+        "name": "GradientMeshMaker",
+        "cat": "media",
+        "catName": "Creative & Design",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Mesh",
+        "desc": "Visual multi-point gradient mesh generator with real-time SwiftUI curve export.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask gradientmesh-maker",
+        "dmg": "downloads/gradientmesh-maker-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "127-diskscleaner-mini",
+        "name": "DisksCleanerMini",
+        "cat": "system",
+        "catName": "Utilities & System",
+        "icon": "Disk",
+        "hotkey": "Scan",
+        "desc": "Visualizes large downloads, node_modules, and cache folders for selective 1-click purge.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask diskscleaner-mini",
+        "dmg": "downloads/diskscleaner-mini-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "128-bluetoothsignal-radar",
+        "name": "BluetoothSignalRadar",
+        "cat": "system",
+        "catName": "Utilities & System",
+        "icon": "AirPods",
+        "hotkey": "RSSI",
+        "desc": "Signal strength (RSSI) monitor for AirPods and mice with disconnect alerts.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask bluetoothsignal-radar",
+        "dmg": "downloads/bluetoothsignal-radar-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "129-batterycycle-telemetry",
+        "name": "BatteryCycleTelemetry",
+        "cat": "system",
+        "catName": "Utilities & System",
+        "icon": "Battery",
+        "hotkey": "SMC",
+        "desc": "Deep SMC battery analytics: degradation curve, wattage telemetry, and cycles.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask batterycycle-telemetry",
+        "dmg": "downloads/batterycycle-telemetry-1.0.0.dmg",
+        "price": "$9"
+    },
+    {
+        "id": "130-appquarantine-inspector",
+        "name": "AppQuarantineInspector",
+        "cat": "system",
+        "catName": "Utilities & System",
+        "icon": "\u26a1\ufe0f",
+        "hotkey": "Gatekeeper",
+        "desc": "Lists quarantine attributes (com.apple.quarantine) with 1-click override.",
+        "features": [
+            "Native Swift 6 / SwiftUI",
+            "Zero-lag performance",
+            "100% Offline Private"
+        ],
+        "brew": "brew install --cask appquarantine-inspector",
+        "dmg": "downloads/appquarantine-inspector-1.0.0.dmg",
+        "price": "$9"
     }
 ];
 
@@ -1389,7 +2239,7 @@ function renderApps() {
         appsGrid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted);">
                 <h3>No apps match "${searchTerm}"</h3>
-                <p>Try searching for "Pet", "Focus", "Bonsai", "Water", "OCR", "Git", or "JSON"</p>
+                <p>Try searching for "Hamster", "Bonsai", "Duck", "Focus", "Water", "Git", "SQL", or "Docker"</p>
             </div>
         `;
         return;

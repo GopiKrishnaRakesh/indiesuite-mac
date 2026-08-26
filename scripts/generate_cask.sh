@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# generate_cask.sh - Generates Homebrew Cask files for all 80 apps
+# generate_cask.sh - Generates Homebrew Cask files for all 130 apps
 set -e
 
 CASK_DIR="./dist/casks"
@@ -86,9 +86,59 @@ APPS=(
     "quickshare-local:P2P local network file dropper between Macs and PCs"
     "audiorecord-hud:1-click system audio + microphone recorder with MP3 export"
     "memorypurge-pro:Visual RAM pressure monitor with 1-click inactive memory purge"
+    "pixelhamster-desktop:Animated pixel hamster running on a wheel in the menu bar"
+    "cybergochi:Retro Tamagotchi virtual pet that eats completed to-do items"
+    "deskduck:Floating rubber duck debugger that asks Socratic prompts"
+    "plantnursery-hud:Virtual greenhouse where rare succulents grow with focus"
+    "focussloth:Animated sloth climbing a branch in the notch during focus time"
+    "zenpanda:Meditating panda companion guiding 60-second box-breathing exercises"
+    "codeotter:Playful otter swimming along window edges catching fish on test passes"
+    "brainwave-sync:Binaural 40Hz Gamma and Alpha wave generator for hyper-focus"
+    "singletask-spotlight:Forces 1 single active window, hiding dock and menu bar"
+    "antiprocrastinate-friction:10-second deliberate breathing countdown before opening sites"
+    "whitenoise-mixer:Multi-track customizable soundscape mixer with rain and campfire"
+    "tablimiter-pro:Restricts open tabs to max 5, auto-archiving overflowing tabs"
+    "eyeblink-coach:Soft screen border halo pulse every 15s to remind users to blink"
+    "focusheatmap:Live visual heatmap overlay showing app and window attention"
+    "morningkickoff-hud:3-minute morning launchpad popup showing MITs and weather"
+    "microjournal-bar:1-line micro-journaling in the menu bar to log quick thoughts"
+    "sugar-fasting-tracker:Visual intermittent fasting timer with ketosis stage alerts"
+    "sleephygiene-nudge:Automatically warms screen warmth and locks distraction apps"
+    "meetingprep-countdown:Popover chime 2 minutes before calls with 1-click join link"
+    "stepcounter-sync:Apple Health synced step counter progress bar in menu bar"
+    "caffeinedecay-curve:Calculates active caffeine in bloodstream with cutoff warnings"
+    "cliptomarkdown-thread:Converts social posts into clean Obsidian/Notion markdown"
+    "podcastchapter-marker:Audio waveform scrubber to drop and export ID3 chapter markers"
+    "teleprompter-hud:Translucent scrolling teleprompter for presentations and video"
+    "quickpoll-creator:Generates formatted poll layouts for Twitter, LinkedIn, and Slack"
+    "videothumbnail-tester:Previews thumbnails on light/dark mode social feed mocks"
+    "discordrole-autoping:Quick organizer for Discord markdown, roles, and embeds"
+    "watermarkmaster:Applies customizable dynamic logos and watermarks to image batches"
+    "whispersubtitles-srt:Generates timestamped .srt and .vtt subtitles locally"
+    "summarizeurl-ai:Offline webpage and article summarizer with 3 bullet takeaways"
+    "sqlquery-ai:Translates plain English requests into optimized SQL queries"
+    "localembeddings-search:Semantic vector search across local folders using CoreML"
+    "diffexplainer-ai:Analyzes git diffs to generate clean release notes and changelogs"
+    "readaloud-tts:Ultra-natural offline text-to-speech voice reader for articles"
+    "regexgenerator-ai:Converts plain English descriptions into tested regex"
+    "kubecluster-quick:Minimalist Kubernetes cluster status watcher with pod logs"
+    "redislens:Menu bar Redis key-value browser, TTL inspector, and memory analyzer"
+    "gitstash-manager:Visual UI for viewing, comparing, applying, and dropping stashes"
+    "portforwarder-pro:SSH tunnel and local port forwarding manager with auto-reconnect"
+    "apimock-server:1-click local mock HTTP server with latency simulation"
+    "dotenv-diff:Compares .env.example against actual .env and flags missing keys"
+    "dnslookup-hud:Instant DNS record inspector with global node propagation test"
+    "httpheader-inspector:Tests HTTP response headers, CORS policies, and SSL handshakes"
+    "icongrid-overlay:Pixel-perfect icon grid overlay for 512x512 and 1024x1024 icons"
+    "contrastpalette-studio:Creates accessible color systems meeting WCAG AAA"
+    "gradientmesh-maker:Visual multi-point gradient mesh generator with SwiftUI export"
+    "diskscleaner-mini:Visualizes large downloads and node_modules for selective purge"
+    "bluetoothsignal-radar:Signal strength (RSSI) monitor for AirPods and mice"
+    "batterycycle-telemetry:Deep SMC battery analytics: degradation curve and cycles"
+    "appquarantine-inspector:Lists quarantine attributes with 1-click gatekeeper override"
 )
 
-echo "🍺 Generating 80 Homebrew Casks..."
+echo "🍺 Generating 130 Homebrew Casks..."
 
 for item in "${APPS[@]}"; do
     name=$(echo "$item" | cut -d: -f1)
@@ -118,4 +168,4 @@ end
 EOF
 done
 
-echo "✅ Successfully generated all 80 Homebrew Casks!"
+echo "✅ Successfully generated all 130 Homebrew Casks!"

@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 import json
 
-# Read and build complete list of 80 apps
+# Import the app definitions from both files
+from scaffold_50_more_apps import new_50_apps as apps_31_to_80
+from scaffold_apps_81_to_130 import apps_81_to_130
+
 first_30_apps = [
     {
         "id": "01-whispertap", "name": "WhisperTap", "cat": "ai", "catName": "AI & Voice", "icon": "🎙️",
@@ -185,12 +188,9 @@ first_30_apps = [
     }
 ]
 
-# Read 50 more apps metadata from script
-from scaffold_50_more_apps import new_50_apps
-
-formatted_new_50 = []
-for app in new_50_apps:
-    formatted_new_50.append({
+formatted_other_apps = []
+for app in apps_31_to_80 + apps_81_to_130:
+    formatted_other_apps.append({
         "id": app["dir"],
         "name": app["name"],
         "cat": app["category"],
@@ -199,15 +199,15 @@ for app in new_50_apps:
         "hotkey": app["hotkey"],
         "desc": app["desc"],
         "features": ["Native Swift 6 / SwiftUI", "Zero-lag performance", "100% Offline Private"],
-        "brew": f"brew install --cask {app['dir'][3:]}",
-        "dmg": f"downloads/{app['dir'][3:]}-1.0.0.dmg",
+        "brew": f"brew install --cask {app['dir'].split('-', 1)[1]}",
+        "dmg": f"downloads/{app['dir'].split('-', 1)[1]}-1.0.0.dmg",
         "price": "$9"
     })
 
-all_80_apps = first_30_apps + formatted_new_50
+all_130_apps = first_30_apps + formatted_other_apps
 
-js_content = f"""// Complete Catalog for all 80 Native macOS Apps
-const apps = {json.dumps(all_80_apps, indent=4)};
+js_content = f"""// Complete Catalog for all 130 Native macOS Apps
+const apps = {json.dumps(all_130_apps, indent=4)};
 
 // DOM Elements
 const appsGrid = document.getElementById("appsGrid");
@@ -236,7 +236,7 @@ function renderApps() {{
         appsGrid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted);">
                 <h3>No apps match "${{searchTerm}}"</h3>
-                <p>Try searching for "Pet", "Focus", "Bonsai", "Water", "OCR", "Git", or "JSON"</p>
+                <p>Try searching for "Hamster", "Bonsai", "Duck", "Focus", "Water", "Git", "SQL", or "Docker"</p>
             </div>
         `;
         return;
@@ -341,4 +341,4 @@ renderApps();
 with open("website/app.js", "w") as f:
     f.write(js_content)
 
-print(f"Generated website/app.js with all {len(all_80_apps)} apps successfully!")
+print(f"Generated website/app.js with all {len(all_130_apps)} apps successfully!")

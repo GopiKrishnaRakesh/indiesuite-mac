@@ -29,7 +29,7 @@ struct EmojiForgeView: View {
                 HotkeyPill(keyCombination: "⌘ .")
             }
             
-            Text("Quick Kaomoji: (╯°□°)╯︵ ┻━┻ • ¯\\_(ツ)_/¯ • (•‿•)")
+            Text("Quick Kaomoji: (╯°□°)╯︵ ┻━┻ • ¯\_(ツ)_/¯ • (•‿•)")
                 .font(.system(size: 11))
                 .padding(8)
                 .glassCard(cornerRadius: 8)

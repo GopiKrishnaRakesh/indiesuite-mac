@@ -1,25 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
     <defs>
-        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.2"/>
-            <stop offset="100%" stop-color="#EC4899" stop-opacity="0.05"/>
+        <linearGradient id="bgGrad_03_locallens_ocr" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.22"/>
+            <stop offset="100%" stop-color="#3B82F6" stop-opacity="0.06"/>
         </linearGradient>
-        <linearGradient id="fgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#8B5CF6"/>
-            <stop offset="50%" stop-color="#EC4899"/>
-            <stop offset="100%" stop-color="#3B82F6"/>
+        <linearGradient id="fgGrad_03_locallens_ocr" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#06B6D4"/>
+            <stop offset="50%" stop-color="#3B82F6"/>
+            <stop offset="100%" stop-color="#8B5CF6"/>
         </linearGradient>
-        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#8B5CF6" flood-opacity="0.3"/>
+        <filter id="glow_03_locallens_ocr" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#06B6D4" flood-opacity="0.35"/>
         </filter>
     </defs>
     
     <!-- Base Squircle Container -->
-    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#bgGrad)" stroke="url(#fgGrad)" stroke-width="1.5" filter="url(#glow)"/>
+    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#bgGrad_03_locallens_ocr)" stroke="url(#fgGrad_03_locallens_ocr)" stroke-width="1.5" filter="url(#glow_03_locallens_ocr)"/>
     
     <!-- Custom Vector Icon Glyph -->
     <g>
-        <path d="M16 24V18C16 16.9 16.9 16 18 16H24M40 16H46C47.1 16 48 16.9 48 18V24M48 40V46C48 47.1 47.1 48 46 48H40M24 48H18C16.9 48 16 47.1 16 46V40" stroke="url(#fgGrad)" stroke-width="3" stroke-linecap="round"/>
-            <path d="M26 27L22 32L26 37M38 27L42 32L38 37M34 25L30 39" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M16 24V18C16 16.9 16.9 16 18 16H24M40 16H46C47.1 16 48 16.9 48 18V24M48 40V46C48 47.1 47.1 48 46 48H40M24 48H18C16.9 48 16 47.1 16 46V40" stroke="url(#fgGrad_03_locallens_ocr)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M26 27L22 32L26 37M38 27L42 32L38 37M34 25L30 39" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
     </g>
 </svg>

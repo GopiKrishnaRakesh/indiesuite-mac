@@ -1,25 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
     <defs>
-        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#EC4899" stop-opacity="0.2"/>
-            <stop offset="100%" stop-color="#F43F5E" stop-opacity="0.05"/>
+        <linearGradient id="bgGrad_48_dminbox_unified" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6366F1" stop-opacity="0.22"/>
+            <stop offset="100%" stop-color="#EC4899" stop-opacity="0.06"/>
         </linearGradient>
-        <linearGradient id="fgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#EC4899"/>
-            <stop offset="50%" stop-color="#F43F5E"/>
+        <linearGradient id="fgGrad_48_dminbox_unified" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6366F1"/>
+            <stop offset="50%" stop-color="#EC4899"/>
             <stop offset="100%" stop-color="#F59E0B"/>
         </linearGradient>
-        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#EC4899" flood-opacity="0.3"/>
+        <filter id="glow_48_dminbox_unified" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#6366F1" flood-opacity="0.35"/>
         </filter>
     </defs>
     
     <!-- Base Squircle Container -->
-    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#bgGrad)" stroke="url(#fgGrad)" stroke-width="1.5" filter="url(#glow)"/>
+    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#bgGrad_48_dminbox_unified)" stroke="url(#fgGrad_48_dminbox_unified)" stroke-width="1.5" filter="url(#glow_48_dminbox_unified)"/>
     
     <!-- Custom Vector Icon Glyph -->
     <g>
-        <path d="M32 16L46 22V32C46 41 39.5 48.5 32 51C24.5 48.5 18 41 18 32V22L32 16Z" fill="none" stroke="url(#fgGrad)" stroke-width="3" stroke-linejoin="round"/>
-                <path d="M26 33L30 37L38 27" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M16 22H48V38H38L32 44L26 38H16V22Z" fill="url(#fgGrad_48_dminbox_unified)"/>
+        <circle cx="46" cy="18" r="4" fill="#EF4444"/>
     </g>
 </svg>

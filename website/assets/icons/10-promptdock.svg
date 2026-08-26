@@ -1,26 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
     <defs>
-        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.2"/>
-            <stop offset="100%" stop-color="#EC4899" stop-opacity="0.05"/>
+        <linearGradient id="bgGrad_10_promptdock" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.22"/>
+            <stop offset="100%" stop-color="#EC4899" stop-opacity="0.06"/>
         </linearGradient>
-        <linearGradient id="fgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="fgGrad_10_promptdock" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="#8B5CF6"/>
             <stop offset="50%" stop-color="#EC4899"/>
-            <stop offset="100%" stop-color="#3B82F6"/>
+            <stop offset="100%" stop-color="#F59E0B"/>
         </linearGradient>
-        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#8B5CF6" flood-opacity="0.3"/>
+        <filter id="glow_10_promptdock" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#8B5CF6" flood-opacity="0.35"/>
         </filter>
     </defs>
     
     <!-- Base Squircle Container -->
-    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#bgGrad)" stroke="url(#fgGrad)" stroke-width="1.5" filter="url(#glow)"/>
+    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#bgGrad_10_promptdock)" stroke="url(#fgGrad_10_promptdock)" stroke-width="1.5" filter="url(#glow_10_promptdock)"/>
     
     <!-- Custom Vector Icon Glyph -->
     <g>
-        <path d="M22 42L40 24M40 24L36 20L44 16L48 24L44 28L40 24Z" fill="url(#fgGrad)" stroke="white" stroke-width="2"/>
-            <path d="M18 20L20 14L22 20L28 22L22 24L20 30L18 24L12 22L18 20Z" fill="#F59E0B"/>
-            <path d="M42 40L43 37L46 36L43 35L42 32L41 35L38 36L41 37L42 40Z" fill="white"/>
+        <path d="M22 42L40 24M40 24L36 20L44 16L48 24L44 28L40 24Z" fill="url(#fgGrad_10_promptdock)" stroke="white" stroke-width="2"/>
+        <path d="M18 20L20 14L22 20L28 22L22 24L20 30L18 24L12 22L18 20Z" fill="#F59E0B"/>
+        <path d="M42 40L43 37L46 36L43 35L42 32L41 35L38 36L41 37L42 40Z" fill="white"/>
     </g>
 </svg>

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# generate_cask.sh - Generates Homebrew Cask files for direct Mac terminal distribution
+# generate_cask.sh - Generates Homebrew Cask files for all 80 apps
 set -e
 
 CASK_DIR="./dist/casks"
@@ -36,9 +36,59 @@ APPS=(
     "bandwidthradar:Real-time per-app network download/upload monitor"
     "bluetoothautohop:Smart Bluetooth auto-disconnect and reconnect manager"
     "privatellm-bar:Ultra-lightweight menu bar local model runner"
+    "petpals-desktop:Interactive desktop pet with hydration and posture nudges"
+    "bonsaigrow:Virtual Zen Bonsai tree that grows with completed focus sessions"
+    "deskfish-aquarium:Translucent floating desk aquarium habit tracker"
+    "pomodorodragon:RPG Pomodoro egg that hatches elemental dragons"
+    "codecat:Animated cat on active window edge purring on Git commits"
+    "deepflow-blocker:Host and DNS-level distraction website and social app blocker"
+    "zenaudio-ambience:Binaural beats, brown noise, and rain 432Hz focus generator"
+    "screendimmer-focus:Spotlights active window and dims background displays"
+    "breakreminder:20-20-20 eye strain rule and ergonomic stretch coach"
+    "monospace-flow:Minimalist typewriter writing mode with mechanical sound cues"
+    "habitgrid:GitHub-style 365-day contribution heatmaps for daily habits"
+    "waterdrop-hud:Smart hydration tracker with 1-click logging and reminders"
+    "postureguard:Offline Vision posture estimation to prevent slouching"
+    "standup-timer:Standing desk timer with smart Bluetooth desk sync"
+    "dayplanner-notch:Visual timeline of calendar events in the MacBook notch"
+    "statussync:Auto-syncs Slack, Discord, and Teams status based on active app"
+    "quicktweet-x:Floating HUD to draft and post to X, Bluesky, and Threads"
+    "dminbox-unified:Unified menu bar badge and preview for Slack, Discord, WhatsApp"
+    "streamerbanner:Animated lower-thirds and watermark for screen recordings"
+    "emojiforge:Floating emoji picker with Slack/Discord custom emoji resizer"
+    "pdfwhisper-ai:Instant local Q&A with PDFs via Apple Silicon embeddings"
+    "gitcommit-ai:1-click conventional git commit message generator from diffs"
+    "codeexplainer-hud:Highlight cryptic code or errors for plain-English explanation"
+    "voicetranscribe-batch:Batch audio transcriber for podcasts and meeting files"
+    "aiwallpaper-generator:Generates 4K dynamic desktop wallpapers using local CoreML"
+    "jsonmaster-pro:JSON, YAML, and TOML formatter with TypeScript interface generator"
+    "cronvisualizer:Visual cron expression builder and schedule debugger"
+    "dockerquick-hud:Lightweight container viewer, log stream, and volume cleanup"
+    "hostsmanager:1-click /etc/hosts profile switcher for dev and staging domains"
+    "certsentry:SSL/TLS certificate expiration tracker for your domains"
+    "keychainquick:Fast search and copy for developer SSH keys and GPG tokens"
+    "curlcraft:Converts network cURL commands to Swift, Python, Node, Go code"
+    "sqlitelens:Instant SQLite database file inspector and query runner"
+    "npmoutdated-hud:Watches package.json across repos and alerts on vulnerabilities"
+    "taillogs:Menu bar multi-file live log tailer with regex highlighting"
+    "mockupsnap:1-click wraps screenshots inside 3D MacBook and iPhone frames"
+    "appiconforge:Generates all iOS, macOS, watchOS, and Web icon sizes from PNG"
+    "lottiepreview:Native dotLottie & JSON animation player with GIF exporter"
+    "aspectratio-calc:Instant aspect ratio, DPI, and viewport sizing calculator"
+    "shadowstudio:Realistic multi-layer shadow designer with SwiftUI code export"
+    "duplicatefinder:Hashing-based duplicate file scanner to reclaim disk space"
+    "caffeinebar:Keeps Mac awake indefinitely with custom display sleep rules"
+    "hiddenfiles-toggle:1-click toggle to show/hide hidden dotfiles in Finder"
+    "archiveextractor:Ultra-fast unarchiver supporting 7z, RAR, TAR, GZ, ISO"
+    "clipboarddiff:Compares current clipboard with previous clipboard with diff"
+    "apppermission-auditor:Inspects apps granted Camera, Mic, or Accessibility"
+    "wifiradar:Displays WiFi channel congestion, RSSI, and speed in menu bar"
+    "quickshare-local:P2P local network file dropper between Macs and PCs"
+    "audiorecord-hud:1-click system audio + microphone recorder with MP3 export"
+    "memorypurge-pro:Visual RAM pressure monitor with 1-click inactive memory purge"
 )
 
-echo "🍺 Generating Homebrew Casks..."
+echo "🍺 Generating 80 Homebrew Casks..."
 
 for item in "${APPS[@]}"; do
     name=$(echo "$item" | cut -d: -f1)
@@ -66,7 +116,6 @@ cask "${name}" do
   ]
 end
 EOF
-    echo "  -> Created ${CASK_DIR}/${name}.rb"
 done
 
-echo "✅ Generated 30 Homebrew Casks!"
+echo "✅ Successfully generated all 80 Homebrew Casks!"

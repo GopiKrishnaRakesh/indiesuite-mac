@@ -326,46 +326,47 @@ window.openCheckoutModal = function(appSlug) {{
     paymentModal.classList.remove("hidden");
 }};
 
-// Process payment and generate secure tokenized link
+// Process payment via real Stripe or PayPal gateway
 async function processPayment(paymentMethod) {{
-    const email = checkoutEmail.value.trim() || "buyer@macupgraded.com";
+    const email = checkoutEmail.value.trim();
+    if (!email || !email.includes("@")) {{
+        alert("Please enter a valid email address so we can deliver your license key.");
+        checkoutEmail.focus();
+        return;
+    }}
     
     // Animate button processing
     const activeBtn = paymentMethod === "Apple Pay" ? payAppleBtn : (paymentMethod === "PayPal" ? payPaypalBtn : payCardBtn);
     const origText = activeBtn.innerHTML;
-    activeBtn.innerHTML = "Processing Securely...";
+    activeBtn.innerHTML = "Connecting to Secure Gateway...";
     activeBtn.disabled = true;
 
     try {{
-        // Call backend verification API
-        const response = await fetch("verify_order.php", {{
+        // Call backend Stripe Checkout API
+        const response = await fetch("api/create_stripe_checkout.php", {{
             method: "POST",
             headers: {{ "Content-Type": "application/json" }},
             body: JSON.stringify({{
                 email: email,
                 app: currentSelectedApp.slug,
                 tier: currentSelectedApp.slug === "all-access" ? "ALL_ACCESS" : "INDIVIDUAL",
-                paymentMethod: paymentMethod
+                name: currentSelectedApp.name,
+                price: currentSelectedApp.priceNum
             }})
         }});
 
         const result = await response.json();
 
-        // Switch to Step 2: Confirmation, License Key, and Secure Download
-        licenseKeyDisplay.textContent = result.licenseKey;
-        downloadLinkBtn.href = result.downloadUrl;
-        
-        checkoutStep1.classList.add("hidden");
-        checkoutStep2.classList.remove("hidden");
+        if (result.success && result.checkoutUrl) {{
+            // Redirect customer directly to official Stripe Checkout page (Apple Pay / Card)
+            window.location.href = result.checkoutUrl;
+        }} else if (result.requires_config) {{
+            alert("⚠️ Payment Setup Required:\\n\\n" + result.error + "\\n\\nTo accept real payments into your bank account, simply paste your live Stripe API key into website/config.php on your Hostinger server.");
+        }} else {{
+            alert("Payment Gateway Error: " + (result.error || "Unable to initiate checkout session. Please try again."));
+        }}
     }} catch (e) {{
-        // Fallback generator for preview servers
-        const randomHex = Math.random().toString(36).substring(2, 6).toUpperCase();
-        const fallbackKey = `${{currentSelectedApp.slug.toUpperCase().replace(/-/g, "")}}-PRO-PASS-${{randomHex}}-${{Math.floor(1000 + Math.random() * 9000)}}`;
-        licenseKeyDisplay.textContent = fallbackKey;
-        downloadLinkBtn.href = `download.php?app=${{currentSelectedApp.slug}}&token=DEMO_TOKEN&expires=${{Math.floor(Date.now()/1000) + 900}}&sig=DEMO_SIG`;
-        
-        checkoutStep1.classList.add("hidden");
-        checkoutStep2.classList.remove("hidden");
+        alert("⚠️ Backend Gateway Notice:\\n\\nTo process real payments, your website must be uploaded to your Hostinger server (macupgraded.com) with PHP support, where Stripe/PayPal will process live transactions.");
     }} finally {{
         activeBtn.innerHTML = origText;
         activeBtn.disabled = false;

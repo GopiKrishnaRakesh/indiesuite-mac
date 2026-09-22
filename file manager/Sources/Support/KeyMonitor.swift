@@ -11,19 +11,21 @@ final class KeyMonitor {
 
     func install() {
         guard monitor == nil else { return }
-        monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
-            MainActor.assumeIsolated {
-                guard let window = event.window ?? NSApp.keyWindow,
-                      let model = ModelRegistry.shared.model(for: window),
-                      window.attachedSheet == nil,
-                      !(window.firstResponder is NSText),
-                      // Leave every key alone while Quick Look is up — it has its own native Escape/
-                      // arrow-key handling, and this monitor was swallowing both before either could
-                      // reach it (Escape as "clear selection", arrows as grid navigation).
-                      !(QLPreviewPanel.sharedPreviewPanelExists() && QLPreviewPanel.shared().isVisible)
-                else { return event }
-                return model.handleKey(event) ? nil : event
-            }
+        // AppKit's overlay types this handler as @Sendable, not @MainActor, even though a *local*
+        // event monitor always fires synchronously on the main thread. Marking the closure literal
+        // itself @MainActor (rather than wrapping the body in MainActor.assumeIsolated) keeps `event`
+        // inside a single isolation domain throughout, so it never needs to be Sendable to cross one.
+        monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { @MainActor event in
+            guard let window = event.window ?? NSApp.keyWindow,
+                  let model = ModelRegistry.shared.model(for: window),
+                  window.attachedSheet == nil,
+                  !(window.firstResponder is NSText),
+                  // Leave every key alone while Quick Look is up — it has its own native Escape/
+                  // arrow-key handling, and this monitor was swallowing both before either could
+                  // reach it (Escape as "clear selection", arrows as grid navigation).
+                  !(QLPreviewPanel.sharedPreviewPanelExists() && QLPreviewPanel.shared().isVisible)
+            else { return event }
+            return model.handleKey(event) ? nil : event
         }
     }
 }

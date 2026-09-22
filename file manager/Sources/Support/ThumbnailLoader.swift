@@ -34,12 +34,19 @@ enum ThumbnailLoader {
         let request = QLThumbnailGenerator.Request(
             fileAt: url, size: CGSize(width: pixels, height: pixels), scale: scale, representationTypes: .thumbnail
         )
-        let image = await withCheckedContinuation { (continuation: CheckedContinuation<NSImage?, Never>) in
+        // QLThumbnailGenerator's completion handler genuinely fires on a background thread — unlike
+        // KeyMonitor's case, this is a real cross-thread handoff. NSImage isn't Sendable, so the value
+        // crosses in a small box we own (and thus can freely assert Sendable on) instead.
+        let box = await withCheckedContinuation { (continuation: CheckedContinuation<ImageBox, Never>) in
             QLThumbnailGenerator.shared.generateBestRepresentation(for: request) { representation, _ in
-                continuation.resume(returning: representation?.nsImage)
+                continuation.resume(returning: ImageBox(image: representation?.nsImage))
             }
         }
-        if let image { cache.setObject(image, forKey: k) }
-        return image
+        if let image = box.image { cache.setObject(image, forKey: k) }
+        return box.image
+    }
+
+    private struct ImageBox: @unchecked Sendable {
+        let image: NSImage?
     }
 }

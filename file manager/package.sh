@@ -1,19 +1,19 @@
 #!/bin/bash
-# Builds a Developer ID-signed Release build of Pathway and packages it into dist/Pathway.dmg.
-# Does its own clean build from scratch -- no need to run build.sh first.
+# Builds a Developer ID-signed, notarized Release build of Pathway and packages it into
+# dist/Pathway-<version>.dmg. Does its own clean build from scratch -- no need to run build.sh first.
 #
-# NOT notarized by this script -- that needs credentials stored separately (an Apple ID
-# app-specific password, or an App Store Connect API key) that aren't set up on this Mac yet.
-# Until notarized, Gatekeeper will show an "Apple could not verify..." warning on first launch.
-# Once credentials exist, notarize with:
-#   xcrun notarytool submit dist/Pathway.dmg --keychain-profile <profile-name> --wait
-#   xcrun stapler staple dist/Pathway.dmg
+# Notarization needs credentials stored once, ahead of time, via:
+#   xcrun notarytool store-credentials "pathway-notary" --apple-id <email> --team-id X9LKG9RX5T
+# (run without --password on the line so it prompts for the app-specific password interactively,
+# rather than leaving it sitting in shell history). If that profile isn't present in the keychain,
+# this script still produces a signed-but-unnotarized DMG and says so -- it doesn't fail outright.
 set -euo pipefail
 cd "$(dirname "$0")"
 
 APP_NAME="Pathway"
 TEAM_ID="X9LKG9RX5T"
 SIGN_IDENTITY="Developer ID Application: Gopi Krishna Rakesh Kode ($TEAM_ID)"
+NOTARY_PROFILE="pathway-notary"
 VERSION=$(grep 'MARKETING_VERSION:' project.yml | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
 DIST_DIR="dist"
 DMG_PATH="$DIST_DIR/${APP_NAME}-${VERSION}.dmg"
@@ -51,8 +51,6 @@ if codesign -d --entitlements :- "$APP_PATH" 2>/dev/null | grep -q "get-task-all
     echo "ERROR: build carries the get-task-allow debug entitlement -- would fail notarization." >&2
     exit 1
 fi
-echo "-- Gatekeeper assessment (expected to fail until notarized) --"
-spctl --assess --type execute --verbose "$APP_PATH" || true
 
 echo "==> Building DMG"
 STAGING=$(mktemp -d)
@@ -62,6 +60,19 @@ rm -f "$DMG_PATH"
 hdiutil create -volname "$APP_NAME" -srcfolder "$STAGING" -ov -format UDZO "$DMG_PATH"
 rm -rf "$STAGING"
 
-echo ""
-echo "Built: $(pwd)/$DMG_PATH"
-echo "Signed with a Developer ID certificate. NOT notarized -- see the note at the top of this script."
+if xcrun notarytool history --keychain-profile "$NOTARY_PROFILE" >/dev/null 2>&1; then
+    echo "==> Notarizing (profile: $NOTARY_PROFILE)"
+    xcrun notarytool submit "$DMG_PATH" --keychain-profile "$NOTARY_PROFILE" --wait
+    echo "==> Stapling ticket"
+    xcrun stapler staple "$DMG_PATH"
+    xcrun stapler validate "$DMG_PATH"
+    echo ""
+    echo "Built and notarized: $(pwd)/$DMG_PATH"
+else
+    echo "-- Gatekeeper assessment (expected to fail until notarized) --"
+    spctl --assess --type execute --verbose "$APP_PATH" || true
+    echo ""
+    echo "Built: $(pwd)/$DMG_PATH"
+    echo "Signed with a Developer ID certificate. NOT notarized -- no '$NOTARY_PROFILE' credentials"
+    echo "found in the keychain. See the note at the top of this script to set them up."
+fi

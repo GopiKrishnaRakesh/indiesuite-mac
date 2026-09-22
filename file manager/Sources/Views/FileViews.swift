@@ -138,6 +138,7 @@ private struct GridCell: View {
     let item: FileItem
     @ObservedObject var model: FileBrowserModel
     @ObservedObject private var clipboard = ClipboardState.shared
+    @State private var thumbnail: NSImage?
 
     private var selected: Bool { model.selection.contains(item.id) }
 
@@ -168,10 +169,25 @@ private struct GridCell: View {
         .opacity(clipboard.isCut(item.url) || item.isHidden ? 0.5 : 1)
         .onTapGesture(count: 2) { model.open(item) }
         .onTapGesture { model.clickSelect(item, modifiers: NSEvent.modifierFlags) }
+        .task(id: "\(item.url.path)#\(ThumbnailLoader.bucket(model.iconSize))") { await loadThumbnail() }
     }
 
     private func icon(size: CGFloat) -> some View {
-        Image(nsImage: IconCache.icon(for: item.url)).resizable().aspectRatio(contentMode: .fit).frame(width: size, height: size)
+        Image(nsImage: thumbnail ?? IconCache.icon(for: item.url))
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: size, height: size)
+    }
+
+    private func loadThumbnail() async {
+        guard !item.isFolder, ThumbnailLoader.isPreviewable(item.url) else { thumbnail = nil; return }
+        if let cached = ThumbnailLoader.cached(for: item.url, size: model.iconSize) {
+            thumbnail = cached
+            return
+        }
+        thumbnail = nil
+        let image = await ThumbnailLoader.load(for: item.url, size: model.iconSize)
+        if !Task.isCancelled { thumbnail = image }
     }
 
     @ViewBuilder private var label: some View {

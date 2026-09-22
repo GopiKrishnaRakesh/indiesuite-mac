@@ -17,9 +17,21 @@ struct PropertiesView: View {
     @State private var accessed: Date?
     @State private var hidden = false
     @State private var sizeTask: Task<Void, Never>?
+    @State private var volumeFormat: String?
 
     private var single: URL? { urls.count == 1 ? urls.first : nil }
     private var item: FileItem? { single.map(FileItem.init) }
+    /// A mounted volume's root (an external drive, "Macintosh HD", …) rather than an ordinary folder —
+    /// its "size" is capacity/free-space math already sitting in SidebarStore, not a full recursive
+    /// scan, which would otherwise walk the entire drive just to open this dialog. Matched against
+    /// SidebarStore.volumes (not re-derived from a fresh single-key resourceValues fetch, which
+    /// doesn't reliably populate .volumeIsRootFileSystemKey on its own) since that list's own batched
+    /// fetch is already proven to work.
+    private var matchedVolume: VolumeInfo? {
+        guard let single else { return nil }
+        return SidebarStore.shared.volumes.first { $0.url.path == single.path }
+    }
+    private var isVolumeRoot: Bool { matchedVolume != nil }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -28,7 +40,7 @@ struct PropertiesView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     general
-                    if single != nil { attributes; permissions }
+                    if single != nil && !isVolumeRoot { attributes; permissions }
                 }
                 .padding(18)
             }
@@ -53,7 +65,7 @@ struct PropertiesView: View {
                 Image(nsImage: IconCache.icon(for: single)).resizable().frame(width: 56, height: 56)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(item?.name ?? "").font(.title3.weight(.semibold)).textSelection(.enabled).lineLimit(2)
-                    Text(item?.kind ?? "").foregroundStyle(.secondary)
+                    Text(isVolumeRoot ? "Volume" : (item?.kind ?? "")).foregroundStyle(.secondary)
                 }
             } else {
                 Image(systemName: "square.stack.3d.up").font(.system(size: 40)).frame(width: 56, height: 56)
@@ -69,19 +81,26 @@ struct PropertiesView: View {
 
     private var general: some View {
         section("General") {
-            if let single {
-                row("Location", single.deletingLastPathComponent().path)
-                if let target = try? FileManager.default.destinationOfSymbolicLink(atPath: single.path) { row("Alias to", target) }
-            }
-            row("Size", calculating ? "Calculating…" : Fmt.exactBytes(logicalSize))
-            row("Size on disk", calculating ? "Calculating…" : Fmt.bytes(onDisk))
-            if folderCount > 0 || fileCount > 0 || urls.count > 1 || (item?.isFolder ?? false) {
-                row("Contains", "\(fileCount.formatted()) files, \(folderCount.formatted()) folders")
-            }
-            if let item {
-                row("Created", Fmt.date(item.created))
-                row("Modified", Fmt.date(item.modified))
-                row("Accessed", Fmt.date(accessed))
+            if isVolumeRoot {
+                row("Capacity", Fmt.bytes(logicalSize))
+                row("Available", Fmt.bytes(onDisk))
+                row("Used", Fmt.bytes(logicalSize - onDisk))
+                if let volumeFormat { row("Format", volumeFormat) }
+            } else {
+                if let single {
+                    row("Location", single.deletingLastPathComponent().path)
+                    if let target = try? FileManager.default.destinationOfSymbolicLink(atPath: single.path) { row("Alias to", target) }
+                }
+                row("Size", calculating ? "Calculating…" : Fmt.exactBytes(logicalSize))
+                row("Size on disk", calculating ? "Calculating…" : Fmt.bytes(onDisk))
+                if folderCount > 0 || fileCount > 0 || urls.count > 1 || (item?.isFolder ?? false) {
+                    row("Contains", "\(fileCount.formatted()) files, \(folderCount.formatted()) folders")
+                }
+                if let item {
+                    row("Created", Fmt.date(item.created))
+                    row("Modified", Fmt.date(item.modified))
+                    row("Accessed", Fmt.date(accessed))
+                }
             }
         }
     }
@@ -141,6 +160,13 @@ struct PropertiesView: View {
 
     // MARK: Data
     private func load() {
+        if let volume = matchedVolume {
+            logicalSize = volume.total
+            onDisk = volume.available
+            volumeFormat = try? single?.resourceValues(forKeys: [.volumeLocalizedFormatDescriptionKey]).volumeLocalizedFormatDescription
+            calculating = false
+            return
+        }
         if let single {
             let attrs = try? FileManager.default.attributesOfItem(atPath: single.path)
             mode = (attrs?[.posixPermissions] as? Int) ?? 0

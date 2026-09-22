@@ -1,4 +1,5 @@
 import AppKit
+import QuickLookUI
 import SwiftUI
 
 /// Intercepts plain keys (Backspace, Enter, F2, Delete, F5 …) that SwiftUI menu shortcuts can't own
@@ -15,7 +16,12 @@ final class KeyMonitor {
                 guard let window = event.window ?? NSApp.keyWindow,
                       let model = ModelRegistry.shared.model(for: window),
                       window.attachedSheet == nil,
-                      !(window.firstResponder is NSText) else { return event }
+                      !(window.firstResponder is NSText),
+                      // Leave every key alone while Quick Look is up — it has its own native Escape/
+                      // arrow-key handling, and this monitor was swallowing both before either could
+                      // reach it (Escape as "clear selection", arrows as grid navigation).
+                      !(QLPreviewPanel.sharedPreviewPanelExists() && QLPreviewPanel.shared().isVisible)
+                else { return event }
                 return model.handleKey(event) ? nil : event
             }
         }

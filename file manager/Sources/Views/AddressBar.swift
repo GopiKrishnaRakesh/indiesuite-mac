@@ -3,8 +3,6 @@ import SwiftUI
 struct AddressBar: View {
     @ObservedObject var model: FileBrowserModel
     @ObservedObject private var sidebar = SidebarStore.shared
-    @State private var text = ""
-    @FocusState private var focused: Bool
 
     private var crumbs: [(name: String, url: URL)] {
         var result: [(String, URL)] = []
@@ -18,34 +16,17 @@ struct AddressBar: View {
         return result.reversed()
     }
 
+    // Breadcrumbs only — never hosts the editable TextField itself. SwiftUI's onExitCommand and focus
+    // tracking don't reliably fire for a TextField placed inside a toolbar item on macOS (confirmed:
+    // Escape and click-away silently failed to leave editing), so the actual path editor lives in
+    // AddressEditBar, an overlay in the main content area, where those mechanisms are proven to work
+    // (same pattern as RenameField). This view just shows breadcrumbs and asks the model to edit.
     var body: some View {
         HStack(spacing: 6) {
             Image(systemName: model.isInTrash ? "trash" : "folder")
                 .foregroundStyle(.secondary)
-            ZStack(alignment: .leading) {
-                if model.isEditingPath {
-                    TextField("Path", text: $text)
-                        .textFieldStyle(.plain)
-                        .focused($focused)
-                        .onSubmit {
-                            model.isEditingPath = false
-                            model.navigate(toPath: text)
-                        }
-                        .onExitCommand {
-                            model.isEditingPath = false
-                            model.focusFileList()
-                        }
-                        .onAppear {
-                            text = model.currentURL.path
-                            focused = true
-                            DispatchQueue.main.async { (NSApp.keyWindow?.firstResponder as? NSTextView)?.selectAll(nil) }
-                        }
-                        .onChange(of: focused) { _, isFocused in if !isFocused { model.isEditingPath = false } }
-                } else {
-                    breadcrumbs
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            breadcrumbs
+                .frame(maxWidth: .infinity, alignment: .leading)
             Button {
                 if sidebar.isPinned(model.currentURL) { sidebar.unpin(model.currentURL) } else { sidebar.pin(model.currentURL) }
             } label: {
@@ -58,7 +39,6 @@ struct AddressBar: View {
         .padding(.horizontal, 10)
         .frame(height: 26)
         .background(RoundedRectangle(cornerRadius: 7).fill(Color.primary.opacity(0.07)))
-        .overlay(RoundedRectangle(cornerRadius: 7).stroke(model.isEditingPath ? Color.accentColor : .clear, lineWidth: 1.5))
     }
 
     private var breadcrumbs: some View {
@@ -80,6 +60,42 @@ struct AddressBar: View {
         .defaultScrollAnchor(.trailing)
         .contentShape(Rectangle())
         .onTapGesture { model.focusAddressBar() }
+    }
+}
+
+/// The actual editable path field, shown as an overlay pinned to the top of the content area while
+/// `model.isEditingPath` is true. Deliberately lives outside the window toolbar — see the note on
+/// AddressBar above for why.
+struct AddressEditBar: View {
+    @ObservedObject var model: FileBrowserModel
+    @State private var text = ""
+    @FocusState private var focused: Bool
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "folder").foregroundStyle(.secondary)
+            TextField("Path", text: $text)
+                .textFieldStyle(.plain)
+                .font(.system(size: 13))
+                .focused($focused)
+                .onSubmit {
+                    model.isEditingPath = false
+                    model.navigate(toPath: text)
+                }
+                .onExitCommand { model.cancelAddressEdit() }
+                .onChange(of: focused) { _, isFocused in if !isFocused { model.cancelAddressEdit() } }
+        }
+        .padding(.horizontal, 12)
+        .frame(height: 30)
+        .background(RoundedRectangle(cornerRadius: 8).fill(.regularMaterial))
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.accentColor, lineWidth: 1.5))
+        .shadow(color: .black.opacity(0.25), radius: 8, y: 2)
+        .padding(8)
+        .onAppear {
+            text = model.currentURL.path
+            focused = true
+            DispatchQueue.main.async { (NSApp.keyWindow?.firstResponder as? NSTextView)?.selectAll(nil) }
+        }
     }
 }
 

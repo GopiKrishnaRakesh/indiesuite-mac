@@ -71,7 +71,7 @@ final class FileBrowserModel: ObservableObject {
 
     // MARK: Selection
     @Published var selection: Set<URL> = [] {
-        didSet { if selection != oldValue { QuickLookController.shared.refresh(with: selectedURLs) } }
+        didSet { if selection != oldValue { QuickLookController.shared.refresh(selected: selectedURLs) } }
     }
     @Published var scrollTarget: URL?
     var gridColumns = 1
@@ -228,6 +228,15 @@ final class FileBrowserModel: ObservableObject {
     func focusAddressBar() { isEditingPath = true }
     func focusSearch() { searchFocusToken += 1 }
 
+    /// Leaves address-bar editing without navigating. The address bar's TextField sits inside a
+    /// toolbar item, where SwiftUI's onExitCommand/focus tracking doesn't reliably fire on macOS, so
+    /// Escape and clicking elsewhere are routed here explicitly instead (see KeyMonitor and clickSelect).
+    func cancelAddressEdit() {
+        guard isEditingPath else { return }
+        isEditingPath = false
+        focusFileList()
+    }
+
     func refresh() { Task { await reload() } }
 
     nonisolated static func readDirectory(_ url: URL) throws -> [FileItem] {
@@ -358,10 +367,11 @@ final class FileBrowserModel: ObservableObject {
 
     // MARK: - Selection
     func selectAll() { selection = Set(displayItems.map(\.id)) }
-    func selectNone() { selection = [] }
+    func selectNone() { cancelAddressEdit(); selection = [] }
     func invertSelection() { selection = Set(displayItems.map(\.id)).subtracting(selection) }
 
     func clickSelect(_ item: FileItem, modifiers: NSEvent.ModifierFlags) {
+        cancelAddressEdit()
         if modifiers.contains(.shift), let a = anchor, let ai = displayItems.firstIndex(where: { $0.id == a }),
            let bi = displayItems.firstIndex(where: { $0.id == item.id }) {
             let range = min(ai, bi)...max(ai, bi)
@@ -445,7 +455,14 @@ final class FileBrowserModel: ObservableObject {
     }
 
     func toggleQuickLook() {
-        QuickLookController.shared.toggle(with: selectedURLs)
+        QuickLookController.shared.toggle(folderItems: displayItems.map(\.url), selected: selectedURLs, model: self)
+    }
+
+    /// Keeps the file list's selection in step as the user arrows through the Quick Look panel.
+    func syncSelectionFromQuickLook(_ url: URL) {
+        guard displayItems.contains(where: { $0.id == url }), selection != [url] else { return }
+        selection = [url]
+        scrollTarget = url
     }
 
     // MARK: - Clipboard

@@ -140,4 +140,23 @@ enum FileOps {
     static func volumeID(of url: URL) -> String? {
         (try? url.resourceValues(forKeys: [.volumeIdentifierKey]))?.volumeIdentifier.map { "\($0)" }
     }
+
+    /// Renames a mounted volume (e.g. an external drive), not a file — there's no Foundation API for
+    /// this, so it shells out to `diskutil`, which accepts a mount point in place of a disk identifier.
+    /// Returns an error message on failure, nil on success.
+    static func renameVolume(_ url: URL, to newName: String) -> String? {
+        let (status, message) = run("/usr/sbin/diskutil", ["rename", url.path, newName])
+        guard status == 0 else { return message.isEmpty ? "diskutil rename failed (status \(status))" : message }
+        return nil
+    }
+
+    /// Erases and reformats a single volume/partition in place (`eraseVolume`, not the much more
+    /// destructive `eraseDisk`, which would take every other partition on the same physical disk with
+    /// it). Irreversible — callers must confirm with the user before calling this. Returns an error
+    /// message on failure, nil on success.
+    static func eraseVolume(_ url: URL, format: String, name: String) -> String? {
+        let (status, message) = run("/usr/sbin/diskutil", ["eraseVolume", format, name, url.path])
+        guard status == 0 else { return message.isEmpty ? "diskutil eraseVolume failed (status \(status))" : message }
+        return nil
+    }
 }

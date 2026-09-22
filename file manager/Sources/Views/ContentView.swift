@@ -25,6 +25,9 @@ struct ContentView: View {
                 Divider()
                 StatusBar(model: model)
             }
+            .overlay(alignment: .top) {
+                if model.isEditingPath { AddressEditBar(model: model) }
+            }
             .inspector(isPresented: $model.showPreview) {
                 PreviewPane(model: model)
                     .inspectorColumnWidth(min: 240, ideal: 300, max: 520)

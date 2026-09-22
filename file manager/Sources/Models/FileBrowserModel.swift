@@ -542,7 +542,7 @@ final class FileBrowserModel: ObservableObject {
 
     func commitRename() {
         guard let source = renamingURL else { return }
-        let newName = renameText.trimmingCharacters(in: .whitespaces)
+        let newName = renameText.trimmingCharacters(in: .whitespacesAndNewlines)
         renamingURL = nil
         defer { focusFileList() }
         guard !newName.isEmpty, newName != source.lastPathComponent else { return }

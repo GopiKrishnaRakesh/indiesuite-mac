@@ -703,6 +703,169 @@ body {
     gap: 6px;
 }
 
+.app-card {
+    cursor: pointer;
+}
+
+/* Generated App Mockup Preview — a mini macOS window per app, colored by category */
+.app-mockup {
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 18px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 10px 24px -10px rgba(15, 23, 42, 0.18);
+}
+.app-mockup-chrome {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 10px;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(10px);
+}
+.app-mockup-chrome .dot { width: 7px; height: 7px; }
+.app-mockup-title {
+    margin-left: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: rgba(15, 23, 42, 0.45);
+    font-weight: 600;
+}
+.app-mockup-body {
+    position: relative;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #64748b 0%, #1e293b 100%);
+    overflow: hidden;
+}
+.app-mockup-body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px);
+    background-size: 14px 14px;
+    opacity: 0.5;
+}
+.app-mockup-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.app-card:hover .app-mockup-icon {
+    transform: scale(1.08) translateY(-2px);
+}
+.app-mockup-hotkey {
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    z-index: 1;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.32);
+    backdrop-filter: blur(6px);
+    padding: 3px 8px;
+    border-radius: 999px;
+}
+
+/* Category gradient identity for mockup previews */
+.app-mockup[data-cat="ai"] .app-mockup-body       { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); }
+.app-mockup[data-cat="dev"] .app-mockup-body      { background: linear-gradient(135deg, #0ea5e9 0%, #4f46e5 100%); }
+.app-mockup[data-cat="media"] .app-mockup-body    { background: linear-gradient(135deg, #f97316 0%, #ec4899 100%); }
+.app-mockup[data-cat="system"] .app-mockup-body   { background: linear-gradient(135deg, #64748b 0%, #1e293b 100%); }
+.app-mockup[data-cat="pets"] .app-mockup-body     { background: linear-gradient(135deg, #f59e0b 0%, #84cc16 100%); }
+.app-mockup[data-cat="focus"] .app-mockup-body    { background: linear-gradient(135deg, #14b8a6 0%, #0891b2 100%); }
+.app-mockup[data-cat="routine"] .app-mockup-body  { background: linear-gradient(135deg, #fb7185 0%, #f97316 100%); }
+.app-mockup[data-cat="social"] .app-mockup-body   { background: linear-gradient(135deg, #6366f1 0%, #d946ef 100%); }
+
+/* Large mockup variant used inside the App Detail modal */
+.app-mockup-lg .app-mockup-body { height: 220px; }
+.app-mockup-icon-lg {
+    width: 108px;
+    height: 108px;
+    border-radius: 24px;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.4));
+}
+
+/* App Detail Modal */
+.detail-modal-card {
+    max-width: 780px;
+    text-align: left;
+}
+.detail-modal-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+}
+.detail-modal-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.detail-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.detail-price-val {
+    font-size: 1.6rem;
+    font-weight: 850;
+    color: var(--text-primary);
+    margin-right: 6px;
+}
+.detail-app-name {
+    font-size: 1.6rem;
+    font-weight: 850;
+    letter-spacing: -0.4px;
+    margin: 10px 0 8px;
+}
+.detail-desc {
+    font-size: 0.94rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+.detail-section {
+    margin-top: 22px;
+}
+.detail-section h4 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 750;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+.detail-features-list {
+    list-style: none;
+}
+.detail-features-list li {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 8px;
+    padding-left: 18px;
+    position: relative;
+}
+.detail-features-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: bold;
+}
+@media (max-width: 640px) {
+    .detail-modal-grid { grid-template-columns: 1fr; }
+}
+
 /* Pricing Grid - Liquid Glass */
 .pricing-section {
     padding: 80px 0 100px;

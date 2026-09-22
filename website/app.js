@@ -22,7 +22,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "02-tokenwatch",
@@ -46,7 +47,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "03-locallens-ocr",
@@ -70,7 +72,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "04-portsentry",
@@ -94,7 +97,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "05-shrinkmedia",
@@ -118,7 +122,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "media"
     },
     {
         "id": "06-colorforge",
@@ -142,7 +147,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "media"
     },
     {
         "id": "07-notchshelf",
@@ -166,7 +172,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "08-audiomix",
@@ -190,7 +197,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "09-micmute-hud",
@@ -214,7 +222,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "10-promptdock",
@@ -238,7 +247,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "11-snaptile",
@@ -262,7 +272,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "12-purgeapp",
@@ -286,7 +297,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "13-chargeguard",
@@ -310,7 +322,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "14-envvault",
@@ -334,7 +347,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "15-devtunnel-hud",
@@ -358,7 +372,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "16-gitpulse",
@@ -382,7 +397,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "17-regexforge",
@@ -406,7 +422,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "18-svgoptim",
@@ -430,7 +447,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "media"
     },
     {
         "id": "19-fontinspect",
@@ -454,7 +472,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "media"
     },
     {
         "id": "20-presentercam",
@@ -478,7 +497,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "social"
     },
     {
         "id": "21-cleandesk-pro",
@@ -502,7 +522,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "22-screenruler",
@@ -526,7 +547,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "media"
     },
     {
         "id": "23-apphop",
@@ -550,7 +572,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "24-scratchpad-hud",
@@ -574,7 +597,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "25-timebridge",
@@ -598,7 +622,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "26-menucleaner",
@@ -622,7 +647,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "27-metascrub",
@@ -646,7 +672,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "28-bandwidthradar",
@@ -670,7 +697,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "29-bluetoothautohop",
@@ -694,7 +722,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "30-privatellm-bar",
@@ -718,7 +747,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "31-petpals-desktop",
@@ -742,7 +772,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "pets"
     },
     {
         "id": "32-bonsaigrow",
@@ -766,7 +797,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "pets"
     },
     {
         "id": "33-deskfish-aquarium",
@@ -790,7 +822,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "pets"
     },
     {
         "id": "34-pomodorodragon",
@@ -814,7 +847,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "pets"
     },
     {
         "id": "35-codecat",
@@ -838,7 +872,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "pets"
     },
     {
         "id": "36-deepflow-blocker",
@@ -862,7 +897,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "37-zenaudio-ambience",
@@ -886,7 +922,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "38-screendimmer-focus",
@@ -910,7 +947,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "39-breakreminder",
@@ -934,7 +972,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "40-monospace-flow",
@@ -958,7 +997,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "41-habitgrid",
@@ -982,7 +1022,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "42-waterdrop-hud",
@@ -1006,7 +1047,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "43-postureguard",
@@ -1030,7 +1072,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "44-standup-timer",
@@ -1054,7 +1097,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "45-dayplanner-notch",
@@ -1078,7 +1122,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "46-statussync",
@@ -1102,7 +1147,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "social"
     },
     {
         "id": "47-quicktweet-x",
@@ -1126,7 +1172,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "social"
     },
     {
         "id": "48-dminbox-unified",
@@ -1150,7 +1197,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "social"
     },
     {
         "id": "49-streamerbanner",
@@ -1174,7 +1222,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "social"
     },
     {
         "id": "50-emojiforge",
@@ -1198,7 +1247,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "social"
     },
     {
         "id": "51-pdfwhisper-ai",
@@ -1222,7 +1272,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "52-gitcommit-ai",
@@ -1246,7 +1297,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "53-codeexplainer-hud",
@@ -1270,7 +1322,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "54-voicetranscribe-batch",
@@ -1294,7 +1347,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "55-aiwallpaper-generator",
@@ -1318,7 +1372,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "56-jsonmaster-pro",
@@ -1342,7 +1397,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "57-cronvisualizer",
@@ -1366,7 +1422,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "58-dockerquick-hud",
@@ -1390,7 +1447,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "59-hostsmanager",
@@ -1414,7 +1472,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "60-certsentry",
@@ -1438,7 +1497,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "61-keychainquick",
@@ -1462,7 +1522,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "62-curlcraft",
@@ -1486,7 +1547,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "63-sqlitelens",
@@ -1510,7 +1572,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "64-npmoutdated-hud",
@@ -1534,7 +1597,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "65-taillogs",
@@ -1558,7 +1622,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "66-mockupsnap",
@@ -1582,7 +1647,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "media"
     },
     {
         "id": "67-appiconforge",
@@ -1606,7 +1672,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "media"
     },
     {
         "id": "68-lottiepreview",
@@ -1630,7 +1697,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "media"
     },
     {
         "id": "69-aspectratio-calc",
@@ -1654,7 +1722,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "media"
     },
     {
         "id": "70-shadowstudio",
@@ -1678,7 +1747,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "media"
     },
     {
         "id": "71-duplicatefinder",
@@ -1702,7 +1772,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "72-caffeinebar",
@@ -1726,7 +1797,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "73-hiddenfiles-toggle",
@@ -1750,7 +1822,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "74-archiveextractor",
@@ -1774,7 +1847,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "75-clipboarddiff",
@@ -1798,7 +1872,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "76-apppermission-auditor",
@@ -1822,7 +1897,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "77-wifiradar",
@@ -1846,7 +1922,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "78-quickshare-local",
@@ -1870,7 +1947,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "79-audiorecord-hud",
@@ -1894,7 +1972,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "80-memorypurge-pro",
@@ -1918,7 +1997,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "81-pixelhamster-desktop",
@@ -1942,7 +2022,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "pets"
     },
     {
         "id": "82-cybergochi",
@@ -1966,7 +2047,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "pets"
     },
     {
         "id": "83-deskduck",
@@ -1990,7 +2072,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "pets"
     },
     {
         "id": "84-plantnursery-hud",
@@ -2014,7 +2097,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "pets"
     },
     {
         "id": "85-focussloth",
@@ -2038,7 +2122,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "pets"
     },
     {
         "id": "86-zenpanda",
@@ -2062,7 +2147,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "pets"
     },
     {
         "id": "87-codeotter",
@@ -2086,7 +2172,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "pets"
     },
     {
         "id": "88-brainwave-sync",
@@ -2110,7 +2197,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "89-singletask-spotlight",
@@ -2134,7 +2222,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "90-antiprocrastinate-friction",
@@ -2158,7 +2247,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "91-whitenoise-mixer",
@@ -2182,7 +2272,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "92-tablimiter-pro",
@@ -2206,7 +2297,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "93-eyeblink-coach",
@@ -2230,7 +2322,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "94-focusheatmap",
@@ -2254,7 +2347,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "focus"
     },
     {
         "id": "95-morningkickoff-hud",
@@ -2278,7 +2372,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "96-microjournal-bar",
@@ -2302,7 +2397,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "97-sugar-fasting-tracker",
@@ -2326,7 +2422,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "98-sleephygiene-nudge",
@@ -2350,7 +2447,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "99-meetingprep-countdown",
@@ -2374,7 +2472,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "100-stepcounter-sync",
@@ -2398,7 +2497,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "101-caffeinedecay-curve",
@@ -2422,7 +2522,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "routine"
     },
     {
         "id": "102-cliptomarkdown-thread",
@@ -2446,7 +2547,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "social"
     },
     {
         "id": "103-podcastchapter-marker",
@@ -2470,7 +2572,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "social"
     },
     {
         "id": "104-teleprompter-hud",
@@ -2494,7 +2597,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "social"
     },
     {
         "id": "105-quickpoll-creator",
@@ -2518,7 +2622,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "social"
     },
     {
         "id": "106-videothumbnail-tester",
@@ -2542,7 +2647,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "social"
     },
     {
         "id": "107-discordrole-autoping",
@@ -2566,7 +2672,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "social"
     },
     {
         "id": "108-watermarkmaster",
@@ -2590,7 +2697,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "social"
     },
     {
         "id": "109-whispersubtitles-srt",
@@ -2614,7 +2722,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "110-summarizeurl-ai",
@@ -2638,7 +2747,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "111-sqlquery-ai",
@@ -2662,7 +2772,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "112-localembeddings-search",
@@ -2686,7 +2797,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "113-diffexplainer-ai",
@@ -2710,7 +2822,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "114-readaloud-tts",
@@ -2734,7 +2847,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "115-regexgenerator-ai",
@@ -2758,7 +2872,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "ai"
     },
     {
         "id": "116-kubecluster-quick",
@@ -2782,7 +2897,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "117-redislens",
@@ -2806,7 +2922,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "118-gitstash-manager",
@@ -2830,7 +2947,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "119-portforwarder-pro",
@@ -2854,7 +2972,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "120-apimock-server",
@@ -2878,7 +2997,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "121-dotenv-diff",
@@ -2902,7 +3022,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "122-dnslookup-hud",
@@ -2926,7 +3047,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "123-httpheader-inspector",
@@ -2950,7 +3072,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "dev"
     },
     {
         "id": "124-icongrid-overlay",
@@ -2974,7 +3097,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "media"
     },
     {
         "id": "125-contrastpalette-studio",
@@ -2998,7 +3122,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "media"
     },
     {
         "id": "126-gradientmesh-maker",
@@ -3022,7 +3147,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "media"
     },
     {
         "id": "127-diskscleaner-mini",
@@ -3046,7 +3172,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "128-bluetoothsignal-radar",
@@ -3070,7 +3197,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "129-batterycycle-telemetry",
@@ -3094,7 +3222,8 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
-        ]
+        ],
+        "catKey": "system"
     },
     {
         "id": "130-appquarantine-inspector",
@@ -3118,6 +3247,33 @@ const apps = [
             "Global customizable keyboard shortcuts",
             "Liquid glass aesthetic with dark/light mode support",
             "Offline HMAC cryptographic license verification for up to 5 Macs"
+        ],
+        "catKey": "system"
+    },
+    {
+        "id": "131-pathway",
+        "slug": "pathway",
+        "name": "Pathway",
+        "cat": "Utilities & System",
+        "catKey": "system",
+        "price": "$14",
+        "priceNum": 14,
+        "hotkey": "\u2318L",
+        "icon": "assets/icons/131-pathway.png",
+        "desc": "A Windows-style file manager for macOS \u2014 Explorer's workflow, Mac's look.",
+        "pitch": "Pathway brings the fast, keyboard-driven Explorer workflow you know from Windows to native macOS \u2014 dual breadcrumb navigation, instant search, real thumbnail previews, and zero sandbox friction.",
+        "use_cases": [
+            "Navigate any folder on disk with Explorer-style shortcuts \u2014 Backspace to go back, F2 to rename, Delete for Trash.",
+            "Preview images, PDFs and movies with real thumbnails and a Quick Look pane (\u2325\u2318P) without leaving the list.",
+            "Manage drives, network volumes and the Trash from one sidebar with live free-space bars."
+        ],
+        "how_it_works": "Built natively in SwiftUI with no sandbox and no bundled dependencies. Pathway reimplements the Windows Explorer interaction model \u2014 breadcrumb address bar, type-to-search, column-sortable Details view \u2014 on top of native macOS file APIs, so it feels instant and looks right at home on the Mac.",
+        "features": [
+            "Sidebar with Quick Access, This Mac volumes, Trash, Recent and a lazy-loading folder tree",
+            "Explorer keyboard shortcuts: Backspace back, F2 rename, Delete to Trash, F5 refresh, F3 search",
+            "Details / Icons / Tiles views with real thumbnails for images, PDFs and movies",
+            "Quick Look preview pane, multi-level Undo, drag-and-drop with Finder",
+            "Universal binary (Apple Silicon + Intel), Developer ID signed and notarized"
         ]
     }
 ];
@@ -3186,15 +3342,23 @@ function updateCartUI() {
     renderCartItems();
 }
 
+function appIconSrc(app) {
+    return app.icon || `assets/icons/${app.id}.svg`;
+}
+
 function renderApps() {
     const filtered = apps.filter(app => {
-        const matchesCategory = activeCategory === "all" || app.cat === activeCategory || app.id.includes(activeCategory);
-        const matchesSearch = searchTerm === "" || 
+        const matchesCategory = activeCategory === "all" || app.catKey === activeCategory;
+        const matchesSearch = searchTerm === "" ||
             app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             app.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
             app.pitch.toLowerCase().includes(searchTerm.toLowerCase()) ||
             app.cat.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesCategory && matchesSearch;
+    });
+
+    document.querySelectorAll(".pill").forEach(p => {
+        p.classList.toggle("active", p.getAttribute("data-category") === activeCategory);
     });
 
     if (filtered.length === 0) {
@@ -3210,16 +3374,24 @@ function renderApps() {
     appsGrid.innerHTML = filtered.map(app => {
         const inCart = cart.some(item => item.slug === app.slug);
         return `
-            <div class="app-card" data-category="${app.cat}">
+            <div class="app-card" data-cat="${app.catKey}" onclick="openAppDetail('${app.slug}')">
                 <div>
+                    <div class="app-mockup">
+                        <div class="app-mockup-chrome">
+                            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                        </div>
+                        <div class="app-mockup-body">
+                            <img src="${appIconSrc(app)}" alt="${app.name}" class="app-mockup-icon" loading="lazy" onerror="this.src='assets/icons/01-whispertap.svg'"/>
+                            <span class="app-mockup-hotkey">${app.hotkey}</span>
+                        </div>
+                    </div>
+
                     <div class="app-card-top">
-                        <img src="assets/icons/${app.id}.svg" alt="${app.name}" class="app-vector-icon" loading="lazy" onerror="this.src='assets/icons/01-whispertap.svg'"/>
                         <div class="app-meta">
                             <div class="app-title-row">
                                 <h3 class="app-name">${app.name}</h3>
                                 <span class="app-cat-badge">${app.cat}</span>
                             </div>
-                            <div class="app-hotkey">${app.hotkey}</div>
                         </div>
                     </div>
 
@@ -3236,10 +3408,10 @@ function renderApps() {
                         <span class="price-type">one-time</span>
                     </div>
                     <div class="card-actions">
-                        <button class="btn btn-cart btn-sm" onclick="toggleCartItem('${app.slug}')">
+                        <button class="btn btn-cart btn-sm" onclick="event.stopPropagation(); toggleCartItem('${app.slug}')">
                             ${inCart ? '✓ In Cart' : '+ Cart'}
                         </button>
-                        <button class="btn btn-primary btn-sm" onclick="openCheckoutModal('${app.slug}')">
+                        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); openCheckoutModal('${app.slug}')">
                             Buy Now
                         </button>
                     </div>
@@ -3248,6 +3420,52 @@ function renderApps() {
         `;
     }).join("");
 }
+
+// App Detail Modal — full feature breakdown for a single app
+const appDetailModal = document.getElementById("appDetailModal");
+
+window.openAppDetail = function(slug) {
+    const app = apps.find(a => a.slug === slug);
+    if (!app || !appDetailModal) return;
+
+    const inCart = cart.some(item => item.slug === app.slug);
+
+    appDetailModal.querySelector(".detail-mockup-shell").outerHTML = `
+        <div class="detail-mockup-shell app-mockup app-mockup-lg" data-cat="${app.catKey}">
+            <div class="app-mockup-chrome">
+                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                <span class="app-mockup-title">${app.name}.app</span>
+            </div>
+            <div class="app-mockup-body">
+                <img src="${appIconSrc(app)}" alt="${app.name}" class="app-mockup-icon-lg" loading="lazy" onerror="this.src='assets/icons/01-whispertap.svg'"/>
+                <span class="app-mockup-hotkey">${app.hotkey}</span>
+            </div>
+        </div>
+    `;
+
+    document.getElementById("detailCatBadge").textContent = app.cat;
+    document.getElementById("detailAppName").textContent = app.name;
+    document.getElementById("detailPrice").textContent = app.price;
+    document.getElementById("detailDesc").textContent = app.pitch || app.desc;
+    document.getElementById("detailHowItWorks").textContent = app.how_it_works || "";
+    document.getElementById("detailFeaturesList").innerHTML = app.features.map(f => `<li>${f}</li>`).join("");
+    document.getElementById("detailUseCasesList").innerHTML = (app.use_cases || []).map(u => `<li>${u}</li>`).join("");
+
+    const cartBtn = document.getElementById("detailCartBtn");
+    cartBtn.textContent = inCart ? "✓ In Cart" : "+ Add to Cart";
+    cartBtn.onclick = () => { window.toggleCartItem(app.slug); window.openAppDetail(app.slug); };
+
+    document.getElementById("detailBuyBtn").onclick = () => {
+        closeAppDetail();
+        window.openCheckoutModal(app.slug);
+    };
+
+    appDetailModal.classList.remove("hidden");
+};
+
+window.closeAppDetail = function() {
+    appDetailModal.classList.add("hidden");
+};
 
 // Add / Remove from Cart
 window.toggleCartItem = function(slug) {

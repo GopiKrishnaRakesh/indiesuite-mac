@@ -1,0 +1,34 @@
+name: Pathway
+options:
+  bundleIdPrefix: com.gopikrishna
+  deploymentTarget:
+    macOS: "15.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    ENABLE_HARDENED_RUNTIME: NO
+    ENABLE_APP_SANDBOX: NO
+targets:
+  Pathway:
+    type: application
+    platform: macOS
+    sources:
+      - Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.gopikrishna.pathway
+        PRODUCT_NAME: Pathway
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Pathway
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+        INFOPLIST_KEY_NSHumanReadableCopyright: "Copyright © 2026 Gopi Krishna Rakesh Kode"
+        INFOPLIST_KEY_NSDesktopFolderUsageDescription: "Pathway shows the files in your Desktop folder."
+        INFOPLIST_KEY_NSDocumentsFolderUsageDescription: "Pathway shows the files in your Documents folder."
+        INFOPLIST_KEY_NSDownloadsFolderUsageDescription: "Pathway shows the files in your Downloads folder."
+        INFOPLIST_KEY_NSRemovableVolumesUsageDescription: "Pathway shows the files on your external drives."
+        INFOPLIST_KEY_NSNetworkVolumesUsageDescription: "Pathway shows the files on your network volumes."

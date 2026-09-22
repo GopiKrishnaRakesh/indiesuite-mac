@@ -23,6 +23,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.gopikrishna.pathway
         PRODUCT_NAME: Pathway
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: Pathway
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities

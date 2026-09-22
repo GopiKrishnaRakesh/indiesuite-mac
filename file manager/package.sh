@@ -1,6 +1,8 @@
 #!/bin/bash
-# Builds a Developer ID-signed, notarized Release build of Pathway and packages it into
-# dist/Pathway-<version>.dmg. Does its own clean build from scratch -- no need to run build.sh first.
+# Builds a universal (Apple Silicon + Intel), Developer ID-signed, notarized Release build of
+# Pathway and packages it into dist/Pathway-<version>.dmg -- the build meant to hand to someone
+# else, on any Mac. Does its own clean build from scratch -- no need to run build.sh first.
+# (build.sh, by contrast, is the fast local dev loop: unsigned/ad-hoc, this machine's arch only.)
 #
 # Notarization needs credentials stored once, ahead of time, via:
 #   xcrun notarytool store-credentials "pathway-notary" --apple-id <email> --team-id X9LKG9RX5T
@@ -25,9 +27,15 @@ echo "==> Cleaning previous build"
 rm -rf Build/Products "$DIST_DIR"
 mkdir -p "$DIST_DIR"
 
-echo "==> Building Release, signed with: $SIGN_IDENTITY"
+echo "==> Building Release (universal), signed with: $SIGN_IDENTITY"
+# -destination "generic/platform=macOS" matters: with no destination (or an ambiguous concrete "My
+# Mac" one, which is what xcodebuild picks by default), the build silently narrows to just that one
+# destination's own architecture, no matter what ARCHS in project.yml says -- producing an
+# arm64-only binary on this (Apple Silicon) Mac that wouldn't even launch on an Intel Mac. The
+# generic destination is what a real Archive build uses, and is what actually honors ARCHS.
 xcodebuild -project Pathway.xcodeproj -scheme Pathway -configuration Release \
   -derivedDataPath Build \
+  -destination "generic/platform=macOS" \
   CODE_SIGN_STYLE=Manual \
   CODE_SIGN_IDENTITY="$SIGN_IDENTITY" \
   DEVELOPMENT_TEAM="$TEAM_ID" \
@@ -38,6 +46,14 @@ xcodebuild -project Pathway.xcodeproj -scheme Pathway -configuration Release \
 
 APP_PATH="Build/Build/Products/Release/${APP_NAME}.app"
 test -d "$APP_PATH" || { echo "Build failed: $APP_PATH not found"; exit 1; }
+
+echo "==> Verifying architectures"
+ARCH_LIST=$(lipo -info "$APP_PATH/Contents/MacOS/${APP_NAME}" 2>&1)
+echo "$ARCH_LIST"
+if ! echo "$ARCH_LIST" | grep -q "x86_64" || ! echo "$ARCH_LIST" | grep -q "arm64"; then
+    echo "ERROR: build is not a universal (arm64 + x86_64) binary -- it would not run on every Mac." >&2
+    exit 1
+fi
 
 echo "==> Verifying signature"
 codesign --verify --deep --strict --verbose=2 "$APP_PATH"

@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import Carbon
 import DesignSystem
 import AppKitKit
 import Licensing
@@ -9,8 +10,18 @@ class ColorForgeState: ObservableObject {
     @Published var hexValue: String = "#6159FA"
     @Published var rgbValue: String = "rgb(97, 89, 250)"
     @Published var swiftUICode: String = "Color(red: 0.38, green: 0.35, blue: 0.98)"
-    @Published var contrastRatio: Double = 6.84 // Against white
-    
+    @Published var contrastRatio: Double = ColorForgeState.wcagContrastRatio(r: 0.38, g: 0.35, b: 0.98) // Real WCAG ratio against white
+
+    /// Real WCAG 2.x relative-luminance contrast ratio against white (#FFFFFF).
+    static func wcagContrastRatio(r: Double, g: Double, b: Double) -> Double {
+        func linearize(_ c: Double) -> Double {
+            c <= 0.03928 ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4)
+        }
+        let luminance = 0.2126 * linearize(r) + 0.7152 * linearize(g) + 0.0722 * linearize(b)
+        let whiteLuminance = 1.0
+        return (whiteLuminance + 0.05) / (luminance + 0.05)
+    }
+
     @Published var palette: [PaletteColor] = [
         PaletteColor(hex: "#6159FA", name: "Indigo Purple"),
         PaletteColor(hex: "#10B981", name: "Emerald Mint"),
@@ -45,7 +56,8 @@ class ColorForgeState: ObservableObject {
             self.rgbValue = "rgb(\(r), \(g), \(b))"
             self.swiftUICode = String(format: "Color(red: %.2f, green: %.2f, blue: %.2f)", rgb.redComponent, rgb.greenComponent, rgb.blueComponent)
             self.selectedColor = Color(nsColor: rgb)
-            
+            self.contrastRatio = Self.wcagContrastRatio(r: Double(rgb.redComponent), g: Double(rgb.greenComponent), b: Double(rgb.blueComponent))
+
             palette.insert(PaletteColor(hex: self.hexValue, name: "Picked Color"), at: 0)
             if palette.count > 8 { palette.removeLast() }
             
@@ -56,7 +68,7 @@ class ColorForgeState: ObservableObject {
 }
 
 struct ColorForgeView: View {
-    @StateObject private var state = ColorForgeState()
+    @ObservedObject var state: ColorForgeState
     @StateObject private var license = LicenseManager.shared
     
     var body: some View {
@@ -112,14 +124,14 @@ struct ColorForgeView: View {
                     .help("Sample Color Anywhere on Screen")
                 }
                 
-                // WCAG Contrast Badge
+                // WCAG Contrast Badge — computed live from the real picked color
                 HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                        .foregroundColor(.green)
-                    Text("WCAG AAA Compliant")
+                    Image(systemName: state.contrastRatio >= 4.5 ? "checkmark.seal.fill" : "exclamationmark.triangle.fill")
+                        .foregroundColor(state.contrastRatio >= 4.5 ? .green : .orange)
+                    Text(state.contrastRatio >= 7 ? "WCAG AAA" : (state.contrastRatio >= 4.5 ? "WCAG AA" : "Low Contrast"))
                         .font(.system(size: 10, weight: .bold))
                     Spacer()
-                    Text("\(String(format: "%.2f", state.contrastRatio)):1 on Light")
+                    Text("\(String(format: "%.2f", state.contrastRatio)):1 on White")
                         .font(.system(size: 10, design: .monospaced))
                         .foregroundColor(.secondary)
                 }
@@ -250,16 +262,21 @@ extension Color {
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var menuBarController: MenuBarController<ColorForgeView>?
-    
+    let state = ColorForgeState()
+
     func applicationDidFinishLaunching(_ notification: Notification) {
-        let contentView = ColorForgeView()
+        let contentView = ColorForgeView(state: state)
         menuBarController = MenuBarController(
             rootView: contentView,
             systemIconName: "eyedropper.halffull",
-            titleText: "ColorForge",
+            titleText: nil,
             contentWidth: 350,
             contentHeight: 460
         )
+
+        _ = GlobalHotkeyManager.shared.registerHotkey(keyCode: UInt32(kVK_ANSI_C), modifiers: UInt32(cmdKey | shiftKey)) { [weak self] in
+            self?.state.pickScreenColor()
+        }
     }
 }
 

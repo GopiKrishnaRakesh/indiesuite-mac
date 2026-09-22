@@ -1,59 +1,163 @@
 import SwiftUI
 import AppKit
+import ImageIO
+import AVFoundation
+import UniformTypeIdentifiers
 import DesignSystem
 import AppKitKit
 import Licensing
 import AudioVideoCore
 
-class ShrinkMediaState: ObservableObject {
-    @Published var selectedPreset: String = "HEVC High Efficiency (1080p)"
-    @Published var targetFormat: String = "MP4"
-    @Published var qualitySlider: Double = 0.75
-    @Published var isProcessing: Bool = false
-    @Published var totalSavedMB: Double = 342.6
-    
-    @Published var queuedFiles: [MediaQueueItem] = [
-        MediaQueueItem(filename: "product_demo_4k.mov", originalSize: "248.5 MB", compressedSize: "28.2 MB", status: .done, savings: "88%"),
-        MediaQueueItem(filename: "screen_recording_raw.mp4", originalSize: "112.0 MB", compressedSize: "14.1 MB", status: .done, savings: "87%"),
-        MediaQueueItem(filename: "keynote_presentation.mp4", originalSize: "84.2 MB", compressedSize: "Pending", status: .waiting, savings: "--")
-    ]
-    
-    struct MediaQueueItem: Identifiable {
-        let id = UUID()
-        let filename: String
-        let originalSize: String
-        var compressedSize: String
-        var status: ProcessStatus
-        var savings: String
-        
-        enum ProcessStatus {
-            case waiting, processing, done
-        }
+struct MediaQueueItem: Identifiable {
+    let id = UUID()
+    let sourceURL: URL
+    let filename: String
+    let originalBytes: Int64
+    var outputURL: URL?
+    var compressedBytes: Int64?
+    var status: Status
+    var errorMessage: String?
+
+    enum Status { case waiting, processing, done, failed }
+
+    var savingsPercent: Int? {
+        guard let compressedBytes, originalBytes > 0 else { return nil }
+        return Int((1.0 - Double(compressedBytes) / Double(originalBytes)) * 100)
     }
-    
-    func compressAll() {
-        isProcessing = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-            self.isProcessing = false
-            if let idx = self.queuedFiles.firstIndex(where: { $0.status == .waiting }) {
-                self.queuedFiles[idx].compressedSize = "11.8 MB"
-                self.queuedFiles[idx].status = .done
-                self.queuedFiles[idx].savings = "86%"
-                self.totalSavedMB += 72.4
+}
+
+enum MediaShrinker {
+    static let imageTypes: Set<String> = ["jpg", "jpeg", "png", "heic", "tiff", "bmp"]
+
+    static func fileSize(_ url: URL) -> Int64 {
+        (try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int64) ?? 0
+    }
+
+    static func outputURL(for input: URL, suffix: String) -> URL {
+        let base = input.deletingPathExtension().lastPathComponent
+        let ext = input.pathExtension
+        return input.deletingLastPathComponent().appendingPathComponent("\(base)-\(suffix).\(ext)")
+    }
+
+    /// Real lossy re-encode via ImageIO — actually shrinks JPEG/HEIC bytes on disk.
+    static func compressImage(at url: URL, quality: Double, completion: @escaping (Result<URL, Error>) -> Void) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),
+                  let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil),
+                  let type = CGImageSourceGetType(source) else {
+                completion(.failure(NSError(domain: "ShrinkMedia", code: -1, userInfo: [NSLocalizedDescriptionKey: "Could not read image"])))
+                return
+            }
+
+            let dest = outputURL(for: url, suffix: "shrunk")
+            guard let destination = CGImageDestinationCreateWithURL(dest as CFURL, type, 1, nil) else {
+                completion(.failure(NSError(domain: "ShrinkMedia", code: -2, userInfo: [NSLocalizedDescriptionKey: "Could not create output"])))
+                return
+            }
+
+            let props: [CFString: Any] = [kCGImageDestinationLossyCompressionQuality: quality]
+            CGImageDestinationAddImage(destination, cgImage, props as CFDictionary)
+
+            if CGImageDestinationFinalize(destination) {
+                completion(.success(dest))
+            } else {
+                completion(.failure(NSError(domain: "ShrinkMedia", code: -3, userInfo: [NSLocalizedDescriptionKey: "Encode failed"])))
             }
         }
     }
+
+    static func compressVideo(at url: URL, quality: Double, completion: @escaping (Result<URL, Error>) -> Void) {
+        let dest = outputURL(for: url, suffix: "shrunk").deletingPathExtension().appendingPathExtension("mp4")
+        try? FileManager.default.removeItem(at: dest)
+        let preset = quality > 0.66 ? AVAssetExportPresetMediumQuality : AVAssetExportPresetLowQuality
+        VideoCompressor.shared.compressVideo(inputURL: url, outputURL: dest, preset: preset) { result in
+            completion(result)
+        }
+    }
+}
+
+class ShrinkMediaState: ObservableObject {
+    @Published var qualitySlider: Double = 0.6
+    @Published var isProcessing: Bool = false
+    @Published var queuedFiles: [MediaQueueItem] = []
+
+    var totalSavedBytes: Int64 {
+        queuedFiles.reduce(0) { total, item in
+            guard let compressed = item.compressedBytes else { return total }
+            return total + max(0, item.originalBytes - compressed)
+        }
+    }
+
+    func pickFiles() {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = true
+        panel.canChooseDirectories = false
+        panel.allowedContentTypes = [.image, .movie, .mpeg4Movie, .quickTimeMovie]
+        if panel.runModal() == .OK {
+            for url in panel.urls {
+                let item = MediaQueueItem(sourceURL: url, filename: url.lastPathComponent, originalBytes: MediaShrinker.fileSize(url), status: .waiting)
+                queuedFiles.append(item)
+            }
+        }
+    }
+
+    func compressAll() {
+        isProcessing = true
+        let waitingIndices = queuedFiles.indices.filter { queuedFiles[$0].status == .waiting }
+        let group = DispatchGroup()
+
+        for idx in waitingIndices {
+            group.enter()
+            queuedFiles[idx].status = .processing
+            let item = queuedFiles[idx]
+            let ext = item.sourceURL.pathExtension.lowercased()
+
+            let handleResult: (Result<URL, Error>) -> Void = { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let outURL):
+                        self.queuedFiles[idx].outputURL = outURL
+                        self.queuedFiles[idx].compressedBytes = MediaShrinker.fileSize(outURL)
+                        self.queuedFiles[idx].status = .done
+                    case .failure(let error):
+                        self.queuedFiles[idx].status = .failed
+                        self.queuedFiles[idx].errorMessage = error.localizedDescription
+                    }
+                    group.leave()
+                }
+            }
+
+            if MediaShrinker.imageTypes.contains(ext) {
+                MediaShrinker.compressImage(at: item.sourceURL, quality: qualitySlider, completion: handleResult)
+            } else {
+                MediaShrinker.compressVideo(at: item.sourceURL, quality: qualitySlider, completion: handleResult)
+            }
+        }
+
+        group.notify(queue: .main) {
+            self.isProcessing = false
+        }
+    }
+
+    func revealInFinder(_ item: MediaQueueItem) {
+        guard let outputURL = item.outputURL else { return }
+        NSWorkspace.shared.activateFileViewerSelecting([outputURL])
+    }
+}
+
+func formatBytes(_ bytes: Int64) -> String {
+    if bytes > 1_000_000_000 { return String(format: "%.2f GB", Double(bytes) / 1_000_000_000) }
+    if bytes > 1_000_000 { return String(format: "%.1f MB", Double(bytes) / 1_000_000) }
+    if bytes > 1_000 { return String(format: "%.0f KB", Double(bytes) / 1_000) }
+    return "\(bytes) B"
 }
 
 struct ShrinkMediaView: View {
     @StateObject private var state = ShrinkMediaState()
     @StateObject private var license = LicenseManager.shared
-    
-    let presets = ["HEVC High Efficiency (1080p)", "H.264 Universal Compatible", "Animated GIF (Lossless)", "ProRes Proxy", "AV1 Next-Gen"]
-    
+
     var body: some View {
         VStack(spacing: 12) {
-            // Header
             HStack {
                 HStack(spacing: 8) {
                     Image(systemName: "arrow.down.right.and.arrow.up.left.circle.fill")
@@ -62,10 +166,8 @@ struct ShrinkMediaView: View {
                     Text("ShrinkMedia")
                         .font(.system(size: 15, weight: .bold))
                 }
-                
                 Spacer()
-                
-                Text(String(format: "Saved %.1f MB", state.totalSavedMB))
+                Text("Saved \(formatBytes(state.totalSavedBytes))")
                     .font(.system(size: 10, weight: .bold, design: .monospaced))
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
@@ -73,44 +175,35 @@ struct ShrinkMediaView: View {
                     .foregroundColor(.green)
                     .cornerRadius(4)
             }
-            
-            // Drop Zone Area
-            VStack(spacing: 6) {
-                Image(systemName: "square.and.arrow.down.on.square.fill")
-                    .font(.system(size: 28))
-                    .foregroundStyle(DSTheme.roseGradient)
-                
-                Text("Drag & Drop Videos or Images")
-                    .font(.system(size: 12, weight: .bold))
-                
-                Text("Hardware VideoToolbox accelerated • Zero quality loss")
-                    .font(.system(size: 10))
-                    .foregroundColor(.secondary)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
-            .background(Color.primary.opacity(0.02))
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .strokeBorder(style: StrokeStyle(lineWidth: 1.5, dash: [5]))
-                    .foregroundColor(Color.primary.opacity(0.15))
-            )
-            .cornerRadius(10)
-            
-            // Compression Settings Card
-            VStack(spacing: 8) {
-                Picker("Preset", selection: $state.selectedPreset) {
-                    ForEach(presets, id: \.self) { preset in
-                        Text(preset).tag(preset)
-                    }
+
+            Button(action: { state.pickFiles() }) {
+                VStack(spacing: 6) {
+                    Image(systemName: "square.and.arrow.down.on.square.fill")
+                        .font(.system(size: 28))
+                        .foregroundStyle(DSTheme.roseGradient)
+                    Text("Choose Images or Videos to Shrink")
+                        .font(.system(size: 12, weight: .bold))
+                    Text("Real ImageIO / AVFoundation re-encode • saved next to original")
+                        .font(.system(size: 10))
+                        .foregroundColor(.secondary)
                 }
-                .pickerStyle(.menu)
-                .font(.system(size: 11))
-                
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(Color.primary.opacity(0.02))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .strokeBorder(style: StrokeStyle(lineWidth: 1.5, dash: [5]))
+                        .foregroundColor(Color.primary.opacity(0.15))
+                )
+                .cornerRadius(10)
+            }
+            .buttonStyle(.plain)
+
+            VStack(spacing: 8) {
                 HStack {
-                    Text("Quality Ratio")
+                    Text("Quality / Size Tradeoff")
                         .font(.system(size: 11))
-                    Slider(value: $state.qualitySlider, in: 0.3...1.0)
+                    Slider(value: $state.qualitySlider, in: 0.2...0.95)
                     Text("\(Int(state.qualitySlider * 100))%")
                         .font(.system(size: 11, weight: .bold, design: .monospaced))
                         .frame(width: 38)
@@ -118,15 +211,14 @@ struct ShrinkMediaView: View {
             }
             .padding(10)
             .glassCard(cornerRadius: 10)
-            
-            // Queue List
+
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
-                    Text("Batch Queue")
+                    Text("Batch Queue (\(state.queuedFiles.count))")
                         .font(.system(size: 11, weight: .bold))
                         .foregroundColor(.secondary)
                     Spacer()
-                    Button("Compress All") {
+                    Button(state.isProcessing ? "Compressing..." : "Compress All") {
                         state.compressAll()
                     }
                     .buttonStyle(.plain)
@@ -136,31 +228,39 @@ struct ShrinkMediaView: View {
                     .padding(.vertical, 3)
                     .background(DSTheme.roseGradient)
                     .cornerRadius(4)
+                    .disabled(state.isProcessing || state.queuedFiles.allSatisfy { $0.status != .waiting })
                 }
-                
+
                 ScrollView {
                     VStack(spacing: 4) {
                         ForEach(state.queuedFiles) { item in
-                            HStack {
-                                Image(systemName: item.filename.hasSuffix(".gif") ? "photo.stack" : "film")
-                                    .font(.system(size: 11))
-                                    .foregroundColor(.secondary)
-                                
-                                VStack(alignment: .leading, spacing: 1) {
-                                    Text(item.filename)
-                                        .font(.system(size: 11, weight: .semibold))
-                                        .lineLimit(1)
-                                    Text("\(item.originalSize) → \(item.compressedSize)")
-                                        .font(.system(size: 9, design: .monospaced))
+                            Button(action: { state.revealInFinder(item) }) {
+                                HStack {
+                                    Image(systemName: MediaShrinker.imageTypes.contains(item.sourceURL.pathExtension.lowercased()) ? "photo" : "film")
+                                        .font(.system(size: 11))
                                         .foregroundColor(.secondary)
+
+                                    VStack(alignment: .leading, spacing: 1) {
+                                        Text(item.filename)
+                                            .font(.system(size: 11, weight: .semibold))
+                                            .lineLimit(1)
+                                        Text("\(formatBytes(item.originalBytes)) → \(item.compressedBytes.map(formatBytes) ?? (item.status == .failed ? (item.errorMessage ?? "Failed") : "Pending"))")
+                                            .font(.system(size: 9, design: .monospaced))
+                                            .foregroundColor(.secondary)
+                                    }
+
+                                    Spacer()
+
+                                    if let pct = item.savingsPercent {
+                                        Text("\(pct)%")
+                                            .font(.system(size: 10, weight: .bold, design: .monospaced))
+                                            .foregroundColor(.green)
+                                    } else if item.status == .processing {
+                                        ProgressView().scaleEffect(0.5)
+                                    }
                                 }
-                                
-                                Spacer()
-                                
-                                Text(item.savings)
-                                    .font(.system(size: 10, weight: .bold, design: .monospaced))
-                                    .foregroundColor(item.status == .done ? .green : .secondary)
                             }
+                            .buttonStyle(.plain)
                             .padding(6)
                             .background(Color.primary.opacity(0.03))
                             .cornerRadius(6)
@@ -169,39 +269,34 @@ struct ShrinkMediaView: View {
                 }
                 .frame(maxHeight: 120)
             }
-            
-            // Footer
+
             HStack {
-                Text("Apple Silicon HW Acceleration Active")
+                Text("Click a finished row to reveal it in Finder")
                     .font(.system(size: 10))
                     .foregroundColor(.secondary)
-                
                 Spacer()
-                
-                Button("Quit") {
-                    NSApp.terminate(nil)
-                }
-                .buttonStyle(.plain)
-                .font(.system(size: 10))
-                .foregroundColor(.secondary)
+                Button("Quit") { NSApp.terminate(nil) }
+                    .buttonStyle(.plain)
+                    .font(.system(size: 10))
+                    .foregroundColor(.secondary)
             }
         }
         .padding(14)
-        .frame(width: 350, height: 480)
+        .frame(width: 360, height: 500)
     }
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var menuBarController: MenuBarController<ShrinkMediaView>?
-    
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         let contentView = ShrinkMediaView()
         menuBarController = MenuBarController(
             rootView: contentView,
             systemIconName: "arrow.down.right.and.arrow.up.left.circle",
-            titleText: "ShrinkMedia",
-            contentWidth: 350,
-            contentHeight: 480
+            titleText: nil,
+            contentWidth: 360,
+            contentHeight: 500
         )
     }
 }

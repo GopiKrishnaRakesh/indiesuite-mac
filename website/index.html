@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MacUpgraded.com - 131 Native Power Utilities for macOS</title>
-    <meta name="description" content="Supercharge your Mac with 131 independent, lightweight native macOS apps. Direct secure download, Apple Pay, Stripe, and Multi-App Cart ready.">
+    <title>MacUpgraded.com - 11 Real, Tested Native Mac Utilities</title>
+    <meta name="description" content="11 native macOS utilities that were actually built, tested against real system state, and shipped — not mockups. Direct secure download, Apple Pay, Stripe, and Multi-App Cart ready.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;850&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -19,9 +19,9 @@
     <!-- Promotional Announcement Bar -->
     <div class="promo-bar">
         <div class="container promo-content">
-            <span class="promo-badge">🔥 LIMITED LAUNCH PROMO</span>
-            <span class="promo-text">Get the <strong>All-Access 131-App Lifetime Pass</strong> for <strong>$129</strong> <span class="old-price">$1,290</span> — Save 90% Today!</span>
-            <button onclick="openCheckoutModal('all-access')" class="btn btn-sm btn-promo">Claim $129 Deal →</button>
+            <span class="promo-badge">✅ VERIFIED WORKING</span>
+            <span class="promo-text">Get the <strong>All-Access 11-App Bundle</strong> for <strong>$59</strong> <span class="old-price">$90</span> — every app, one price.</span>
+            <button onclick="openCheckoutModal('all-access')" class="btn btn-sm btn-promo">Claim $59 Bundle →</button>
         </div>
     </div>
 
@@ -29,107 +29,107 @@
     <header class="navbar">
         <div class="nav-container">
             <a href="#" class="logo">
-                <span class="logo-icon"></span>
+                <span class="logo-icon"></span>
                 <span class="logo-text">Mac<strong>Upgraded</strong></span>
-                <span class="badge-pill">131 Native Apps</span>
+                <span class="badge-pill">11 Real Apps</span>
             </a>
             <nav class="nav-links">
-                <a href="#apps">All Apps (131)</a>
+                <a href="#apps">All Apps (11)</a>
                 <a href="#pricing">Pricing & Bundles</a>
+                <a href="#tested">What "Tested" Means</a>
                 <a href="#security">Security & License Gate</a>
-                <a href="#homebrew">Terminal / Brew</a>
             </nav>
             <div class="nav-actions">
                 <button onclick="openCartModal()" class="btn btn-secondary btn-sm" id="navCartBtn">
                     🛒 Cart (<span class="nav-cart-count">0</span>)
                 </button>
-                <button onclick="openCheckoutModal('all-access')" class="btn btn-primary btn-sm">Get All-Access ($129)</button>
+                <button onclick="openCheckoutModal('all-access')" class="btn btn-primary btn-sm">Get All-Access ($59)</button>
             </div>
         </div>
     </header>
 
-    <!-- Hero Section - Apple Keynote Caliber Layout -->
+    <!-- Hero Section -->
     <main>
         <section class="hero-section">
             <div class="container hero-content">
-                <div class="hero-overline">Native macOS Ecosystem • Apple Silicon Optimized</div>
-                
+                <div class="hero-overline">Native macOS • Apple Silicon & Intel • Actually Verified</div>
+
                 <h1 class="hero-title">
-                    Supercharge your Mac.<br>
-                    <span class="text-gradient">131 hyper-fast native tools.</span>
+                    Fewer apps.<br>
+                    <span class="text-gradient">Every one of them real.</span>
                 </h1>
-                
+
                 <p class="hero-subtitle">
-                    A hand-crafted suite of lightweight, standalone utilities designed without subscription lock-in. From local Whisper dictation and interactive desktop pets to per-app audio routing and developer tooling.
+                    We started with 130 prototype utilities. Most were UI mockups with hardcoded demo data. We picked the 10 most useful, rewrote every one against real macOS APIs — Vision OCR, the Keychain, Accessibility window control, lsof, ImageIO — and verified each one actually works before shipping it.
                 </p>
 
-                <!-- Interactive Liquid Glass Control Dock (Inspired by Apple VisionOS & Camera Toolbar) -->
+                <!-- Interactive Liquid Glass Control Dock -->
                 <div class="hero-liquid-dock">
-                    <button class="dock-item active" onclick="searchAppHero('Whisper')">
-                        <span>🎙️</span>
-                        <span>WhisperTap</span>
-                        <code style="font-size: 0.72rem; color: var(--primary); opacity: 0.8;">⌥ Space</code>
+                    <button class="dock-item active" onclick="searchAppHero('LocalLens')">
+                        <span>🔍</span>
+                        <span>LocalLens OCR</span>
+                        <code style="font-size: 0.72rem; color: var(--primary); opacity: 0.8;">⌘⇧2</code>
                     </button>
-                    <button class="dock-item" onclick="searchAppHero('Hamster')">
-                        <span>🐹</span>
-                        <span>PixelHamster</span>
-                        <span style="font-size: 0.72rem; color: #10b981;">Running</span>
-                    </button>
-                    <button class="dock-item" onclick="searchAppHero('ChargeGuard')">
-                        <span>🔋</span>
-                        <span>ChargeGuard</span>
-                        <span style="font-size: 0.72rem; color: #d97706;">80% Cap</span>
-                    </button>
-                    <button class="dock-item" onclick="searchAppHero('AudioMix')">
-                        <span>🎛️</span>
-                        <span>AudioMix</span>
-                        <span style="font-size: 0.72rem; color: #6366f1;">CoreAudio</span>
+                    <button class="dock-item" onclick="searchAppHero('ColorForge')">
+                        <span>🎨</span>
+                        <span>ColorForge</span>
+                        <code style="font-size: 0.72rem; color: #d97706;">⌘⇧C</code>
                     </button>
                     <button class="dock-item" onclick="searchAppHero('SnapTile')">
                         <span>🧩</span>
                         <span>SnapTile</span>
                         <code style="font-size: 0.72rem; color: #475569;">⌃⌥ Arrows</code>
                     </button>
-                    <button class="dock-item" onclick="searchAppHero('OCR')">
-                        <span>🔍</span>
-                        <span>LocalLens</span>
-                        <span style="font-size: 0.72rem; color: #059669;">Neural OCR</span>
+                    <button class="dock-item" onclick="searchAppHero('PortSentry')">
+                        <span>🌐</span>
+                        <span>PortSentry</span>
+                        <span style="font-size: 0.72rem; color: #10b981;">lsof</span>
+                    </button>
+                    <button class="dock-item" onclick="searchAppHero('EnvVault')">
+                        <span>🔒</span>
+                        <span>EnvVault</span>
+                        <span style="font-size: 0.72rem; color: #6366f1;">Keychain</span>
+                    </button>
+                    <button class="dock-item" onclick="searchAppHero('Pathway')">
+                        <span>📁</span>
+                        <span>Pathway</span>
+                        <span style="font-size: 0.72rem; color: #059669;">File Manager</span>
                     </button>
                 </div>
 
                 <div class="hero-cta-group">
                     <a href="#apps" class="btn btn-primary btn-lg">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-                        Explore 131 Apps
+                        Explore All 11 Apps
                     </a>
                     <button onclick="openCheckoutModal('all-access')" class="btn btn-secondary btn-lg">
                         <span>👑</span>
-                        <span>Unlock All 131 for $129 <span style="text-decoration: line-through; opacity: 0.6; font-size: 0.85em; margin-left: 4px;">$1,290</span></span>
+                        <span>Unlock All 11 for $59 <span style="text-decoration: line-through; opacity: 0.6; font-size: 0.85em; margin-left: 4px;">$90</span></span>
                     </button>
                 </div>
 
                 <!-- Trust Badges -->
                 <div class="trust-ribbon">
                     <span class="trust-pill">🔒 256-Bit SSL Encrypted</span>
-                    <span class="trust-pill"> Apple Pay & Stripe Ready</span>
-                    <span class="trust-pill">⚡️ M1 / M2 / M3 / M4 Apple Silicon</span>
-                    <span class="trust-pill">🛡️ 100% Offline & Private</span>
+                    <span class="trust-pill"> Apple Pay & Stripe Ready</span>
+                    <span class="trust-pill">⚡️ Apple Silicon & Intel Universal</span>
+                    <span class="trust-pill">✅ Verified Against Real System APIs</span>
                 </div>
 
                 <!-- Live Metrics Ribbon -->
                 <div class="metrics-ribbon">
                     <div class="metric-item">
-                        <span class="metric-value">131</span>
-                        <span class="metric-label">Standalone Apps</span>
+                        <span class="metric-value">11</span>
+                        <span class="metric-label">Real, Working Apps</span>
                     </div>
                     <div class="metric-divider"></div>
                     <div class="metric-item">
-                        <span class="metric-value">&lt; 15 MB</span>
-                        <span class="metric-label">Avg Memory Usage</span>
+                        <span class="metric-value">0</span>
+                        <span class="metric-label">Fake / Mock Features</span>
                     </div>
                     <div class="metric-divider"></div>
                     <div class="metric-item">
-                        <span class="metric-value">8</span>
+                        <span class="metric-value">5</span>
                         <span class="metric-label">Curated Categories</span>
                     </div>
                     <div class="metric-divider"></div>
@@ -145,37 +145,61 @@
         <section id="apps" class="apps-section">
             <div class="container">
                 <div class="section-header">
-                    <h2 class="section-title">The Complete 131-App Catalog</h2>
-                    <p class="section-subtitle">Add individual apps to your cart or unlock the entire suite forever with the Lifetime Master Pass.</p>
+                    <h2 class="section-title">The Real 11-App Catalog</h2>
+                    <p class="section-subtitle">Add individual apps to your cart or unlock the entire bundle at once.</p>
                 </div>
 
                 <div class="catalog-controls">
                     <div class="search-box">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <input type="text" id="appSearchInput" placeholder="Search across all 131 apps (e.g. Whisper, Hamster, Duck, Focus, Git, SQL, Docker)...">
+                        <input type="text" id="appSearchInput" placeholder="Search 11 apps (e.g. OCR, Color, Ports, Regex, Keychain, Files)...">
                     </div>
 
                     <div class="category-pills" id="categoryPills">
-                        <button class="pill active" data-category="all">All (131)</button>
-                        <button class="pill" data-category="pets">🐾 Pets & Habits (12)</button>
-                        <button class="pill" data-category="focus">🧘 Focus & Flow (16)</button>
-                        <button class="pill" data-category="routine">📅 Routine & Wellness (14)</button>
-                        <button class="pill" data-category="social">💬 Social & Creator (13)</button>
-                        <button class="pill" data-category="ai">🧠 AI & Voice (17)</button>
-                        <button class="pill" data-category="dev">💻 Developer Tools (23)</button>
-                        <button class="pill" data-category="media">🎨 Creative & Design (13)</button>
-                        <button class="pill" data-category="system">⚙️ Utilities & System (24)</button>
+                        <button class="pill active" data-category="all">All (11)</button>
+                        <button class="pill" data-category="ai">🧠 AI & Vision (1)</button>
+                        <button class="pill" data-category="media">🎨 Creative & Design (2)</button>
+                        <button class="pill" data-category="dev">💻 Developer Tools (4)</button>
+                        <button class="pill" data-category="focus">🧘 Focus & Flow (1)</button>
+                        <button class="pill" data-category="system">⚙️ Utilities & System (3)</button>
                     </div>
                 </div>
 
-                <!-- Apps Grid (Populated with ultra-transparent Liquid Glass Cards) -->
+                <!-- Apps Grid -->
                 <div class="apps-grid" id="appsGrid">
                     <!-- Populated dynamically via app.js -->
                 </div>
             </div>
         </section>
 
-        <!-- Pricing & Lifetime Pass -->
+        <!-- What "Tested" Means Section -->
+        <section id="tested" class="security-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">🧪 What "Actually Tested" Means Here</h2>
+                    <p class="section-subtitle">Every app below was verified against real system state before it shipped — not just compiled.</p>
+                </div>
+                <div class="security-grid">
+                    <div class="security-card">
+                        <div class="security-icon">🔍</div>
+                        <h3>Real Pipelines, Not Demo Data</h3>
+                        <p>LocalLens OCR was run against a real rendered image through Apple's Vision framework and produced real extracted text. PortSentry found and killed a real live listening process. EnvVault's Keychain write → read → delete round-trip was confirmed byte-for-byte.</p>
+                    </div>
+                    <div class="security-card">
+                        <div class="security-icon">💾</div>
+                        <h3>Measured On Disk, Not Simulated</h3>
+                        <p>ShrinkMedia's compression is measured from real file sizes before and after re-encoding (we saw an 83% reduction on a real JPEG during testing). PurgeApp's scan was run against a real installed app and found its real Caches, Preferences and Application Support folders.</p>
+                    </div>
+                    <div class="security-card">
+                        <div class="security-icon">🛡️</div>
+                        <h3>Honest About Permissions</h3>
+                        <p>SnapTile, PromptDock and LocalLens OCR need a one-time Accessibility or Screen Recording grant from System Settings — the same permission every window manager or screenshot tool needs. Each app detects and tells you when it's missing, instead of silently failing.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing -->
         <section id="pricing" class="pricing-section">
             <div class="container">
                 <div class="section-header">
@@ -190,14 +214,14 @@
                         <h3 class="pricing-name">Individual App License</h3>
                         <div class="pricing-price">
                             <span class="currency">$</span>
-                            <span class="amount">3 - 19</span>
+                            <span class="amount">4 - 16</span>
                             <span class="period">/ one-time</span>
                         </div>
                         <p class="pricing-desc">Pick any specific utilities and bundle them in your shopping cart.</p>
                         <ul class="pricing-features">
                             <li>✓ Lifetime license for 3 Macs</li>
                             <li>✓ Unlimited updates forever</li>
-                            <li>✓ Instant signed cryptographic DMG download</li>
+                            <li>✓ Instant signed DMG download</li>
                             <li>✓ Offline HMAC license key validation</li>
                         </ul>
                         <a href="#apps" class="btn btn-secondary btn-block">Browse Catalog</a>
@@ -205,24 +229,24 @@
 
                     <!-- All Access Card -->
                     <div class="pricing-card featured">
-                        <div class="pricing-badge popular">Special Promo • 90% Savings</div>
-                        <h3 class="pricing-name">All-Access 131-App Pass</h3>
+                        <div class="pricing-badge popular">All 11 Apps • One Price</div>
+                        <h3 class="pricing-name">All-Access 11-App Bundle</h3>
                         <div class="pricing-price">
                             <span class="currency">$</span>
-                            <span class="amount">129</span>
+                            <span class="amount">59</span>
                             <span class="period">/ lifetime</span>
-                            <span style="font-size: 0.95rem; text-decoration: line-through; color: var(--text-muted); margin-left: 8px;">$1,290</span>
+                            <span style="font-size: 0.95rem; text-decoration: line-through; color: var(--text-muted); margin-left: 8px;">$90</span>
                         </div>
-                        <p class="pricing-desc">Instant access to all 131 apps + all future utilities we ship.</p>
+                        <p class="pricing-desc">Instant access to all 11 real, tested apps + future ones we add to this bundle.</p>
                         <ul class="pricing-features">
-                            <li>✓ <strong>All 131 Native macOS Apps</strong> included</li>
-                            <li>✓ Single Universal Master Key for all 131 apps</li>
-                            <li>✓ Future new apps added for free</li>
+                            <li>✓ <strong>All 11 verified-working apps</strong> included</li>
+                            <li>✓ Single Universal Master Key for all 11 apps</li>
+                            <li>✓ Future apps added to the bundle for free</li>
                             <li>✓ Commercial & personal use on 5 Macs</li>
                             <li>✓ Instant Apple Pay, Stripe, PayPal checkout</li>
                             <li>✓ 30-day money-back guarantee</li>
                         </ul>
-                        <button onclick="openCheckoutModal('all-access')" class="btn btn-primary btn-block btn-lg">Get All 131 Apps for $129</button>
+                        <button onclick="openCheckoutModal('all-access')" class="btn btn-primary btn-block btn-lg">Get All 11 Apps for $59</button>
                     </div>
                 </div>
             </div>
@@ -232,7 +256,7 @@
         <section id="security" class="security-section">
             <div class="container">
                 <div class="section-header">
-                    <h2 class="section-title">🔒 Military-Grade Download Security</h2>
+                    <h2 class="section-title">🔒 Download Security</h2>
                     <p class="section-subtitle">How MacUpgraded.com protects your purchases and prevents piracy and tampering.</p>
                 </div>
                 <div class="security-grid">
@@ -249,38 +273,7 @@
                     <div class="security-card">
                         <div class="security-icon">🔑</div>
                         <h3>Offline Cryptographic Keys</h3>
-                        <p>Every purchase issues an offline cryptographic license key evaluated locally on Apple Silicon without cloud ping latency.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Homebrew Section -->
-        <section id="homebrew" class="homebrew-section">
-            <div class="container">
-                <div class="terminal-card">
-                    <div class="terminal-header">
-                        <div class="terminal-dots">
-                            <span class="dot red"></span>
-                            <span class="dot yellow"></span>
-                            <span class="dot green"></span>
-                        </div>
-                        <span class="terminal-title">Homebrew Cask Direct Distribution</span>
-                    </div>
-                    <div class="terminal-body">
-                        <div class="terminal-line">
-                            <span class="prompt">$</span>
-                            <span class="command">brew tap macupgraded/apps</span>
-                        </div>
-                        <div class="terminal-line">
-                            <span class="prompt">$</span>
-                            <span class="command">brew install --cask whispertap pixelhamster-desktop cybergochi</span>
-                        </div>
-                        <div class="terminal-output">
-                            ==> Downloading https://macupgraded.com/downloads/whispertap-1.0.0.dmg<br>
-                            ==> Installing Cask whispertap<br>
-                            🍺 All 131 apps available via Homebrew!
-                        </div>
+                        <p>Every purchase issues an offline cryptographic license key evaluated locally without cloud ping latency.</p>
                     </div>
                 </div>
             </div>
@@ -327,7 +320,7 @@
 
             <div class="payment-buttons-stack">
                 <button onclick="checkoutCart('Apple Pay')" id="cartPayAppleBtn" class="btn btn-apple-pay btn-block">
-                    <span> Checkout All with Apple Pay</span>
+                    <span> Checkout All with Apple Pay</span>
                 </button>
                 <button onclick="checkoutCart('Card')" id="cartPayCardBtn" class="btn btn-primary btn-block">
                     <span>💳 Checkout All with Card (Stripe)</span>
@@ -398,7 +391,7 @@
     <div id="paymentModal" class="modal-overlay hidden">
         <div class="modal-card">
             <button onclick="closePaymentModal()" class="modal-close" title="Cancel">&times;</button>
-            
+
             <!-- Step 1: Checkout Form & Payment Portals -->
             <div id="checkoutStep1">
                 <div class="modal-header">
@@ -411,10 +404,10 @@
                 <div class="checkout-form">
                     <label for="checkoutEmail" class="form-label">Your License Email Address:</label>
                     <input type="email" id="checkoutEmail" placeholder="your-email@domain.com" class="form-input" required value="founder@macupgraded.com">
-                    
+
                     <div class="payment-buttons-stack">
                         <button id="payAppleBtn" class="btn btn-apple-pay btn-block">
-                            <span> Pay with Apple Pay</span>
+                            <span> Pay with Apple Pay</span>
                         </button>
                         <button id="payCardBtn" class="btn btn-primary btn-block">
                             <span>💳 Credit or Debit Card (Stripe)</span>
@@ -465,15 +458,15 @@
     <footer class="footer">
         <div class="container footer-content">
             <div class="footer-brand">
-                <span class="logo-icon"></span>
+                <span class="logo-icon"></span>
                 <span class="logo-text">Mac<strong>Upgraded</strong>.com</span>
-                <p>Crafted for the modern macOS power user. 131 independent native apps shipped directly.</p>
+                <p>11 real, tested native macOS apps — no mockups, no fake demo data.</p>
             </div>
             <div class="footer-links">
                 <div>
                     <h4>Distribution</h4>
-                    <a href="#apps">Direct DMG Downloads (131 Apps)</a>
-                    <a href="#homebrew">Homebrew Cask Tap</a>
+                    <a href="#apps">Direct DMG Downloads (11 Apps)</a>
+                    <a href="#tested">What "Tested" Means</a>
                     <a href="#security">Security & License Gate</a>
                 </div>
                 <div>

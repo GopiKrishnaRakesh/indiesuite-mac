@@ -13,6 +13,12 @@ settings:
     CODE_SIGN_IDENTITY: "-"
     ENABLE_HARDENED_RUNTIME: NO
     ENABLE_APP_SANDBOX: NO
+    # Universal binary -- without this, a build on this (Apple Silicon) Mac only contains an arm64
+    # slice and won't even launch on an Intel Mac. ONLY_ACTIVE_ARCH: NO is what actually makes a
+    # local `xcodebuild build` emit both slices; without it, Xcode still only builds the arch of the
+    # machine doing the building regardless of what ARCHS lists.
+    ARCHS: "$(ARCHS_STANDARD)"
+    ONLY_ACTIVE_ARCH: NO
 targets:
   Pathway:
     type: application

@@ -97,40 +97,52 @@ struct IconGridView: View {
 
     private var cellWidth: CGFloat { model.viewMode == .tiles ? 250 : max(model.iconSize + 36, 84) }
 
+    // Broken up into small, explicitly-typed pieces (rather than one deeply nested expression) —
+    // CI's slower runner hit "unable to type-check this expression in reasonable time" on the
+    // original single-expression body; each boundary below gives the type checker an early exit.
     var body: some View {
         GeometryReader { proxy in
             ScrollViewReader { reader in
                 ScrollView {
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: cellWidth), spacing: 6, alignment: .top)], spacing: 6) {
-                        ForEach(model.displayItems) { item in
-                            GridCell(item: item, model: model)
-                                .id(item.id)
-                                .draggable(item.url)
-                                .contextMenu { ItemContextMenu(model: model, ids: model.selection.contains(item.id) ? model.selection : [item.id]) }
-                        }
-                    }
-                    .padding(12)
-                    .frame(maxWidth: .infinity, minHeight: proxy.size.height - 24, alignment: .top)
-                    .background(
-                        Color.clear.contentShape(Rectangle())
-                            .onTapGesture { model.selectNone() }
-                            .contextMenu { ItemContextMenu(model: model, ids: []) }
-                    )
+                    grid(minHeight: proxy.size.height - 24)
                 }
                 .onChange(of: model.scrollTarget) { _, target in
                     if let target { withAnimation(.easeOut(duration: 0.12)) { reader.scrollTo(target) } }
                 }
             }
-            .onChange(of: proxy.size.width, initial: true) { _, width in
-                model.gridColumns = max(1, Int((width - 24 + 6) / (cellWidth + 6)))
-            }
-            .onChange(of: model.viewMode) { _, _ in
-                model.gridColumns = max(1, Int((proxy.size.width - 24 + 6) / (cellWidth + 6)))
-            }
-            .onChange(of: model.iconSize) { _, _ in
-                model.gridColumns = max(1, Int((proxy.size.width - 24 + 6) / (cellWidth + 6)))
+            .onChange(of: proxy.size.width, initial: true) { _, width in updateColumns(width: width) }
+            .onChange(of: model.viewMode) { _, _ in updateColumns(width: proxy.size.width) }
+            .onChange(of: model.iconSize) { _, _ in updateColumns(width: proxy.size.width) }
+        }
+    }
+
+    private func updateColumns(width: CGFloat) {
+        model.gridColumns = max(1, Int((width - 24 + 6) / (cellWidth + 6)))
+    }
+
+    private func grid(minHeight: CGFloat) -> some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: cellWidth), spacing: 6, alignment: .top)], spacing: 6) {
+            ForEach(model.displayItems) { item in
+                gridCell(for: item)
             }
         }
+        .padding(12)
+        .frame(maxWidth: .infinity, minHeight: minHeight, alignment: .top)
+        .background(backgroundTapArea)
+    }
+
+    private func gridCell(for item: FileItem) -> some View {
+        let ids: Set<URL> = model.selection.contains(item.id) ? model.selection : [item.id]
+        return GridCell(item: item, model: model)
+            .id(item.id)
+            .draggable(item.url)
+            .contextMenu { ItemContextMenu(model: model, ids: ids) }
+    }
+
+    private var backgroundTapArea: some View {
+        Color.clear.contentShape(Rectangle())
+            .onTapGesture { model.selectNone() }
+            .contextMenu { ItemContextMenu(model: model, ids: []) }
     }
 }
 

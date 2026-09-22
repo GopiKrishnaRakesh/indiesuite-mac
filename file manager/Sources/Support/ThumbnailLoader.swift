@@ -3,20 +3,25 @@ import QuickLookThumbnailing
 import UniformTypeIdentifiers
 
 /// Real content thumbnails (actual photo/PDF-page previews) for Icon/Tile view, as opposed to
-/// IconCache's generic file-type glyph. Generation runs off the main thread via QLThumbnailGenerator
-/// and results are cached by URL + size bucket so re-layout and scrolling don't regenerate them.
+/// IconCache's generic file-type glyph. `@MainActor` (matching IconCache) so `load`'s NSImage? return
+/// — NSImage isn't Sendable — never has to cross an isolation boundary at the call site; the actual
+/// QLThumbnailGenerator work still happens off the main thread via its own completion handler
+/// (CheckedContinuation is unconditionally Sendable regardless of what it resumes with, so bridging
+/// that handoff back onto the main actor doesn't block on the generation itself). Results are cached
+/// by URL + size bucket so re-layout and scrolling don't regenerate them.
+@MainActor
 enum ThumbnailLoader {
     private static let cache = NSCache<NSString, NSImage>()
 
     /// Only file types that actually have visual content are worth the cost of generating a thumbnail.
-    static func isPreviewable(_ url: URL) -> Bool {
+    nonisolated static func isPreviewable(_ url: URL) -> Bool {
         guard let type = UTType(filenameExtension: url.pathExtension) else { return false }
         return type.conforms(to: .image) || type.conforms(to: .pdf) || type.conforms(to: .movie)
     }
 
     /// Buckets size to the nearest 16pt so dragging the icon-size slider doesn't regenerate on
     /// every frame.
-    static func bucket(_ size: Double) -> Int { max(32, Int((size / 16).rounded()) * 16) }
+    nonisolated static func bucket(_ size: Double) -> Int { max(32, Int((size / 16).rounded()) * 16) }
 
     static func cached(for url: URL, size: Double) -> NSImage? {
         cache.object(forKey: key(url, size))
@@ -30,23 +35,16 @@ enum ThumbnailLoader {
         let k = key(url, size)
         if let hit = cache.object(forKey: k) { return hit }
         let pixels = CGFloat(bucket(size))
-        let scale = await MainActor.run { NSScreen.main?.backingScaleFactor ?? 2 }
+        let scale = NSScreen.main?.backingScaleFactor ?? 2
         let request = QLThumbnailGenerator.Request(
             fileAt: url, size: CGSize(width: pixels, height: pixels), scale: scale, representationTypes: .thumbnail
         )
-        // QLThumbnailGenerator's completion handler genuinely fires on a background thread — unlike
-        // KeyMonitor's case, this is a real cross-thread handoff. NSImage isn't Sendable, so the value
-        // crosses in a small box we own (and thus can freely assert Sendable on) instead.
-        let box = await withCheckedContinuation { (continuation: CheckedContinuation<ImageBox, Never>) in
+        let image = await withCheckedContinuation { (continuation: CheckedContinuation<NSImage?, Never>) in
             QLThumbnailGenerator.shared.generateBestRepresentation(for: request) { representation, _ in
-                continuation.resume(returning: ImageBox(image: representation?.nsImage))
+                continuation.resume(returning: representation?.nsImage)
             }
         }
-        if let image = box.image { cache.setObject(image, forKey: k) }
-        return box.image
-    }
-
-    private struct ImageBox: @unchecked Sendable {
-        let image: NSImage?
+        if let image { cache.setObject(image, forKey: k) }
+        return image
     }
 }

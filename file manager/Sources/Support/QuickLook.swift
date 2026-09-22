@@ -41,12 +41,16 @@ final class QuickLookController: NSObject, QLPreviewPanelDataSource, QLPreviewPa
     }
 
     /// Mirrors the panel's own item back into the file list's selection as the user arrows through
-    /// Quick Look, Finder-style.
+    /// Quick Look, Finder-style. KVO delivers this on an unspecified thread, so `urls` (main-actor
+    /// isolated) can't be touched in the closure itself — only the plain Int comes out of it; the
+    /// actual lookup happens inside the hop to the main actor.
     private func observeIndex(_ panel: QLPreviewPanel) {
         indexObservation = panel.observe(\.currentPreviewItemIndex) { [weak self] panel, _ in
-            guard let self, urls.indices.contains(panel.currentPreviewItemIndex) else { return }
-            let url = urls[panel.currentPreviewItemIndex]
-            Task { @MainActor in self.model?.syncSelectionFromQuickLook(url) }
+            let index = panel.currentPreviewItemIndex
+            Task { @MainActor in
+                guard let self, self.urls.indices.contains(index) else { return }
+                self.model?.syncSelectionFromQuickLook(self.urls[index])
+            }
         }
     }
 

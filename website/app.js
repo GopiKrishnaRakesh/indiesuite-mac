@@ -305,13 +305,13 @@ const apps = [
             "Think out loud at 150+ WPM and get clean, punctuated text instead of a transcript full of filler words.",
             "Record a meeting's mic + system audio together and get an on-device summary afterward."
         ],
-        "how_it_works": "A global Carbon hotkey (⌃⌥D) opens a floating liquid-glass HUD that streams microphone audio into a bundled Core ML Whisper model running on the Neural Engine. A regex/heuristic FillerFilter cleans hesitation sounds and stutters from the transcript, then TextInserter writes the result into the focused app via the Accessibility API. Built, Developer-ID signed with Hardened Runtime, and verified to launch and stay stable during development.",
+        "how_it_works": "A global Carbon hotkey (⌃⌥D) opens a floating liquid-glass HUD that streams microphone audio into a bundled Core ML Whisper model running on the Neural Engine. A regex/heuristic FillerFilter cleans hesitation sounds and stutters from the transcript, then TextInserter writes the result into the focused app via the Accessibility API. Built, Developer ID signed with Hardened Runtime, notarized and stapled by Apple, and verified to launch and stay stable during development.",
         "features": [
             "100% on-device Whisper transcription via WhisperKit — no cloud, no API key, works offline",
             "Real-time filler-word and stutter removal before text is inserted",
             "Global ⌃⌥D hotkey types directly into whatever app is focused",
             "Two-way meeting recording (mic + system audio) with on-device summaries",
-            "Developer ID signed with Hardened Runtime — source on its own GitHub repo"
+            "Developer ID signed, notarized and stapled by Apple — no Gatekeeper warning on launch"
         ]
     }
 ];

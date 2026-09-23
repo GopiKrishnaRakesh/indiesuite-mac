@@ -266,6 +266,7 @@ const apps = [
         "name": "Pathway",
         "cat": "Utilities & System",
         "catKey": "system",
+        "standalone": true,
         "price": "$14",
         "priceNum": 14,
         "hotkey": "\u2318L",
@@ -284,6 +285,33 @@ const apps = [
             "Details / Icons / Tiles views with real thumbnails for images, PDFs and movies",
             "Quick Look preview pane, multi-level Undo, drag-and-drop with Finder",
             "Universal binary (Apple Silicon + Intel), Developer ID signed and notarized"
+        ]
+    },
+    {
+        "id": "132-murmur",
+        "slug": "murmur",
+        "name": "Murmur",
+        "cat": "AI & Voice",
+        "catKey": "ai",
+        "standalone": true,
+        "price": "$24",
+        "priceNum": 24,
+        "hotkey": "⌃⌥D",
+        "icon": "assets/icons/murmur.png",
+        "desc": "A 100% on-device AI voice agent — press ⌃⌥D anywhere and it types clean, filler-stripped text into whatever app is focused.",
+        "pitch": "Murmur runs OpenAI's Whisper (via WhisperKit) directly on the Apple Neural Engine — the Base English model ships inside the app (~147MB) so dictation works instantly, offline, with zero API calls. A real-time filter strips \"um\", \"uh\", stutters and repeated words before the text is inserted.",
+        "use_cases": [
+            "Dictate messages, docs, or code comments straight into Slack, VS Code, Notion, or Mail.",
+            "Think out loud at 150+ WPM and get clean, punctuated text instead of a transcript full of filler words.",
+            "Record a meeting's mic + system audio together and get an on-device summary afterward."
+        ],
+        "how_it_works": "A global Carbon hotkey (⌃⌥D) opens a floating liquid-glass HUD that streams microphone audio into a bundled Core ML Whisper model running on the Neural Engine. A regex/heuristic FillerFilter cleans hesitation sounds and stutters from the transcript, then TextInserter writes the result into the focused app via the Accessibility API. Built, Developer-ID signed with Hardened Runtime, and verified to launch and stay stable during development.",
+        "features": [
+            "100% on-device Whisper transcription via WhisperKit — no cloud, no API key, works offline",
+            "Real-time filler-word and stutter removal before text is inserted",
+            "Global ⌃⌥D hotkey types directly into whatever app is focused",
+            "Two-way meeting recording (mic + system audio) with on-device summaries",
+            "Developer ID signed with Hardened Runtime — source on its own GitHub repo"
         ]
     }
 ];
@@ -356,8 +384,59 @@ function appIconSrc(app) {
     return app.icon || `assets/icons/${app.id}.svg`;
 }
 
+function buildAppCard(app) {
+    const inCart = cart.some(item => item.slug === app.slug);
+    return `
+        <div class="app-card" data-cat="${app.catKey}" onclick="openAppDetail('${app.slug}')">
+            <div>
+                <div class="app-mockup">
+                    <div class="app-mockup-chrome">
+                        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                    </div>
+                    <div class="app-mockup-body">
+                        <img src="${appIconSrc(app)}" alt="${app.name}" class="app-mockup-icon" loading="lazy" onerror="this.src='assets/icons/01-whispertap.svg'"/>
+                        <span class="app-mockup-hotkey">${app.hotkey}</span>
+                    </div>
+                </div>
+
+                <div class="app-card-top">
+                    <div class="app-meta">
+                        <div class="app-title-row">
+                            <h3 class="app-name">${app.name}</h3>
+                            <span class="app-cat-badge">${app.cat}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="app-desc">${app.desc}</p>
+
+                <ul class="app-features">
+                    ${app.features.slice(0, 3).map(f => `<li>${f}</li>`).join("")}
+                </ul>
+            </div>
+
+            <div class="app-card-footer">
+                <div class="app-price-tag">
+                    <span class="price-val">${app.price}</span>
+                    <span class="price-type">one-time</span>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-cart btn-sm" onclick="event.stopPropagation(); toggleCartItem('${app.slug}')">
+                        ${inCart ? '✓ In Cart' : '+ Cart'}
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); openCheckoutModal('${app.slug}')">
+                        Buy Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 function renderApps() {
-    const filtered = apps.filter(app => {
+    const bundleApps = apps.filter(app => !app.standalone);
+
+    const filtered = bundleApps.filter(app => {
         const matchesCategory = activeCategory === "all" || app.catKey === activeCategory;
         const matchesSearch = searchTerm === "" ||
             app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -375,60 +454,20 @@ function renderApps() {
         appsGrid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted);">
                 <h3>No apps match "${searchTerm}"</h3>
-                <p>Try searching for "OCR", "Color", "Shrink", "Port", "Purge", "Snap", "Notch", "Env", "Prompt", "Regex", or "Pathway"</p>
+                <p>Try searching for "OCR", "Color", "Shrink", "Port", "Purge", "Snap", "Notch", "Env", "Prompt", or "Regex"</p>
             </div>
         `;
         return;
     }
 
-    appsGrid.innerHTML = filtered.map(app => {
-        const inCart = cart.some(item => item.slug === app.slug);
-        return `
-            <div class="app-card" data-cat="${app.catKey}" onclick="openAppDetail('${app.slug}')">
-                <div>
-                    <div class="app-mockup">
-                        <div class="app-mockup-chrome">
-                            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-                        </div>
-                        <div class="app-mockup-body">
-                            <img src="${appIconSrc(app)}" alt="${app.name}" class="app-mockup-icon" loading="lazy" onerror="this.src='assets/icons/01-whispertap.svg'"/>
-                            <span class="app-mockup-hotkey">${app.hotkey}</span>
-                        </div>
-                    </div>
+    appsGrid.innerHTML = filtered.map(buildAppCard).join("");
+}
 
-                    <div class="app-card-top">
-                        <div class="app-meta">
-                            <div class="app-title-row">
-                                <h3 class="app-name">${app.name}</h3>
-                                <span class="app-cat-badge">${app.cat}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <p class="app-desc">${app.desc}</p>
-
-                    <ul class="app-features">
-                        ${app.features.slice(0, 3).map(f => `<li>${f}</li>`).join("")}
-                    </ul>
-                </div>
-
-                <div class="app-card-footer">
-                    <div class="app-price-tag">
-                        <span class="price-val">${app.price}</span>
-                        <span class="price-type">one-time</span>
-                    </div>
-                    <div class="card-actions">
-                        <button class="btn btn-cart btn-sm" onclick="event.stopPropagation(); toggleCartItem('${app.slug}')">
-                            ${inCart ? '✓ In Cart' : '+ Cart'}
-                        </button>
-                        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); openCheckoutModal('${app.slug}')">
-                            Buy Now
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join("");
+function renderStandaloneApps() {
+    const standaloneGrid = document.getElementById("standaloneGrid");
+    if (!standaloneGrid) return;
+    const standaloneApps = apps.filter(app => app.standalone);
+    standaloneGrid.innerHTML = standaloneApps.map(buildAppCard).join("");
 }
 
 // App Detail Modal — full feature breakdown for a single app
@@ -555,10 +594,10 @@ window.openCheckoutModal = function(appSlug) {
     if (appSlug === "all-access") {
         currentSelectedApp = {
             slug: "all-access",
-            name: "All-Access 11-App Bundle",
-            price: "$59",
-            priceNum: 59,
-            desc: "Instant lifetime access to all 11 real, tested native macOS applications + Universal Master License Key for up to 5 Macs."
+            name: "All-Access 10-App Bundle",
+            price: "$49",
+            priceNum: 49,
+            desc: "Instant lifetime access to all 10 real, tested native macOS applications + Universal Master License Key for up to 5 Macs. (Pathway and Murmur are sold separately.)"
         };
     } else {
         currentSelectedApp = apps.find(a => a.slug === appSlug);
@@ -722,4 +761,5 @@ window.searchAppHero = function(term) {
 
 // Initialize
 renderApps();
+renderStandaloneApps();
 updateCartUI();

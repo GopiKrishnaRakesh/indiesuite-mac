@@ -1,16 +1,35 @@
 #!/usr/bin/env bash
-# package_top10.sh - Builds, icon-generates, ad-hoc signs, and DMG-packages
-# the 10 apps rebuilt to actually work for real (not the mockup catalog).
+# package_top10.sh - Builds, icon-generates, Developer-ID signs (Hardened
+# Runtime), notarizes, staples, and DMG-packages the 10 apps rebuilt to
+# actually work for real (not the mockup catalog).
+#
+# Notarization needs credentials stored once, ahead of time, e.g.:
+#   xcrun notarytool store-credentials "pathway-notary" --apple-id <email> --team-id X9LKG9RX5T
+# (any profile under the same Apple Developer team works -- this script reuses
+# whichever of NOTARY_PROFILE / its fallback is present). If none is found,
+# this script still produces a signed-but-unnotarized DMG and says so.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
+
+TEAM_ID="X9LKG9RX5T"
+SIGN_IDENTITY="Developer ID Application: Gopi Krishna Rakesh Kode ($TEAM_ID)"
+NOTARY_PROFILE="pathway-notary"
 
 WEBSITE_DOWNLOADS="website/downloads"
 WEBSITE_PROTECTED="website/protected_dmgs"
 WEBSITE_ICONS="website/assets/icons"
 DIST_DIR="dist/top10"
 mkdir -p "$WEBSITE_DOWNLOADS" "$WEBSITE_PROTECTED" "$DIST_DIR"
+
+NOTARY_AVAILABLE="false"
+if xcrun notarytool history --keychain-profile "$NOTARY_PROFILE" >/dev/null 2>&1; then
+  NOTARY_AVAILABLE="true"
+  echo "Notary profile '$NOTARY_PROFILE' found -- will notarize each app."
+else
+  echo "!! Notary profile '$NOTARY_PROFILE' not found/invalid -- apps will be signed but NOT notarized."
+fi
 
 # dir_name:target_name:display_name
 APPS=(
@@ -108,8 +127,11 @@ $( [ "$has_icon" = "true" ] && echo "    <key>CFBundleIconFile</key>
 </plist>
 PLIST
 
-  # Ad-hoc codesign so Gatekeeper doesn't call it "damaged".
-  codesign --force --deep --sign - "$app_bundle" 2>&1 | grep -v "^$" || true
+  # Real Developer ID signature + Hardened Runtime + secure timestamp --
+  # required for notarization (ad-hoc "-" signing can never be notarized).
+  codesign --force --deep --options runtime --timestamp \
+    --sign "$SIGN_IDENTITY" "$app_bundle"
+  codesign --verify --deep --strict --verbose=2 "$app_bundle"
 
   # --- DMG ---
   dmg_name="${app_slug}-1.0.0.dmg"
@@ -117,6 +139,14 @@ PLIST
   rm -f "$dmg_path"
   ln -sf /Applications "${stage}/Applications"
   hdiutil create -volname "$target_name" -srcfolder "$stage" -ov -format UDZO -quiet "$dmg_path"
+  codesign --force --timestamp --sign "$SIGN_IDENTITY" "$dmg_path"
+
+  if [ "$NOTARY_AVAILABLE" = "true" ]; then
+    echo "  -> Notarizing ${dmg_name}..."
+    xcrun notarytool submit "$dmg_path" --keychain-profile "$NOTARY_PROFILE" --wait
+    xcrun stapler staple "$dmg_path"
+    xcrun stapler validate "$dmg_path"
+  fi
 
   cp "$dmg_path" "${WEBSITE_DOWNLOADS}/${dmg_name}"
   cp "$dmg_path" "${WEBSITE_PROTECTED}/${dmg_name}"

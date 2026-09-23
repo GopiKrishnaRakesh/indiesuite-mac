@@ -43,7 +43,7 @@ enum MediaShrinker {
     static func compressImage(at url: URL, quality: Double, completion: @escaping (Result<URL, Error>) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),
-                  let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil),
+                  CGImageSourceGetCount(source) > 0,
                   let type = CGImageSourceGetType(source) else {
                 completion(.failure(NSError(domain: "ShrinkMedia", code: -1, userInfo: [NSLocalizedDescriptionKey: "Could not read image"])))
                 return
@@ -56,7 +56,9 @@ enum MediaShrinker {
             }
 
             let props: [CFString: Any] = [kCGImageDestinationLossyCompressionQuality: quality]
-            CGImageDestinationAddImage(destination, cgImage, props as CFDictionary)
+            // Copy from the source (not a bare CGImage) so EXIF/GPS/color profile survive --
+            // dropping the Orientation tag would turn portrait photos sideways.
+            CGImageDestinationAddImageFromSource(destination, source, 0, props as CFDictionary)
 
             if CGImageDestinationFinalize(destination) {
                 completion(.success(dest))
@@ -70,6 +72,8 @@ enum MediaShrinker {
         let dest = outputURL(for: url, suffix: "shrunk").deletingPathExtension().appendingPathExtension("mp4")
         try? FileManager.default.removeItem(at: dest)
         let preset = quality > 0.66 ? AVAssetExportPresetMediumQuality : AVAssetExportPresetLowQuality
+        // AVAssetExportSession refuses to overwrite, so re-shrinking the same file would fail.
+        try? FileManager.default.removeItem(at: dest)
         VideoCompressor.shared.compressVideo(inputURL: url, outputURL: dest, preset: preset) { result in
             completion(result)
         }
@@ -116,9 +120,18 @@ class ShrinkMediaState: ObservableObject {
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let outURL):
-                        self.queuedFiles[idx].outputURL = outURL
-                        self.queuedFiles[idx].compressedBytes = MediaShrinker.fileSize(outURL)
-                        self.queuedFiles[idx].status = .done
+                        let newBytes = MediaShrinker.fileSize(outURL)
+                        if newBytes >= item.originalBytes {
+                            // Lossless formats (PNG) or already-compressed files can grow on
+                            // re-encode; never leave a bigger "shrunk" copy behind.
+                            try? FileManager.default.removeItem(at: outURL)
+                            self.queuedFiles[idx].status = .failed
+                            self.queuedFiles[idx].errorMessage = "Already optimal — no smaller"
+                        } else {
+                            self.queuedFiles[idx].outputURL = outURL
+                            self.queuedFiles[idx].compressedBytes = newBytes
+                            self.queuedFiles[idx].status = .done
+                        }
                     case .failure(let error):
                         self.queuedFiles[idx].status = .failed
                         self.queuedFiles[idx].errorMessage = error.localizedDescription

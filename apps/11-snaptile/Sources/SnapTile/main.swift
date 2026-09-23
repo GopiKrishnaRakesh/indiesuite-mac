@@ -75,9 +75,11 @@ enum WindowTiler {
         if gap > 0 {
             rect = rect.insetBy(dx: gap / 2, dy: gap / 2)
         }
-        // AX coordinates are top-left origin; NSScreen frames are bottom-left origin. Flip Y.
-        let screenHeight = screen?.frame.height ?? visible.height
-        let flippedY = screenHeight - rect.origin.y - rect.height
+        // AX coordinates are global with a top-left origin at the *primary* display;
+        // NSScreen frames are bottom-left origin. Flip against the primary screen's
+        // height, not the target screen's, or tiling on a secondary display lands wrong.
+        let primaryMaxY = NSScreen.screens.first?.frame.maxY ?? (screen?.frame.maxY ?? visible.maxY)
+        let flippedY = primaryMaxY - rect.maxY
         return CGRect(x: rect.origin.x, y: flippedY, width: rect.width, height: rect.height)
     }
 }

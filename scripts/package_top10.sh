@@ -45,8 +45,12 @@ APPS=(
   "17-regexforge:RegexForge:RegexForge"
 )
 
+# Optional args: only package these app dirs (e.g. `04-portsentry 14-envvault`).
+ONLY=" $* "
+
 for entry in "${APPS[@]}"; do
   IFS=":" read -r dir_name target_name display_name <<< "$entry"
+  if [ -n "$*" ] && [[ "$ONLY" != *" ${dir_name} "* ]]; then continue; fi
   app_slug=$(echo "$dir_name" | sed -E 's/^[0-9]+-//')
   app_dir="apps/${dir_name}"
 

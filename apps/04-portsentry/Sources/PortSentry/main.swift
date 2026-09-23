@@ -18,7 +18,8 @@ enum PortScanner {
     static func scan() -> [ListeningPort] {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/sbin/lsof")
-        process.arguments = ["-iTCP", "-sTCP:LISTEN", "-n", "-P"]
+        // +c 0: full command names (lsof truncates to 9 chars by default, e.g. "ControlCe").
+        process.arguments = ["+c", "0", "-iTCP", "-sTCP:LISTEN", "-n", "-P"]
 
         let pipe = Pipe()
         process.standardOutput = pipe
@@ -40,7 +41,8 @@ enum PortScanner {
         for line in output.split(separator: "\n").dropFirst() {
             let cols = line.split(separator: " ", omittingEmptySubsequences: true).map(String.init)
             guard cols.count >= 9 else { continue }
-            let command = cols[0]
+            // lsof escapes spaces in names as \x20 so the columns stay splittable.
+            let command = cols[0].replacingOccurrences(of: "\\x20", with: " ")
             guard let pid = Int32(cols[1]) else { continue }
             let user = cols[2]
             let name = cols[8] // e.g. *:5432 or 127.0.0.1:3000
@@ -154,7 +156,7 @@ struct PortSentryView: View {
                         }
                         ForEach(filteredPorts) { item in
                             HStack {
-                                Text(":\(item.port)")
+                                Text(verbatim: ":\(item.port)")
                                     .font(.system(size: 12, weight: .bold, design: .monospaced))
                                     .foregroundColor(.primary)
                                     .frame(width: 56, alignment: .leading)
@@ -163,7 +165,7 @@ struct PortSentryView: View {
                                     Text(item.processName)
                                         .font(.system(size: 11, weight: .semibold))
                                         .lineLimit(1)
-                                    Text("PID \(item.pid) • \(item.user)")
+                                    Text(verbatim: "PID \(item.pid) • \(item.user)")
                                         .font(.system(size: 9, design: .monospaced))
                                         .foregroundColor(.secondary)
                                 }

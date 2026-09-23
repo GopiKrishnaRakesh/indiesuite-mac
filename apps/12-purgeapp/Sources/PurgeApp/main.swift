@@ -117,17 +117,27 @@ class PurgeAppState: ObservableObject {
     }
 
     func purgeSelected() {
+        // Trashing a running app's bundle/support files corrupts it mid-session.
+        if let url = selectedAppURL,
+           let bundleID = Bundle(url: url)?.bundleIdentifier,
+           !NSRunningApplication.runningApplications(withBundleIdentifier: bundleID).isEmpty {
+            statusMessage = "Quit \(selectedAppName) first, then purge"
+            return
+        }
+
         let fm = FileManager.default
-        var failed = 0
+        var trashed = Set<UUID>()
         for item in residuals where item.isChecked {
-            do {
-                try fm.trashItem(at: item.url, resultingItemURL: nil)
-            } catch {
-                failed += 1
+            if (try? fm.trashItem(at: item.url, resultingItemURL: nil)) != nil {
+                trashed.insert(item.id)
             }
         }
-        statusMessage = failed == 0 ? "Moved \(residuals.filter { $0.isChecked }.count) items to Trash" : "\(failed) item(s) could not be trashed"
-        residuals.removeAll { $0.isChecked }
+        let failed = residuals.filter { $0.isChecked }.count - trashed.count
+        statusMessage = failed == 0
+            ? "Moved \(trashed.count) item\(trashed.count == 1 ? "" : "s") to Trash"
+            : "Moved \(trashed.count) to Trash, \(failed) could not be trashed"
+        // Only drop rows that actually left disk; failures stay visible.
+        residuals.removeAll { trashed.contains($0.id) }
     }
 }
 

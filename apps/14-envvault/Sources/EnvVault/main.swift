@@ -101,6 +101,11 @@ class EnvVaultState: ObservableObject {
     func addEntry() {
         let key = newKey.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !key.isEmpty, !newValue.isEmpty else { return }
+        // A key with whitespace or "=" can't round-trip through a .env file.
+        guard key.rangeOfCharacter(from: CharacterSet.whitespacesAndNewlines.union(CharacterSet(charactersIn: "="))) == nil else {
+            statusMessage = "Key can't contain spaces or ="
+            return
+        }
         if SecretsVault.write(key: key, value: newValue) {
             statusMessage = "Saved \(key) to Keychain"
             newKey = ""
@@ -114,6 +119,7 @@ class EnvVaultState: ObservableObject {
     func deleteEntry(_ entry: EnvEntry) {
         SecretsVault.delete(entry.key)
         reload()
+        statusMessage = "Deleted \(entry.key)"
     }
 
     func copyValue(_ entry: EnvEntry) {
@@ -123,10 +129,24 @@ class EnvVaultState: ObservableObject {
     }
 
     func copyAllAsEnv() {
-        let formatted = entries.map { "\($0.key)=\($0.value)" }.joined(separator: "\n")
+        let formatted = entries.map { "\($0.key)=\(Self.dotenvQuoted($0.value))" }.joined(separator: "\n")
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(formatted, forType: .string)
-        statusMessage = "Copied .env (\(entries.count) vars)"
+        statusMessage = "Copied .env (\(entries.count) \(entries.count == 1 ? "var" : "vars"))"
+    }
+
+    /// Leaves simple values bare; double-quotes anything a shell or dotenv parser
+    /// would split or reinterpret (spaces, #, quotes, $, backslashes, newlines).
+    static func dotenvQuoted(_ value: String) -> String {
+        let safe = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_-.,:/@+=%"))
+        if !value.isEmpty, value.unicodeScalars.allSatisfy({ safe.contains($0) }) { return value }
+        let escaped = value
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "\"", with: "\\\"")
+            .replacingOccurrences(of: "$", with: "\\$")
+            .replacingOccurrences(of: "`", with: "\\`")
+            .replacingOccurrences(of: "\n", with: "\\n")
+        return "\"\(escaped)\""
     }
 }
 
@@ -181,7 +201,7 @@ struct EnvVaultView: View {
             .glassCard(cornerRadius: 8)
 
             HStack {
-                Text("\(state.entries.count) secrets in macOS Keychain")
+                Text("\(state.entries.count) \(state.entries.count == 1 ? "secret" : "secrets") in macOS Keychain")
                     .font(.system(size: 10, weight: .semibold))
                     .foregroundColor(.secondary)
                 Spacer()

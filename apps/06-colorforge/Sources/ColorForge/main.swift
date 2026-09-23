@@ -48,9 +48,9 @@ class ColorForgeState: ObservableObject {
     
     func updateColor(_ nsColor: NSColor) {
         if let rgb = nsColor.usingColorSpace(.sRGB) {
-            let r = Int(rgb.redComponent * 255)
-            let g = Int(rgb.greenComponent * 255)
-            let b = Int(rgb.blueComponent * 255)
+            let r = Int((min(max(rgb.redComponent, 0), 1) * 255).rounded())
+            let g = Int((min(max(rgb.greenComponent, 0), 1) * 255).rounded())
+            let b = Int((min(max(rgb.blueComponent, 0), 1) * 255).rounded())
             
             self.hexValue = String(format: "#%02X%02X%02X", r, g, b)
             self.rgbValue = "rgb(\(r), \(g), \(b))"

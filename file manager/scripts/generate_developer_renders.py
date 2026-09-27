@@ -1767,20 +1767,862 @@ def generate_social_banner():
 
 </body>
 </html>"""
-    render_html_to_image(html, "social-banner", 1200, 630, 1200, 630)
+# =============================================================
+# 5. INSTAGRAM POST RENDER (Portrait 1080x1350 - 4:5 ratio)
+# =============================================================
+def generate_instagram_post():
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+  body {{
+    width: 1080px;
+    height: 1350px;
+    background: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 64px 54px;
+    color: #121316;
+    overflow: hidden;
+    position: relative;
+  }}
+
+  /* Background subtle gradient */
+  .bg-glow {{
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(0, 113, 227, 0.05) 0%, rgba(247, 247, 248, 0) 70%);
+    top: -100px;
+    right: -100px;
+    pointer-events: none;
+  }}
+
+  /* Top Brand Header */
+  .insta-header {{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+  }}
+  .brand-group {{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }}
+  .brand-logo {{
+    width: 64px;
+    height: 64px;
+    border-radius: 15px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }}
+  .brand-title {{
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #121316;
+  }}
+  .brand-sub {{
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 2px;
+  }}
+  .badge-pill {{
+    background: #f1f5f9;
+    color: #0f172a;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+  }}
+
+  /* Hero Headline */
+  .insta-headline-block {{
+    width: 100%;
+    text-align: center;
+    margin-top: 14px;
+    margin-bottom: 24px;
+    z-index: 10;
+  }}
+  .insta-title {{
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.04em;
+    color: #121316;
+    margin-bottom: 12px;
+  }}
+  .insta-title span {{
+    color: #0071e3;
+  }}
+  .insta-subtitle {{
+    font-size: 18px;
+    color: #52545d;
+    max-width: 680px;
+    margin: 0 auto;
+    line-height: 1.45;
+  }}
+
+  /* Floating Pathway Window */
+  .window-card {{
+    width: 100%;
+    height: 520px;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+  }}
+
+  /* Window Titlebar */
+  .win-bar {{
+    height: 44px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    justify-content: space-between;
+  }}
+  .traffic-dots {{ display: flex; gap: 7px; }}
+  .dot {{ width: 11px; height: 11px; border-radius: 50%; }}
+  .d-red {{ background: #ff5f56; }}
+  .d-yellow {{ background: #ffbd2e; }}
+  .d-green {{ background: #27c93f; }}
+
+  /* Breadcrumbs */
+  .breadcrumb-row {{
+    height: 36px;
+    background: #ffffff;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-size: 12px;
+    color: #64748b;
+    gap: 8px;
+  }}
+  .bread-pill {{
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 3px 8px;
+    color: #1e293b;
+    font-weight: 500;
+  }}
+
+  /* Command Ribbon */
+  .cmd-ribbon {{
+    height: 40px;
+    background: #fafbfc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+  }}
+  .ribbon-btn {{
+    padding: 4px 8px;
+    border-radius: 5px;
+    background: #f1f5f9;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }}
+  .ribbon-btn.active {{
+    background: #e0f2fe;
+    color: #0369a1;
+    font-weight: 600;
+  }}
+
+  /* Table */
+  .file-table {{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    font-size: 13px;
+  }}
+  .file-head {{
+    display: grid;
+    grid-template-columns: 360px 180px 160px 1fr;
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+  }}
+  .file-row {{
+    display: grid;
+    grid-template-columns: 360px 180px 160px 1fr;
+    padding: 10px 16px;
+    align-items: center;
+    border-bottom: 1px solid #f8fafc;
+    color: #1e293b;
+  }}
+  .file-row.selected {{
+    background: #eff6ff;
+  }}
+  .col-name {{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+  }}
+  .size-tag {{
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #ecfdf5;
+    color: #059669;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }}
+
+  /* Feature Grid 2x2 */
+  .features-grid {{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+    margin-bottom: 24px;
+    z-index: 10;
+  }}
+  .feat-card {{
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }}
+  .feat-icon {{
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }}
+  .feat-text h5 {{
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+  }}
+  .feat-text p {{
+    font-size: 11px;
+    color: #64748b;
+  }}
+
+  /* Bottom Call to Action & Download Button */
+  .insta-footer {{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    z-index: 10;
+  }}
+  
+  .download-cta-btn {{
+    width: 100%;
+    height: 64px;
+    background: #121316;
+    border-radius: 16px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+  }}
+  .download-cta-btn span.icon {{
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }}
+  .download-cta-btn span.bio-tag {{
+    font-size: 13px;
+    background: #0071e3;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-left: 4px;
+  }}
+
+  .footer-meta {{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: #64748b;
+  }}
+  .meta-dot {{ width: 4px; height: 4px; border-radius: 50%; background: #cbd5e1; }}
+</style>
+</head>
+<body>
+
+  <div class="bg-glow"></div>
+
+  <!-- Header -->
+  <div class="insta-header">
+    <div class="brand-group">
+      <img src="{ICON_B64}" alt="Pathway" class="brand-logo">
+      <div>
+        <div class="brand-title">Pathway</div>
+        <div class="brand-sub">The Windows-Style File Manager for macOS</div>
+      </div>
+    </div>
+    <div class="badge-pill">v1.0.0 Universal</div>
+  </div>
+
+  <!-- Headline -->
+  <div class="insta-headline-block">
+    <h1 class="insta-title">Windows muscle memory.<br><span>Native Mac power.</span></h1>
+    <p class="insta-subtitle">
+      Stop fighting Finder. Launch files with Enter, rename instantly on F2, and see real folder sizes calculated live in List view.
+    </p>
+  </div>
+
+  <!-- Central Window Showcase -->
+  <div class="window-card">
+    <div class="win-bar">
+      <div class="traffic-dots">
+        <div class="dot d-red"></div>
+        <div class="dot d-yellow"></div>
+        <div class="dot d-green"></div>
+      </div>
+      <div style="font-size: 12px; font-weight: 600; color: #475569;">
+        Pathway — indiesuite-mac
+      </div>
+      <div style="font-size: 11px; color: #94a3b8;">
+        Details View (⌘1)
+      </div>
+    </div>
+
+    <div class="breadcrumb-row">
+      <span style="font-size: 11px;">◀ ▶ ⟳</span>
+      <span class="bread-pill">This PC</span>
+      <span>›</span>
+      <span class="bread-pill">Macintosh HD</span>
+      <span>›</span>
+      <span class="bread-pill">developer</span>
+      <span>›</span>
+      <span class="bread-pill" style="font-weight: 700; color: #0071e3;">Pathway</span>
+    </div>
+
+    <div class="cmd-ribbon">
+      <div class="ribbon-btn"><span>➕</span><span>New</span></div>
+      <div class="ribbon-btn"><span>✂️</span><span>Cut (⌘X)</span></div>
+      <div class="ribbon-btn"><span>📋</span><span>Copy</span></div>
+      <div class="ribbon-btn"><span>✏️</span><span>Rename (F2)</span></div>
+      <div class="ribbon-btn active"><span>↕️</span><span>Sort: Size ▾</span></div>
+      <div class="ribbon-btn active"><span>🗂</span><span>Group: Type ▾</span></div>
+    </div>
+
+    <div class="file-table">
+      <div class="file-head">
+        <div>Name</div>
+        <div>Date modified</div>
+        <div>Type</div>
+        <div>Size</div>
+      </div>
+
+      <div class="file-row selected">
+        <div class="col-name">
+          {SVG_FOLDER}
+          <span style="font-weight: 600;">DerivedData</span>
+        </div>
+        <div>Today, 18:30</div>
+        <div>Folder</div>
+        <div><span class="size-tag">✓ 1.84 GB</span></div>
+      </div>
+
+      <div class="file-row">
+        <div class="col-name">
+          {SVG_FOLDER}
+          <span>node_modules</span>
+        </div>
+        <div>Today, 17:15</div>
+        <div>Folder</div>
+        <div><span class="size-tag">✓ 418.2 MB</span></div>
+      </div>
+
+      <div class="file-row">
+        <div class="col-name">
+          {SVG_FOLDER}
+          <span>Sources</span>
+        </div>
+        <div>Today, 18:48</div>
+        <div>Folder</div>
+        <div><span class="size-tag">✓ 148 KB</span></div>
+      </div>
+
+      <div class="file-row">
+        <div class="col-name">
+          {SVG_SWIFT}
+          <span>FileBrowserModel.swift</span>
+        </div>
+        <div>Today, 18:40</div>
+        <div>Swift Source</div>
+        <div style="font-weight: 500;">32.8 KB</div>
+      </div>
+
+      <div class="file-row">
+        <div class="col-name">
+          {SVG_DMG}
+          <span>Pathway-1.0.0.dmg</span>
+        </div>
+        <div>Today, 17:45</div>
+        <div>Apple Disk Image</div>
+        <div style="font-weight: 600; color: #0071e3;">1.8 MB</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Grid 2x2 -->
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon">↵</div>
+      <div class="feat-text">
+        <h5>Enter Opens Files</h5>
+        <p>Never accidentally renames</p>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">F2</div>
+      <div class="feat-text">
+        <h5>F2 Instant Rename</h5>
+        <p>No waiting on double clicks</p>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">⚡️</div>
+      <div class="feat-text">
+        <h5>Live Folder Sizes</h5>
+        <p>Off-thread Swift 6 actor</p>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">✂️</div>
+      <div class="feat-text">
+        <h5>⌘X / Ctrl+X Cut & Paste</h5>
+        <p>True atomic file moves</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom CTA & Download Button -->
+  <div class="insta-footer">
+    <div class="download-cta-btn">
+      <span class="icon">⬇</span>
+      <span>Download Pathway (Free)</span>
+      <span class="bio-tag">Link in Bio 🔗</span>
+    </div>
+
+    <div class="footer-meta">
+      <span>github.com/GopiKrishnaRakesh/indiesuite-mac</span>
+      <span class="meta-dot"></span>
+      <span>Universal Binary (Apple Silicon + Intel)</span>
+      <span class="meta-dot"></span>
+      <span>Zero Sandbox</span>
+    </div>
+  </div>
+
+</body>
+</html>"""
+    render_html_to_image(html, "instagram-post", 1080, 1350, 1080, 1350)
+
+
+# =============================================================
+# 6. INSTAGRAM SQUARE POST RENDER (1:1 ratio 1080x1080)
+# =============================================================
+def generate_instagram_square():
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+  body {{
+    width: 1080px;
+    height: 1080px;
+    background: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 48px;
+    color: #121316;
+    overflow: hidden;
+    position: relative;
+  }}
+
+  /* Top Brand Header */
+  .insta-header {{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }}
+  .brand-group {{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }}
+  .brand-logo {{
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  }}
+  .brand-title {{
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }}
+  .brand-sub {{
+    font-size: 13px;
+    color: #64748b;
+  }}
+  .badge-pill {{
+    background: #f1f5f9;
+    color: #0f172a;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 999px;
+  }}
+
+  /* Headline */
+  .headline-group {{
+    text-align: center;
+    margin: 8px 0 16px;
+  }}
+  .main-title {{
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+  }}
+  .main-title span {{ color: #0071e3; }}
+  .main-sub {{
+    font-size: 16px;
+    color: #52545d;
+    margin-top: 6px;
+  }}
+
+  /* Window */
+  .window-card {{
+    width: 100%;
+    height: 440px;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }}
+  .win-bar {{
+    height: 38px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    justify-content: space-between;
+  }}
+  .traffic-dots {{ display: flex; gap: 6px; }}
+  .dot {{ width: 10px; height: 10px; border-radius: 50%; }}
+  .d-red {{ background: #ff5f56; }}
+  .d-yellow {{ background: #ffbd2e; }}
+  .d-green {{ background: #27c93f; }}
+
+  .cmd-ribbon {{
+    height: 38px;
+    background: #fafbfc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 500;
+  }}
+  .ribbon-btn {{
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: #f1f5f9;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }}
+  .ribbon-btn.active {{
+    background: #e0f2fe;
+    color: #0369a1;
+    font-weight: 600;
+  }}
+
+  .file-table {{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    font-size: 12px;
+  }}
+  .file-head {{
+    display: grid;
+    grid-template-columns: 340px 180px 140px 1fr;
+    padding: 7px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+  }}
+  .file-row {{
+    display: grid;
+    grid-template-columns: 340px 180px 140px 1fr;
+    padding: 9px 14px;
+    align-items: center;
+    border-bottom: 1px solid #f8fafc;
+    color: #1e293b;
+  }}
+  .file-row.selected {{ background: #eff6ff; }}
+  .col-name {{ display: flex; align-items: center; gap: 8px; font-weight: 500; }}
+  .size-tag {{
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #ecfdf5;
+    color: #059669;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }}
+
+  /* Feature Pills Row */
+  .pills-row {{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 14px 0;
+  }}
+  .mini-pill {{
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }}
+
+  /* Download Button CTA */
+  .cta-btn {{
+    width: 100%;
+    height: 58px;
+    background: #121316;
+    border-radius: 14px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }}
+  .cta-badge {{
+    font-size: 12px;
+    background: #0071e3;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }}
+
+  .foot-meta {{
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 10px;
+  }}
+</style>
+</head>
+<body>
+
+  <div class="insta-header">
+    <div class="brand-group">
+      <img src="{ICON_B64}" alt="Pathway" class="brand-logo">
+      <div>
+        <div class="brand-title">Pathway</div>
+        <div class="brand-sub">Windows-Style File Manager for Mac</div>
+      </div>
+    </div>
+    <div class="badge-pill">Free & Open Source</div>
+  </div>
+
+  <div class="headline-group">
+    <h1 class="main-title">Windows muscle memory.<br><span>Native Mac power.</span></h1>
+    <p class="main-sub">Enter to open, F2 to rename, live folder sizes & batch conversions.</p>
+  </div>
+
+  <div class="window-card">
+    <div class="win-bar">
+      <div class="traffic-dots">
+        <div class="dot d-red"></div>
+        <div class="dot d-yellow"></div>
+        <div class="dot d-green"></div>
+      </div>
+      <div style="font-size: 12px; font-weight: 600; color: #475569;">
+        Pathway — indiesuite-mac
+      </div>
+      <div style="font-size: 11px; color: #94a3b8;">Details View</div>
+    </div>
+
+    <div class="cmd-ribbon">
+      <div class="ribbon-btn"><span>➕</span><span>New</span></div>
+      <div class="ribbon-btn"><span>✂️</span><span>Cut (⌘X)</span></div>
+      <div class="ribbon-btn"><span>✏️</span><span>Rename (F2)</span></div>
+      <div class="ribbon-btn active"><span>↕️</span><span>Sort: Size ▾</span></div>
+      <div class="ribbon-btn active"><span>🗂</span><span>Group: Type ▾</span></div>
+    </div>
+
+    <div class="file-table">
+      <div class="file-head">
+        <div>Name</div>
+        <div>Date modified</div>
+        <div>Type</div>
+        <div>Size</div>
+      </div>
+
+      <div class="file-row selected">
+        <div class="col-name">
+          {SVG_FOLDER}
+          <span style="font-weight: 600;">DerivedData</span>
+        </div>
+        <div>Today, 18:30</div>
+        <div>Folder</div>
+        <div><span class="size-tag">✓ 1.84 GB</span></div>
+      </div>
+
+      <div class="file-row">
+        <div class="col-name">
+          {SVG_FOLDER}
+          <span>node_modules</span>
+        </div>
+        <div>Today, 17:15</div>
+        <div>Folder</div>
+        <div><span class="size-tag">✓ 418.2 MB</span></div>
+      </div>
+
+      <div class="file-row">
+        <div class="col-name">
+          {SVG_FOLDER}
+          <span>Sources</span>
+        </div>
+        <div>Today, 18:48</div>
+        <div>Folder</div>
+        <div><span class="size-tag">✓ 148 KB</span></div>
+      </div>
+
+      <div class="file-row">
+        <div class="col-name">
+          {SVG_DMG}
+          <span>Pathway-1.0.0.dmg</span>
+        </div>
+        <div>Today, 17:45</div>
+        <div>Disk Image</div>
+        <div style="font-weight: 600; color: #0071e3;">1.8 MB</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pills-row">
+    <div class="mini-pill"><span>↵</span><span>Enter opens</span></div>
+    <div class="mini-pill"><span>F2</span><span>F2 renames</span></div>
+    <div class="mini-pill"><span>⚡️</span><span>Live Folder Sizes</span></div>
+    <div class="mini-pill"><span>✂️</span><span>⌘X Cut & Paste</span></div>
+  </div>
+
+  <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+    <div class="cta-btn">
+      <span>⬇</span>
+      <span>Download Pathway (Free)</span>
+      <span class="cta-badge">Link in Bio 🔗</span>
+    </div>
+    <div class="foot-meta">
+      github.com/GopiKrishnaRakesh/indiesuite-mac · Universal Binary (M1/M2/M3/M4 & Intel)
+    </div>
+  </div>
+
+</body>
+</html>"""
+    render_html_to_image(html, "instagram-post-square", 1080, 1080, 1080, 1080)
 
 
 if __name__ == "__main__":
-    print("Generating Hero MacBook Pro render...")
-    generate_hero_macbook()
+    import sys
+    args = sys.argv[1:]
     
-    print("Generating Features Showcase render...")
-    generate_features_showcase()
-    
-    print("Generating Context Actions render...")
-    generate_context_actions()
-    
-    print("Generating Social Banner render...")
-    generate_social_banner()
+    if "insta" in args or not args:
+        print("Generating Instagram Post render (Portrait 1080x1350)...")
+        generate_instagram_post()
+        
+        print("Generating Instagram Post Square render (1080x1080)...")
+        generate_instagram_square()
 
-    print("\nAll 4 professional developer renders created successfully!")
+    if "all" in args or not args:
+        print("Generating Hero MacBook Pro render...")
+        generate_hero_macbook()
+        
+        print("Generating Features Showcase render...")
+        generate_features_showcase()
+        
+        print("Generating Context Actions render...")
+        generate_context_actions()
+        
+        print("Generating Social Banner render...")
+        generate_social_banner()
+
+    print("\nAll renders created successfully!")
+

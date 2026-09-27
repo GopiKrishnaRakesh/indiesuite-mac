@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSetupTerminals();
   initKeyTester();
   initFolderSizeSimulator();
+  initDownloadLinkButtons();
 });
 
 // Toast notification helper
@@ -242,3 +243,39 @@ function initFolderSizeSimulator() {
     }, 400);
   });
 }
+
+// 6. Copy Direct Download Link
+function initDownloadLinkButtons() {
+  const copyBtns = document.querySelectorAll('.copy-download-link-btn');
+  copyBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Generate clean absolute download URL
+      const directUrl = new URL('downloads/Pathway-1.0.0.dmg', window.location.href).href;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(directUrl).then(() => {
+          showToast('Direct download link copied to clipboard!');
+        }).catch(() => {
+          copyFallback(directUrl);
+        });
+      } else {
+        copyFallback(directUrl);
+      }
+    });
+  });
+
+  function copyFallback(text) {
+    const tempInput = document.createElement('input');
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    try {
+      document.execCommand('copy');
+      showToast('Direct download link copied to clipboard!');
+    } catch (err) {
+      prompt('Direct download link:', text);
+    }
+    document.body.removeChild(tempInput);
+  }
+}
+

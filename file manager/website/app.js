@@ -244,22 +244,21 @@ function initFolderSizeSimulator() {
   });
 }
 
-// 6. Copy Direct Download Link
+// 6. Copy Direct Download Link (Official GitHub Release URL)
 function initDownloadLinkButtons() {
+  const GITHUB_DOWNLOAD_URL = 'https://github.com/GopiKrishnaRakesh/indiesuite-mac/releases/latest/download/Pathway-1.0.0.dmg';
   const copyBtns = document.querySelectorAll('.copy-download-link-btn');
   copyBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      // Generate clean absolute download URL
-      const directUrl = new URL('downloads/Pathway-1.0.0.dmg', window.location.href).href;
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(directUrl).then(() => {
-          showToast('Direct download link copied to clipboard!');
+        navigator.clipboard.writeText(GITHUB_DOWNLOAD_URL).then(() => {
+          showToast('GitHub download link copied to clipboard!');
         }).catch(() => {
-          copyFallback(directUrl);
+          copyFallback(GITHUB_DOWNLOAD_URL);
         });
       } else {
-        copyFallback(directUrl);
+        copyFallback(GITHUB_DOWNLOAD_URL);
       }
     });
   });
@@ -271,9 +270,9 @@ function initDownloadLinkButtons() {
     tempInput.select();
     try {
       document.execCommand('copy');
-      showToast('Direct download link copied to clipboard!');
+      showToast('GitHub download link copied to clipboard!');
     } catch (err) {
-      prompt('Direct download link:', text);
+      prompt('GitHub download link:', text);
     }
     document.body.removeChild(tempInput);
   }

@@ -15,7 +15,18 @@ struct NameCell: View {
                 RenameField(model: model, item: item)
             } else {
                 VStack(alignment: .leading, spacing: 0) {
-                    Text(item.name).lineLimit(1)
+                    HStack(spacing: 4) {
+                        Text(item.name).lineLimit(1)
+                        if !item.tags.isEmpty {
+                            HStack(spacing: 2) {
+                                ForEach(item.tags.prefix(3), id: \.self) { tagName in
+                                    Circle()
+                                        .fill(FileItem.tagColor(for: tagName))
+                                        .frame(width: 7, height: 7)
+                                }
+                            }
+                        }
+                    }
                     if model.searchResults != nil, model.isRecursiveSearchActive {
                         Text(item.url.deletingLastPathComponent().path.replacingOccurrences(of: SidebarStore.home.path, with: "~"))
                             .font(.system(size: 10)).foregroundStyle(.secondary).lineLimit(1)
@@ -23,6 +34,14 @@ struct NameCell: View {
                 }
             }
         }
+        .background(
+            GeometryReader { geo in
+                Color.clear.preference(
+                    key: GridCellFrameKey.self,
+                    value: [item.id: geo.frame(in: .named("fileListAreaSpace"))]
+                )
+            }
+        )
         .opacity(clipboard.isCut(item.url) || item.isHidden ? 0.5 : 1)
     }
 }
@@ -79,9 +98,24 @@ struct DetailsTableView: View {
             }
             .width(min: 60, ideal: 90)
         } rows: {
-            ForEach(model.displayItems) { item in
-                TableRow(item)
-                    .draggable(item.url)
+            if model.groupBy == .none {
+                ForEach(model.displayItems) { item in
+                    TableRow(item)
+                        .draggable(item.url)
+                }
+            } else {
+                ForEach(model.groupedItems) { group in
+                    Section {
+                        ForEach(group.items) { item in
+                            TableRow(item)
+                                .draggable(item.url)
+                        }
+                    } header: {
+                        Text("\(group.title) (\(group.items.count))")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
         }
         .contextMenu(forSelectionType: URL.self) { ids in
@@ -92,14 +126,18 @@ struct DetailsTableView: View {
     }
 }
 
+struct GridCellFrameKey: PreferenceKey {
+    static var defaultValue: [URL: CGRect] = [:]
+    static func reduce(value: inout [URL: CGRect], nextValue: () -> [URL: CGRect]) {
+        value.merge(nextValue(), uniquingKeysWith: { $1 })
+    }
+}
+
 struct IconGridView: View {
     @ObservedObject var model: FileBrowserModel
 
     private var cellWidth: CGFloat { model.viewMode == .tiles ? 250 : max(model.iconSize + 36, 84) }
 
-    // Broken up into small, explicitly-typed pieces (rather than one deeply nested expression) —
-    // CI's slower runner hit "unable to type-check this expression in reasonable time" on the
-    // original single-expression body; each boundary below gives the type checker an early exit.
     var body: some View {
         GeometryReader { proxy in
             ScrollViewReader { reader in
@@ -122,8 +160,30 @@ struct IconGridView: View {
 
     private func grid(minHeight: CGFloat) -> some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: cellWidth), spacing: 6, alignment: .top)], spacing: 6) {
-            ForEach(model.displayItems) { item in
-                gridCell(for: item)
+            if model.groupBy == .none {
+                ForEach(model.displayItems) { item in
+                    gridCell(for: item)
+                }
+            } else {
+                ForEach(model.groupedItems) { group in
+                    Section {
+                        ForEach(group.items) { item in
+                            gridCell(for: item)
+                        }
+                    } header: {
+                        HStack(spacing: 6) {
+                            Text(group.title)
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundStyle(.primary)
+                            Text("(\(group.items.count))")
+                                .font(.system(size: 11))
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                        }
+                        .padding(.top, 10)
+                        .padding(.bottom, 4)
+                    }
+                }
             }
         }
         .padding(12)
@@ -132,17 +192,39 @@ struct IconGridView: View {
     }
 
     private func gridCell(for item: FileItem) -> some View {
-        let ids: Set<URL> = model.selection.contains(item.id) ? model.selection : [item.id]
-        return GridCell(item: item, model: model)
+        let isSelected = model.selection.contains(item.id)
+        let ids: Set<URL> = isSelected ? model.selection : [item.id]
+        let cell = GridCell(item: item, model: model)
             .id(item.id)
-            .draggable(item.url)
-            .contextMenu { ItemContextMenu(model: model, ids: ids) }
+            .background(
+                GeometryReader { geo in
+                    Color.clear.preference(
+                        key: GridCellFrameKey.self,
+                        value: [item.id: geo.frame(in: .named("fileListAreaSpace"))]
+                    )
+                }
+            )
+            .contextMenu {
+                ItemContextMenu(model: model, ids: ids)
+            }
+
+        return Group {
+            if isSelected {
+                cell.draggable(item.url)
+            } else {
+                cell
+            }
+        }
     }
 
     private var backgroundTapArea: some View {
         Color.clear.contentShape(Rectangle())
-            .onTapGesture { model.selectNone() }
-            .contextMenu { ItemContextMenu(model: model, ids: []) }
+            .onTapGesture {
+                model.selectNone()
+            }
+            .contextMenu {
+                ItemContextMenu(model: model, ids: model.selection)
+            }
     }
 }
 
@@ -162,7 +244,7 @@ private struct GridCell: View {
                     VStack(alignment: .leading, spacing: 1) {
                         label.font(.system(size: 12, weight: .medium))
                         Text(item.kind).font(.system(size: 10)).foregroundStyle(.secondary).lineLimit(1)
-                        if !item.isFolder { Text(item.displaySize).font(.system(size: 10)).foregroundStyle(.secondary) }
+                        Text(item.displaySize).font(.system(size: 10)).foregroundStyle(.secondary)
                     }
                     Spacer(minLength: 0)
                 }
@@ -206,7 +288,18 @@ private struct GridCell: View {
         if model.renamingURL == item.url {
             RenameField(model: model, item: item)
         } else {
-            Text(item.name).lineLimit(model.viewMode == .tiles ? 1 : 2).truncationMode(.middle)
+            VStack(spacing: 2) {
+                Text(item.name).lineLimit(model.viewMode == .tiles ? 1 : 2).truncationMode(.middle)
+                if !item.tags.isEmpty {
+                    HStack(spacing: 2) {
+                        ForEach(item.tags.prefix(3), id: \.self) { tagName in
+                            Circle()
+                                .fill(FileItem.tagColor(for: tagName))
+                                .frame(width: 6, height: 6)
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -215,11 +308,20 @@ struct ItemContextMenu: View {
     @ObservedObject var model: FileBrowserModel
     let ids: Set<URL>
 
-    private var urls: [URL] { model.displayItems.filter { ids.contains($0.id) }.map(\.url) }
-    private var items: [FileItem] { model.displayItems.filter { ids.contains($0.id) } }
+    private var effectiveIDs: Set<URL> {
+        if !ids.isEmpty { return ids }
+        return model.selection
+    }
+
+    private var urls: [URL] { model.displayItems.filter { effectiveIDs.contains($0.id) }.map(\.url) }
+    private var items: [FileItem] { model.displayItems.filter { effectiveIDs.contains($0.id) } }
 
     var body: some View {
-        if ids.isEmpty { backgroundMenu } else { itemMenu }
+        if effectiveIDs.isEmpty {
+            backgroundMenu
+        } else {
+            itemMenu
+        }
     }
 
     @ViewBuilder private var backgroundMenu: some View {
@@ -230,7 +332,49 @@ struct ItemContextMenu: View {
         Button("Paste") { model.paste() }.disabled(!ClipboardState.shared.canPaste)
         Divider()
         Menu("Sort by") {
-            ForEach(SortField.allCases) { field in Button(field.title) { model.setSort(field) } }
+            ForEach(SortField.allCases) { field in
+                Button {
+                    model.setSort(field)
+                } label: {
+                    if field == model.currentSortField {
+                        Label(field.title, systemImage: model.sortAscending ? "arrow.up" : "arrow.down")
+                    } else {
+                        Text(field.title)
+                    }
+                }
+            }
+            Divider()
+            Button {
+                model.setSortDirection(ascending: true)
+            } label: {
+                if model.sortAscending {
+                    Label("Ascending", systemImage: "checkmark")
+                } else {
+                    Text("Ascending")
+                }
+            }
+            Button {
+                model.setSortDirection(ascending: false)
+            } label: {
+                if !model.sortAscending {
+                    Label("Descending", systemImage: "checkmark")
+                } else {
+                    Text("Descending")
+                }
+            }
+        }
+        Menu("Group by") {
+            ForEach(GroupByField.allCases) { field in
+                Button {
+                    model.groupBy = field
+                } label: {
+                    if field == model.groupBy {
+                        Label(field.title, systemImage: "checkmark")
+                    } else {
+                        Text(field.title)
+                    }
+                }
+            }
         }
         Menu("View") {
             ForEach(ViewMode.allCases) { mode in Button(mode.title, systemImage: mode.symbol) { model.viewMode = mode } }
@@ -244,7 +388,87 @@ struct ItemContextMenu: View {
 
     @ViewBuilder private var itemMenu: some View {
         let single = items.count == 1 ? items.first : nil
-        Button("Open") { model.open(ids) }
+        let count = items.count
+        let archives = items.filter(\.isArchive)
+        let images = items.filter(\.isImage)
+        let docs = items.filter(\.isConvertibleDocument)
+
+        if count > 1 {
+            Text("\(count) items selected")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Divider()
+        }
+
+        Button(count > 1 ? "Open \(count) Items" : "Open") {
+            model.open(effectiveIDs)
+        }
+        Button(count > 1 ? "Quick Look (\(count) Items)" : "Quick Look") {
+            model.toggleQuickLook()
+        }
+        ShareLink(items: urls) {
+            Label(count > 1 ? "Share \(count) Items…" : "Share…", systemImage: "square.and.arrow.up")
+        }
+
+        // Unzip / Extract Actions
+        if !archives.isEmpty {
+            Divider()
+            if archives.count == 1 {
+                let arch = archives[0]
+                Button("Extract Here", systemImage: "arrow.up.bin") {
+                    model.extract([arch.url], toSubfolder: false)
+                }
+                Button("Extract to “\(arch.url.deletingPathExtension().lastPathComponent)”", systemImage: "folder.badge.plus") {
+                    model.extract([arch.url], toSubfolder: true)
+                }
+            } else {
+                Menu("Extract (\(archives.count) Archives)", systemImage: "arrow.up.bin") {
+                    Button("Extract All Here") {
+                        model.extract(archives.map(\.url), toSubfolder: false)
+                    }
+                    Button("Extract Each to Subfolder") {
+                        model.extract(archives.map(\.url), toSubfolder: true)
+                    }
+                }
+            }
+        }
+
+        // Convert Image Actions
+        if !images.isEmpty {
+            Divider()
+            Menu(images.count > 1 ? "Convert \(images.count) Images" : "Convert Image", systemImage: "photo.on.rectangle") {
+                Button("Convert to JPEG (.jpg)") { model.convertImages(images.map(\.url), to: .jpeg) }
+                Button("Convert to PNG (.png)") { model.convertImages(images.map(\.url), to: .png) }
+                Button("Convert to HEIC (.heic)") { model.convertImages(images.map(\.url), to: .heic) }
+                Button("Convert to TIFF (.tiff)") { model.convertImages(images.map(\.url), to: .tiff) }
+                Button("Convert to GIF (.gif)") { model.convertImages(images.map(\.url), to: .gif) }
+                Button("Convert to BMP (.bmp)") { model.convertImages(images.map(\.url), to: .bmp) }
+                Divider()
+                Button(images.count > 1 ? "Convert Each to PDF (.pdf)" : "Convert to PDF (.pdf)") {
+                    model.convertImages(images.map(\.url), to: .pdf)
+                }
+                if images.count > 1 {
+                    Button("Combine into Single PDF…", systemImage: "doc.on.doc") {
+                        model.combineImagesToPDF(images.map(\.url))
+                    }
+                }
+            }
+        }
+
+        // Convert Document Actions
+        if !docs.isEmpty {
+            Divider()
+            Menu(docs.count > 1 ? "Convert \(docs.count) Documents" : "Convert Document", systemImage: "doc.text") {
+                Button("Convert to PDF (.pdf)") { model.convertDocuments(docs.map(\.url), to: .pdf) }
+                Divider()
+                Button("Convert to Word (.docx)") { model.convertDocuments(docs.map(\.url), to: .docx) }
+                Button("Convert to Rich Text (.rtf)") { model.convertDocuments(docs.map(\.url), to: .rtf) }
+                Button("Convert to Plain Text (.txt)") { model.convertDocuments(docs.map(\.url), to: .txt) }
+                Button("Convert to HTML (.html)") { model.convertDocuments(docs.map(\.url), to: .html) }
+                Button("Convert to OpenDocument (.odt)") { model.convertDocuments(docs.map(\.url), to: .odt) }
+            }
+        }
+
         if let single, !single.isFolder {
             Menu("Open With") {
                 ForEach(openWithApps(for: single.url), id: \.self) { app in
@@ -259,16 +483,37 @@ struct ItemContextMenu: View {
         }
         Button("Reveal in Finder") { model.reveal(urls) }
         Divider()
-        Button("Cut") { model.cut(urls) }
-        Button("Copy") { model.copy(urls) }
+        Menu(count > 1 ? "Tags (\(count) Items)" : "Tags") {
+            ForEach(MacTag.allCases) { tag in
+                Button {
+                    model.toggleTag(tag.rawValue, for: urls)
+                } label: {
+                    Label(tag.rawValue, systemImage: "circle.fill")
+                }
+            }
+            Divider()
+            Button("Clear Tags") { model.clearTags(for: urls) }
+        }
+        Divider()
+        Button("New Folder with Selection (\(count) Item\(count == 1 ? "" : "s"))") {
+            model.newFolderWithSelection()
+        }
+        Button(count > 1 ? "Make Aliases (\(count) Items)" : "Make Alias") {
+            model.makeAlias(urls)
+        }
+        Divider()
+        Button(count > 1 ? "Cut (\(count) Items)" : "Cut") { model.cut(urls) }
+        Button(count > 1 ? "Copy (\(count) Items)" : "Copy") { model.copy(urls) }
         if let single, single.isFolder {
             Button("Paste into Folder") { model.paste(into: single.url) }.disabled(!ClipboardState.shared.canPaste)
         }
-        Button("Copy Path") { model.copyPath(urls) }
+        Button(count > 1 ? "Copy \(count) Paths" : "Copy Path") { model.copyPath(urls) }
         Divider()
-        Button("Duplicate") { model.duplicate(urls) }
-        Button("Compress") { model.compress(urls) }
-        if let single, single.isZip { Button("Extract Here") { model.extract(single.url) } }
+        Button(count > 1 ? "Duplicate (\(count) Items)" : "Duplicate") { model.duplicate(urls) }
+        Menu(count > 1 ? "Compress (\(count) Items)" : "Compress", systemImage: "doc.zipper") {
+            Button("ZIP Archive (.zip)") { model.compress(urls, format: .zip) }
+            Button("TAR Archive (.tar.gz)") { model.compress(urls, format: .tarGz) }
+        }
         if let single {
             Button("Rename") { model.beginRename(single.url) }
             if single.isFolder {
@@ -279,10 +524,15 @@ struct ItemContextMenu: View {
             }
         }
         Divider()
-        Button("Move to Trash", systemImage: "trash") { model.trash(urls) }
-        Button("Delete Permanently…") { model.requestPermanentDelete(urls) }
+        Button(count > 1 ? "Move \(count) Items to Trash" : "Move to Trash", systemImage: "trash") { model.trash(urls) }
+        Button(count > 1 ? "Delete \(count) Items Permanently…" : "Delete Permanently…") { model.requestPermanentDelete(urls) }
         Divider()
-        Button("Properties") { model.showProperties(urls) }
+        Button(count > 1 ? "Properties (\(count) Items)" : "Properties") { model.showProperties(urls) }
+
+        if count > 1 {
+            Divider()
+            Button("Deselect All") { model.selectNone() }
+        }
     }
 
     private func openWithApps(for url: URL) -> [URL] {

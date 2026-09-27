@@ -34,12 +34,83 @@ struct PreviewPane: View {
     private func details(for item: FileItem) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(item.name).font(.headline).textSelection(.enabled)
+
+            HStack(spacing: 8) {
+                Button {
+                    model.open(item)
+                } label: {
+                    Label("Open", systemImage: "arrow.up.forward.app")
+                        .font(.system(size: 11))
+                }
+                .controlSize(.small)
+
+                Button {
+                    model.toggleQuickLook()
+                } label: {
+                    Label("Quick Look", systemImage: "eye")
+                        .font(.system(size: 11))
+                }
+                .controlSize(.small)
+
+                ShareLink(items: [item.url]) {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.system(size: 11))
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+            }
+
+            Divider()
+
             row("Type", item.kind)
             if !item.isFolder { row("Size", Fmt.exactBytes(item.size)) }
             row("Modified", Fmt.date(item.modified))
             row("Created", Fmt.date(item.created))
             row("Location", item.url.deletingLastPathComponent().path)
             if item.isSymlink { row("Alias", "Yes") }
+
+            Divider()
+
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text("Tags").font(.caption).foregroundStyle(.secondary)
+                    Spacer()
+                    Menu {
+                        ForEach(MacTag.allCases) { tag in
+                            Button {
+                                model.toggleTag(tag.rawValue, for: [item.url])
+                            } label: {
+                                Label(tag.rawValue, systemImage: "circle.fill")
+                            }
+                        }
+                        Divider()
+                        Button("Clear Tags") { model.clearTags(for: [item.url]) }
+                    } label: {
+                        Image(systemName: "plus.circle")
+                            .font(.caption)
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                if item.tags.isEmpty {
+                    Text("None").font(.caption).foregroundStyle(.tertiary)
+                } else {
+                    HStack(spacing: 4) {
+                        ForEach(item.tags, id: \.self) { tagName in
+                            HStack(spacing: 3) {
+                                Circle()
+                                    .fill(FileItem.tagColor(for: tagName))
+                                    .frame(width: 6, height: 6)
+                                Text(tagName)
+                                    .font(.system(size: 10))
+                            }
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Capsule().fill(Color.primary.opacity(0.08)))
+                        }
+                    }
+                }
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

@@ -22,7 +22,9 @@ struct ShortcutsView: View {
             Entry(keys: "⌘X / ⌘C / ⌘V", windows: "Ctrl+X / C / V", action: "Cut, copy, paste (cut moves the files)"),
             Entry(keys: "⌘Z", windows: "Ctrl+Z", action: "Undo the last file operation"),
             Entry(keys: "⇧⌘N", windows: "Ctrl+Shift+N", action: "New folder"),
+            Entry(keys: "⌃⌘N", windows: "—", action: "New folder with selection"),
             Entry(keys: "⌘D", windows: "—", action: "Duplicate"),
+            Entry(keys: "⌃⌘A", windows: "—", action: "Make alias (symbolic link)"),
             Entry(keys: "⌥↩  or  ⌘I", windows: "Alt+Enter", action: "Properties"),
             Entry(keys: "Space", windows: "—", action: "Quick Look preview"),
             Entry(keys: "⌥⌘C", windows: "Ctrl+Shift+C", action: "Copy path"),
@@ -37,7 +39,7 @@ struct ShortcutsView: View {
         ]),
         Group(title: "View & search", entries: [
             Entry(keys: "⌘F  or  F3", windows: "Ctrl+F / F3", action: "Search (this folder or subfolders)"),
-            Entry(keys: "⌘1 / ⌘2 / ⌘3", windows: "Ctrl+Shift+1…", action: "Details / Icons / Tiles"),
+            Entry(keys: "⌘1 / ⌘2 / ⌘3 / ⌘4", windows: "Ctrl+Shift+1…", action: "Details / Icons / Tiles / Columns"),
             Entry(keys: "⌥⌘P", windows: "Alt+P", action: "Toggle preview pane"),
             Entry(keys: "⇧⌘.", windows: "—", action: "Show hidden files"),
             Entry(keys: "⌘+  /  ⌘−", windows: "Ctrl+scroll", action: "Bigger / smaller icons"),

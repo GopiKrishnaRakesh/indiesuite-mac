@@ -3,13 +3,14 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 enum ViewMode: String, CaseIterable, Identifiable {
-    case details, icons, tiles
+    case details, icons, tiles, columns
     var id: String { rawValue }
     var title: String {
         switch self {
         case .details: "Details"
         case .icons: "Icons"
         case .tiles: "Tiles"
+        case .columns: "Columns"
         }
     }
     var symbol: String {
@@ -17,29 +18,60 @@ enum ViewMode: String, CaseIterable, Identifiable {
         case .details: "list.bullet"
         case .icons: "square.grid.2x2"
         case .tiles: "rectangle.grid.1x2"
+        case .columns: "rectangle.split.3x1"
         }
     }
 }
 
 enum SortField: String, CaseIterable, Identifiable {
-    case name, modified, kind, size
+    case name, kind, modified, created, size, tags
     var id: String { rawValue }
     var title: String {
         switch self {
         case .name: "Name"
-        case .modified: "Date modified"
         case .kind: "Type"
+        case .modified: "Date modified"
+        case .created: "Date created"
         case .size: "Size"
+        case .tags: "Tags"
         }
     }
     func comparator(_ order: SortOrder) -> KeyPathComparator<FileItem> {
         switch self {
         case .name: KeyPathComparator(\FileItem.name, comparator: .localizedStandard, order: order)
-        case .modified: KeyPathComparator(\FileItem.modifiedSort, order: order)
         case .kind: KeyPathComparator(\FileItem.kind, comparator: .localizedStandard, order: order)
+        case .modified: KeyPathComparator(\FileItem.modifiedSort, order: order)
+        case .created: KeyPathComparator(\FileItem.createdSort, order: order)
         case .size: KeyPathComparator(\FileItem.sizeSort, order: order)
+        case .tags: KeyPathComparator(\FileItem.tagsSort, comparator: .localizedStandard, order: order)
         }
     }
+}
+
+enum GroupByField: String, CaseIterable, Identifiable {
+    case none = "none"
+    case kind = "kind"
+    case dateModified = "dateModified"
+    case size = "size"
+    case tags = "tags"
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .none: "None"
+        case .kind: "Type"
+        case .dateModified: "Date modified"
+        case .size: "Size"
+        case .tags: "Tags"
+        }
+    }
+}
+
+struct FileGroup: Identifiable {
+    let id: String
+    let title: String
+    let items: [FileItem]
 }
 
 enum NavMode { case push, back, forward }
@@ -89,6 +121,12 @@ final class FileBrowserModel: ObservableObject {
     @Published var showPreview: Bool {
         didSet { defaults.set(showPreview, forKey: "showPreview") }
     }
+    @Published var showPathBar: Bool {
+        didSet { defaults.set(showPathBar, forKey: "showPathBar") }
+    }
+    @Published var selectedTagFilter: String? {
+        didSet { rebuild() }
+    }
     @Published var foldersFirst: Bool {
         didSet { defaults.set(foldersFirst, forKey: "foldersFirst"); rebuild() }
     }
@@ -98,6 +136,19 @@ final class FileBrowserModel: ObservableObject {
     @Published var sortOrder: [KeyPathComparator<FileItem>] = [SortField.name.comparator(.forward)] {
         didSet { rebuild() }
     }
+    @Published var groupBy: GroupByField {
+        didSet { defaults.set(groupBy.rawValue, forKey: "groupBy"); rebuild() }
+    }
+    @Published var folderSizes: [URL: Int64] = [:]
+    @Published var calculateFolderSizes: Bool {
+        didSet {
+            defaults.set(calculateFolderSizes, forKey: "calculateFolderSizes")
+            if calculateFolderSizes {
+                triggerFolderSizeCalculations(for: items.filter(\.isFolder))
+            }
+        }
+    }
+    private var folderSizeTask: Task<Void, Never>?
 
     // MARK: Search
     @Published var searchText = "" {
@@ -116,9 +167,15 @@ final class FileBrowserModel: ObservableObject {
     @Published var renamingURL: URL?
     @Published var renameText = ""
     @Published var sheet: Sheet?
+    @Published var showOnboarding: Bool = false
+    @Published var showFeatureStore: Bool = false
     @Published var errorMessage: String?
     @Published var pendingPermanentDelete: [URL]?
     @Published private(set) var undoStack: [UndoEntry] = []
+
+    // MARK: Drag Selection Marquee
+    @Published var dragMarqueeRect: CGRect?
+    @Published var itemFrames: [URL: CGRect] = [:]
 
     weak var window: NSWindow?
     private var loadGeneration = 0
@@ -136,8 +193,12 @@ final class FileBrowserModel: ObservableObject {
         viewMode = ViewMode(rawValue: d.string(forKey: "viewMode") ?? "") ?? .details
         showHidden = d.bool(forKey: "showHidden")
         showPreview = d.bool(forKey: "showPreview")
+        showPathBar = d.object(forKey: "showPathBar") as? Bool ?? true
         foldersFirst = d.object(forKey: "foldersFirst") as? Bool ?? true
         iconSize = d.object(forKey: "iconSize") as? Double ?? 64
+        showOnboarding = !d.bool(forKey: "hasCompletedSetup")
+        groupBy = GroupByField(rawValue: d.string(forKey: "groupBy") ?? "") ?? .none
+        calculateFolderSizes = d.object(forKey: "calculateFolderSizes") as? Bool ?? true
         navigate(to: start, mode: .push, force: true)
     }
 
@@ -254,6 +315,7 @@ final class FileBrowserModel: ObservableObject {
         let kept = selection.intersection(existing)
         if kept != selection { selection = kept }
         if let renaming = renamingURL, !existing.contains(renaming) { cancelRename() }
+        triggerFolderSizeCalculations(for: loaded.filter(\.isFolder))
     }
 
     private func startWatching() {
@@ -289,8 +351,19 @@ final class FileBrowserModel: ObservableObject {
     private func rebuild() {
         var list = searchResults ?? items
         if !showHidden { list = list.filter { !$0.isHidden } }
+        if let tagFilter = selectedTagFilter {
+            list = list.filter { $0.tags.contains { $0.localizedCaseInsensitiveCompare(tagFilter) == .orderedSame } }
+        }
         if !searchText.isEmpty && !searchRecursive {
             list = list.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        }
+        list = list.map { item in
+            if item.isFolder, let fs = folderSizes[item.url] {
+                var updated = item
+                updated.folderSize = fs
+                return updated
+            }
+            return item
         }
         list.sort(using: sortOrder)
         if foldersFirst {
@@ -299,11 +372,40 @@ final class FileBrowserModel: ObservableObject {
         displayItems = list
     }
 
+    private func triggerFolderSizeCalculations(for folders: [FileItem]) {
+        guard calculateFolderSizes, !folders.isEmpty else { return }
+        folderSizeTask?.cancel()
+        folderSizeTask = Task { [weak self] in
+            for folder in folders {
+                if Task.isCancelled { break }
+                let size = await FolderSizeCalculator.shared.size(of: folder.url)
+                if Task.isCancelled { break }
+                await MainActor.run {
+                    guard let self else { return }
+                    self.folderSizes[folder.url] = size
+                    if let idx = self.displayItems.firstIndex(where: { $0.url == folder.url }) {
+                        var updated = self.displayItems[idx]
+                        updated.folderSize = size
+                        self.displayItems[idx] = updated
+                    }
+                }
+            }
+            await MainActor.run {
+                guard let self else { return }
+                if self.currentSortField == .size {
+                    self.rebuild()
+                }
+            }
+        }
+    }
+
     var currentSortField: SortField {
         guard let first = sortOrder.first else { return .name }
-        if first.keyPath == \FileItem.modifiedSort { return .modified }
         if first.keyPath == \FileItem.kind { return .kind }
+        if first.keyPath == \FileItem.modifiedSort { return .modified }
+        if first.keyPath == \FileItem.createdSort { return .created }
         if first.keyPath == \FileItem.sizeSort { return .size }
+        if first.keyPath == \FileItem.tagsSort { return .tags }
         return .name
     }
 
@@ -316,6 +418,152 @@ final class FileBrowserModel: ObservableObject {
 
     func setSortDirection(ascending: Bool) {
         sortOrder = [currentSortField.comparator(ascending ? .forward : .reverse)]
+    }
+
+    var groupedItems: [FileGroup] {
+        guard groupBy != .none else {
+            return [FileGroup(id: "all", title: "", items: displayItems)]
+        }
+
+        switch groupBy {
+        case .none:
+            return [FileGroup(id: "all", title: "", items: displayItems)]
+
+        case .kind:
+            var folders: [FileItem] = []
+            var images: [FileItem] = []
+            var documents: [FileItem] = []
+            var archives: [FileItem] = []
+            var apps: [FileItem] = []
+            var others: [FileItem] = []
+
+            for item in displayItems {
+                if item.isFolder {
+                    folders.append(item)
+                } else if item.isImage {
+                    images.append(item)
+                } else if item.isConvertibleDocument || item.isPdf {
+                    documents.append(item)
+                } else if item.isArchive {
+                    archives.append(item)
+                } else if item.isPackage || item.url.pathExtension.lowercased() == "app" {
+                    apps.append(item)
+                } else {
+                    others.append(item)
+                }
+            }
+
+            var groups: [FileGroup] = []
+            if !folders.isEmpty { groups.append(FileGroup(id: "folders", title: "Folders", items: folders)) }
+            if !images.isEmpty { groups.append(FileGroup(id: "images", title: "Images", items: images)) }
+            if !documents.isEmpty { groups.append(FileGroup(id: "documents", title: "Documents", items: documents)) }
+            if !archives.isEmpty { groups.append(FileGroup(id: "archives", title: "Archives", items: archives)) }
+            if !apps.isEmpty { groups.append(FileGroup(id: "apps", title: "Applications", items: apps)) }
+            if !others.isEmpty { groups.append(FileGroup(id: "others", title: "Other Files", items: others)) }
+            return groups
+
+        case .dateModified:
+            let calendar = Calendar.current
+            let now = Date()
+            let startOfToday = calendar.startOfDay(for: now)
+            let yesterday = calendar.date(byAdding: .day, value: -1, to: startOfToday) ?? startOfToday
+            let sevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: startOfToday) ?? startOfToday
+            let thirtyDaysAgo = calendar.date(byAdding: .day, value: -30, to: startOfToday) ?? startOfToday
+            let startOfYear = calendar.date(from: calendar.dateComponents([.year], from: now)) ?? startOfToday
+
+            var today: [FileItem] = []
+            var yest: [FileItem] = []
+            var pastWeek: [FileItem] = []
+            var pastMonth: [FileItem] = []
+            var thisYear: [FileItem] = []
+            var older: [FileItem] = []
+
+            for item in displayItems {
+                guard let date = item.modified else {
+                    older.append(item)
+                    continue
+                }
+                if date >= startOfToday {
+                    today.append(item)
+                } else if date >= yesterday {
+                    yest.append(item)
+                } else if date >= sevenDaysAgo {
+                    pastWeek.append(item)
+                } else if date >= thirtyDaysAgo {
+                    pastMonth.append(item)
+                } else if date >= startOfYear {
+                    thisYear.append(item)
+                } else {
+                    older.append(item)
+                }
+            }
+
+            var groups: [FileGroup] = []
+            if !today.isEmpty { groups.append(FileGroup(id: "today", title: "Today", items: today)) }
+            if !yest.isEmpty { groups.append(FileGroup(id: "yesterday", title: "Yesterday", items: yest)) }
+            if !pastWeek.isEmpty { groups.append(FileGroup(id: "pastWeek", title: "Previous 7 Days", items: pastWeek)) }
+            if !pastMonth.isEmpty { groups.append(FileGroup(id: "pastMonth", title: "Previous 30 Days", items: pastMonth)) }
+            if !thisYear.isEmpty { groups.append(FileGroup(id: "thisYear", title: "Earlier this Year", items: thisYear)) }
+            if !older.isEmpty { groups.append(FileGroup(id: "older", title: "Older", items: older)) }
+            return groups
+
+        case .size:
+            var huge: [FileItem] = []
+            var large: [FileItem] = []
+            var medium: [FileItem] = []
+            var small: [FileItem] = []
+            var tiny: [FileItem] = []
+            var zero: [FileItem] = []
+
+            for item in displayItems {
+                let s = item.isFolder ? (folderSizes[item.url] ?? 0) : item.size
+                if s > 500 * 1024 * 1024 {
+                    huge.append(item)
+                } else if s > 100 * 1024 * 1024 {
+                    large.append(item)
+                } else if s > 1 * 1024 * 1024 {
+                    medium.append(item)
+                } else if s > 16 * 1024 {
+                    small.append(item)
+                } else if s > 0 {
+                    tiny.append(item)
+                } else {
+                    zero.append(item)
+                }
+            }
+
+            var groups: [FileGroup] = []
+            if !huge.isEmpty { groups.append(FileGroup(id: "huge", title: "Huge (> 500 MB)", items: huge)) }
+            if !large.isEmpty { groups.append(FileGroup(id: "large", title: "Large (100 MB – 500 MB)", items: large)) }
+            if !medium.isEmpty { groups.append(FileGroup(id: "medium", title: "Medium (1 MB – 100 MB)", items: medium)) }
+            if !small.isEmpty { groups.append(FileGroup(id: "small", title: "Small (16 KB – 1 MB)", items: small)) }
+            if !tiny.isEmpty { groups.append(FileGroup(id: "tiny", title: "Tiny (< 16 KB)", items: tiny)) }
+            if !zero.isEmpty { groups.append(FileGroup(id: "zero", title: "Zero bytes", items: zero)) }
+            return groups
+
+        case .tags:
+            var tagDict: [String: [FileItem]] = [:]
+            var untagged: [FileItem] = []
+
+            for item in displayItems {
+                if item.tags.isEmpty {
+                    untagged.append(item)
+                } else {
+                    for t in item.tags {
+                        tagDict[t, default: []].append(item)
+                    }
+                }
+            }
+
+            var groups: [FileGroup] = []
+            for (tagName, groupItems) in tagDict.sorted(by: { $0.key < $1.key }) {
+                groups.append(FileGroup(id: "tag-\(tagName)", title: tagName, items: groupItems))
+            }
+            if !untagged.isEmpty {
+                groups.append(FileGroup(id: "untagged", title: "No Tags", items: untagged))
+            }
+            return groups
+        }
     }
 
     // MARK: - Search
@@ -526,6 +774,89 @@ final class FileBrowserModel: ObservableObject {
     func newFolder() { create(named: "New folder", folder: true) }
     func newTextFile() { create(named: "New Text Document.txt", folder: false) }
 
+    /// macOS Finder: New Folder with Selection (⌃⌘N)
+    func newFolderWithSelection() {
+        let targets = selectionURLs
+        guard !targets.isEmpty else { return }
+        let dir = currentURL
+        let folderURL = FileOps.uniqueURL(named: "New Folder with Items", in: dir, copy: false)
+        do {
+            try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: false)
+        } catch {
+            errorMessage = "Couldn't create folder: \(error.localizedDescription)"
+            return
+        }
+        Task {
+            let result = await runOp("Moving into new folder…") { FileOps.move(targets, to: folderURL) }
+            record(result, label: "New Folder with Selection", inverse: .moveBack)
+            await reload()
+            selection = [folderURL]
+            anchor = folderURL
+            cursor = folderURL
+            scrollTarget = folderURL
+            beginRename(folderURL)
+        }
+    }
+
+    /// macOS Finder: Make Alias (⌃⌘A)
+    func makeAlias(_ urls: [URL]? = nil) {
+        let targets = urls ?? (selectionURLs.isEmpty ? [currentURL] : selectionURLs)
+        guard !targets.isEmpty else { return }
+        let dir = currentURL
+        var createdURLs: [URL] = []
+        for src in targets {
+            let base = src.deletingPathExtension().lastPathComponent
+            let ext = src.pathExtension
+            let aliasName = ext.isEmpty ? "\(base) alias" : "\(base) alias.\(ext)"
+            let dest = FileOps.uniqueURL(named: aliasName, in: dir, copy: false)
+            do {
+                try FileManager.default.createSymbolicLink(at: dest, withDestinationURL: src)
+                createdURLs.append(dest)
+            } catch {
+                errorMessage = "Couldn't create alias for “\(src.lastPathComponent)”: \(error.localizedDescription)"
+            }
+        }
+        if !createdURLs.isEmpty {
+            let pairs = createdURLs.map { FilePair(from: $0, to: $0) }
+            record(OpResult(pairs: pairs), label: "Make Alias", inverse: .trashCreated)
+            Task {
+                await reload()
+                selection = Set(createdURLs)
+                if let first = createdURLs.first { scrollTarget = first }
+            }
+        }
+    }
+
+    // MARK: - macOS Finder Tags
+    func toggleTag(_ tag: String, for urls: [URL]? = nil) {
+        let targets = urls ?? (selectionURLs.isEmpty ? [currentURL] : selectionURLs)
+        guard !targets.isEmpty else { return }
+        for url in targets {
+            let existing = (try? url.resourceValues(forKeys: [.tagNamesKey]))?.tagNames ?? []
+            var updated = existing
+            if let idx = updated.firstIndex(where: { $0.localizedCaseInsensitiveCompare(tag) == .orderedSame }) {
+                updated.remove(at: idx)
+            } else {
+                updated.append(tag)
+            }
+            do {
+                try (url as NSURL).setResourceValue(updated as NSArray, forKey: .tagNamesKey)
+            } catch {
+                errorMessage = "Couldn't update tags on “\(url.lastPathComponent)”: \(error.localizedDescription)"
+            }
+        }
+        refresh()
+    }
+
+    func clearTags(for urls: [URL]? = nil) {
+        let targets = urls ?? (selectionURLs.isEmpty ? [currentURL] : selectionURLs)
+        guard !targets.isEmpty else { return }
+        for url in targets {
+            try? (url as NSURL).setResourceValue([] as NSArray, forKey: .tagNamesKey)
+        }
+        refresh()
+    }
+
     private func create(named name: String, folder: Bool) {
         let dir = currentURL
         let dest = FileOps.uniqueURL(named: name, in: dir, copy: false)
@@ -612,22 +943,67 @@ final class FileBrowserModel: ObservableObject {
         }
     }
 
-    func compress(_ urls: [URL]? = nil) {
+    func compress(_ urls: [URL]? = nil, format: ArchiveFormat = .zip) {
         let list = urls ?? selectionURLs
         guard !list.isEmpty else { return }
         let dir = currentURL
         Task {
-            let result = await runOp("Compressing…") { FileOps.compress(list, in: dir) }
+            let result = await runOp("Compressing…") { FileOps.compress(list, in: dir, format: format) }
             record(result, label: "Compress", inverse: .trashCreated, using: result.pairs.map { FilePair(from: $0.to, to: $0.to) })
             await finish(result, selecting: result.pairs.map(\.to))
         }
     }
 
-    func extract(_ url: URL) {
+    func extract(_ urls: [URL]? = nil, toSubfolder: Bool = false) {
+        let list = urls ?? selectionURLs
+        guard !list.isEmpty else { return }
         let dir = currentURL
         Task {
-            let result = await runOp("Extracting…") { FileOps.extract(url, in: dir) }
+            let result = await runOp("Extracting…") { FileOps.extract(list, in: dir, toSubfolder: toSubfolder) }
             record(result, label: "Extract", inverse: .trashCreated, using: result.pairs.map { FilePair(from: $0.to, to: $0.to) })
+            await finish(result, selecting: result.pairs.map(\.to))
+        }
+    }
+
+    func extract(_ url: URL) {
+        extract([url], toSubfolder: true)
+    }
+
+    func convertImages(_ urls: [URL]? = nil, to format: ImageFormat) {
+        let list = urls ?? selectionURLs
+        guard !list.isEmpty else { return }
+        let dir = currentURL
+        Task {
+            let result = await runOp("Converting \(list.count) image\(list.count == 1 ? "" : "s")…") {
+                FileOps.convertImages(list, to: format, in: dir)
+            }
+            record(result, label: "Convert to \(format.title)", inverse: .trashCreated, using: result.pairs.map { FilePair(from: $0.to, to: $0.to) })
+            await finish(result, selecting: result.pairs.map(\.to))
+        }
+    }
+
+    func combineImagesToPDF(_ urls: [URL]? = nil) {
+        let list = urls ?? selectionURLs
+        guard !list.isEmpty else { return }
+        let dir = currentURL
+        Task {
+            let result = await runOp("Combining images into PDF…") {
+                FileOps.combineImagesToPDF(list, in: dir)
+            }
+            record(result, label: "Combine Images to PDF", inverse: .trashCreated, using: result.pairs.map { FilePair(from: $0.to, to: $0.to) })
+            await finish(result, selecting: result.pairs.map(\.to))
+        }
+    }
+
+    func convertDocuments(_ urls: [URL]? = nil, to format: DocumentFormat) {
+        let list = urls ?? selectionURLs
+        guard !list.isEmpty else { return }
+        let dir = currentURL
+        Task {
+            let result = await runOp("Converting \(list.count) document\(list.count == 1 ? "" : "s")…") {
+                FileOps.convertDocuments(list, to: format, in: dir)
+            }
+            record(result, label: "Convert to \(format.title)", inverse: .trashCreated, using: result.pairs.map { FilePair(from: $0.to, to: $0.to) })
             await finish(result, selecting: result.pairs.map(\.to))
         }
     }
@@ -708,6 +1084,7 @@ final class FileBrowserModel: ObservableObject {
         case 99 where flags.isEmpty: focusSearch(); return true // F3
         case 118 where flags.isEmpty: focusAddressBar(); return true // F4
         case 53 where flags.isEmpty: // Escape
+            MarqueeMonitor.shared.cancelDrag(for: self)
             if !searchText.isEmpty { searchText = "" } else { selection = [] }
             return true
         case 123 where flags == .option: goBack(); return true
@@ -756,7 +1133,7 @@ final class FileBrowserModel: ObservableObject {
         }
     }
 
-    private static func findFileTable(in view: NSView?) -> NSTableView? {
+    static func findFileTable(in view: NSView?) -> NSTableView? {
         guard let view else { return nil }
         if let table = view as? NSTableView, !(table is NSOutlineView), table.tableColumns.count > 1 { return table }
         for sub in view.subviews { if let found = findFileTable(in: sub) { return found } }

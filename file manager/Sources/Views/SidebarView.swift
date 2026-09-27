@@ -88,6 +88,40 @@ struct SidebarView: View {
                 }
             }
 
+            Section("Tags") {
+                ForEach(MacTag.allCases) { tag in
+                    HStack(spacing: 8) {
+                        Circle()
+                            .fill(tag.color)
+                            .frame(width: 9, height: 9)
+                        Text(tag.rawValue)
+                            .font(.system(size: 13))
+                        Spacer()
+                        if model.selectedTagFilter == tag.rawValue {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.system(size: 11))
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .padding(.vertical, 1)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        if model.selectedTagFilter == tag.rawValue {
+                            model.selectedTagFilter = nil
+                        } else {
+                            model.selectedTagFilter = tag.rawValue
+                        }
+                    }
+                    .contextMenu {
+                        if model.selectedTagFilter == tag.rawValue {
+                            Button("Clear Tag Filter") { model.selectedTagFilter = nil }
+                        } else {
+                            Button("Filter by \(tag.rawValue)") { model.selectedTagFilter = tag.rawValue }
+                        }
+                    }
+                }
+            }
+
             Section("Folders") {
                 FolderTreeNode(url: SidebarStore.home, title: NSUserName(), model: model, startExpanded: true)
             }

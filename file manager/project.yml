@@ -39,3 +39,14 @@ targets:
         INFOPLIST_KEY_NSDownloadsFolderUsageDescription: "Pathway shows the files in your Downloads folder."
         INFOPLIST_KEY_NSRemovableVolumesUsageDescription: "Pathway shows the files on your external drives."
         INFOPLIST_KEY_NSNetworkVolumesUsageDescription: "Pathway shows the files on your network volumes."
+  PathwayTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - Tests
+      - path: Sources/Models
+      - path: Sources/Support
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.gopikrishna.pathway.tests

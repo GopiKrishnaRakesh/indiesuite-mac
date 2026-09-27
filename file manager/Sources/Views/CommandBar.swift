@@ -28,25 +28,98 @@ struct CommandBar: View {
             tool("trash", "Move to Trash (Delete)", enabled: hasSelection) { model.trash() }
             divider
 
+            ShareLink(items: model.selectedURLs.isEmpty ? [model.currentURL] : model.selectedURLs) {
+                Image(systemName: "square.and.arrow.up")
+                    .frame(width: 26, height: 22)
+            }
+            .buttonStyle(.borderless)
+            .help("Share (AirDrop, Messages, Mail…)")
+
             Menu {
-                ForEach(SortField.allCases) { field in
+                ForEach(MacTag.allCases) { tag in
                     Button {
-                        model.setSort(field)
+                        model.toggleTag(tag.rawValue)
                     } label: {
-                        if field == model.currentSortField {
-                            Label(field.title, systemImage: model.sortAscending ? "chevron.up" : "chevron.down")
-                        } else {
-                            Text(field.title)
+                        Label(tag.rawValue, systemImage: "circle.fill")
+                    }
+                }
+                Divider()
+                Button("Clear Tags") { model.clearTags() }
+            } label: {
+                Image(systemName: "tag")
+                    .frame(width: 26, height: 22)
+            }
+            .menuStyle(.borderlessButton)
+            .fixedSize()
+            .help("Tags (macOS color labels)")
+
+            divider
+
+            Menu {
+                Section("Sort By") {
+                    ForEach(SortField.allCases) { field in
+                        Button {
+                            model.setSort(field)
+                        } label: {
+                            if field == model.currentSortField {
+                                Label(field.title, systemImage: model.sortAscending ? "arrow.up" : "arrow.down")
+                            } else {
+                                Text(field.title)
+                            }
                         }
                     }
                 }
                 Divider()
-                Toggle("Folders on top", isOn: $model.foldersFirst)
+                Section("Order") {
+                    Button {
+                        model.setSortDirection(ascending: true)
+                    } label: {
+                        if model.sortAscending {
+                            Label("Ascending", systemImage: "checkmark")
+                        } else {
+                            Text("Ascending")
+                        }
+                    }
+                    Button {
+                        model.setSortDirection(ascending: false)
+                    } label: {
+                        if !model.sortAscending {
+                            Label("Descending", systemImage: "checkmark")
+                        } else {
+                            Text("Descending")
+                        }
+                    }
+                }
+                Divider()
+                Section("Options") {
+                    Toggle("Folders on top", isOn: $model.foldersFirst)
+                    Toggle("Calculate folder sizes", isOn: $model.calculateFolderSizes)
+                }
             } label: {
                 Label("Sort", systemImage: "arrow.up.arrow.down")
             }
             .menuStyle(.borderlessButton)
             .fixedSize()
+            .help("Sort items and toggle ascending/descending order")
+
+            Menu {
+                ForEach(GroupByField.allCases) { field in
+                    Button {
+                        model.groupBy = field
+                    } label: {
+                        if field == model.groupBy {
+                            Label(field.title, systemImage: "checkmark")
+                        } else {
+                            Text(field.title)
+                        }
+                    }
+                }
+            } label: {
+                Label(model.groupBy == .none ? "Group" : "Group: \(model.groupBy.title)", systemImage: "rectangle.3.group")
+            }
+            .menuStyle(.borderlessButton)
+            .fixedSize()
+            .help("Group items by Type, Date, Size, or Tags")
 
             Menu {
                 Picker("View", selection: $model.viewMode) {
@@ -69,10 +142,14 @@ struct CommandBar: View {
                 ProgressView().controlSize(.small)
                 Text(busy).font(.caption).foregroundStyle(.secondary)
             }
+            tool(model.showPathBar ? "location.fill" : "location", "Path bar", enabled: true, active: model.showPathBar) {
+                model.showPathBar.toggle()
+            }
             tool(model.showPreview ? "sidebar.right" : "sidebar.right", "Preview pane (⌥⌘P)", enabled: true, active: model.showPreview) {
                 model.showPreview.toggle()
             }
             tool("info.circle", "Properties (⌥Return)", enabled: true) { model.showProperties() }
+            tool("sparkles", "Feature Store", enabled: true, active: model.showFeatureStore) { model.showFeatureStore = true }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 5)
@@ -108,7 +185,7 @@ struct StatusBar: View {
             }
             if model.isLoading { ProgressView().controlSize(.mini) }
             Spacer()
-            if model.viewMode != .details {
+            if model.viewMode != .details && model.viewMode != .columns {
                 Slider(value: $model.iconSize, in: 32...128).frame(width: 110).controlSize(.mini)
             }
             Picker("View", selection: $model.viewMode) {
@@ -116,7 +193,7 @@ struct StatusBar: View {
             }
             .pickerStyle(.segmented)
             .labelsHidden()
-            .frame(width: 100)
+            .frame(width: 130)
             .controlSize(.small)
         }
         .font(.system(size: 11))

@@ -25,12 +25,18 @@ struct PathwayCommands: Commands {
         // File
         CommandGroup(after: .newItem) {
             Button("New Folder") { model?.newFolder() }.keyboardShortcut("n", modifiers: [.command, .shift])
+            Button("New Folder with Selection") { model?.newFolderWithSelection() }.keyboardShortcut("n", modifiers: [.command, .control])
             Button("New Text Document") { model?.newTextFile() }.keyboardShortcut("n", modifiers: [.command, .option])
             Divider()
             Button("Open") { model?.openSelection() }.keyboardShortcut(.downArrow, modifiers: .command)
             Button("Rename") { model?.beginRename() }
             Button("Duplicate") { model?.duplicate() }.keyboardShortcut("d")
-            Button("Compress") { model?.compress() }
+            Button("Make Alias") { model?.makeAlias() }.keyboardShortcut("a", modifiers: [.command, .control])
+            Menu("Compress") {
+                Button("ZIP Archive (.zip)") { model?.compress(format: .zip) }
+                Button("TAR Archive (.tar.gz)") { model?.compress(format: .tarGz) }
+            }
+            Button("Extract Archive") { model?.extract() }
             Button("Quick Look") { model?.toggleQuickLook() }
             Button("Properties") { model?.showProperties() }.keyboardShortcut("i")
             Divider()
@@ -64,6 +70,7 @@ struct PathwayCommands: Commands {
             Button("Details") { model?.viewMode = .details }.keyboardShortcut("1")
             Button("Icons") { model?.viewMode = .icons }.keyboardShortcut("2")
             Button("Tiles") { model?.viewMode = .tiles }.keyboardShortcut("3")
+            Button("Columns") { model?.viewMode = .columns }.keyboardShortcut("4")
             Divider()
             Menu("Sort By") {
                 ForEach(SortField.allCases) { field in
@@ -75,9 +82,18 @@ struct PathwayCommands: Commands {
                 Button("Ascending") { model?.setSortDirection(ascending: true) }
                 Button("Descending") { model?.setSortDirection(ascending: false) }
             }
+            Menu("Group By") {
+                ForEach(GroupByField.allCases) { field in
+                    Button(field.title + (model?.groupBy == field ? "  ✓" : "")) {
+                        model?.groupBy = field
+                    }
+                }
+            }
             Toggle("Show Hidden Files", isOn: Binding(get: { model?.showHidden ?? false }, set: { model?.showHidden = $0 }))
                 .keyboardShortcut(".", modifiers: [.command, .shift])
             Toggle("Folders on Top", isOn: Binding(get: { model?.foldersFirst ?? true }, set: { model?.foldersFirst = $0 }))
+            Toggle("Calculate Folder Sizes", isOn: Binding(get: { model?.calculateFolderSizes ?? true }, set: { model?.calculateFolderSizes = $0 }))
+            Toggle("Path Bar", isOn: Binding(get: { model?.showPathBar ?? true }, set: { model?.showPathBar = $0 }))
             Toggle("Preview Pane", isOn: Binding(get: { model?.showPreview ?? false }, set: { model?.showPreview = $0 }))
                 .keyboardShortcut("p", modifiers: [.command, .option])
             Button("Bigger Icons") { model?.iconSize = min((model?.iconSize ?? 64) + 16, 128) }.keyboardShortcut("+")
@@ -110,6 +126,9 @@ struct PathwayCommands: Commands {
 
         // Help
         CommandGroup(replacing: .help) {
+            Button("Feature Store…") { model?.showFeatureStore = true }
+            Button("Permissions & Setup Assistant…") { model?.showOnboarding = true }
+            Divider()
             Button("Keyboard Shortcuts") { openWindow(id: "shortcuts") }.keyboardShortcut("/")
         }
     }

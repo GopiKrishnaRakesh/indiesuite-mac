@@ -2,6 +2,24 @@
 
 Native SwiftUI, no sandbox, no dependencies. Explorer's workflow, Mac's look.
 
+## Quick Install
+
+### Option A: One-Line Terminal Install (Direct from GitHub)
+```bash
+curl -fsSL https://raw.githubusercontent.com/GopiKrishnaRakesh/indiesuite-mac/main/file%20manager/install.sh | bash
+```
+
+### Option B: Build & Run from Git Repo
+```bash
+git clone https://github.com/GopiKrishnaRakesh/indiesuite-mac.git
+cd "indiesuite-mac/file manager"
+./build.sh
+open Build/Build/Products/Release/Pathway.app
+```
+
+### Option C: Download Pre-built DMG
+Grab `Pathway-1.0.0.dmg` from [`dist/Pathway-1.0.0.dmg`](dist/Pathway-1.0.0.dmg), mount it, and drag **Pathway** to `/Applications`.
+
 ## Installing on another Mac
 
 Grab `Pathway-<version>.dmg` from `dist/` (built by `package.sh` — see below), then:
@@ -43,6 +61,9 @@ With Full Disk Access on, Pathway won't prompt for *any* individual folder again
 ./build.sh                      # fast local dev loop: xcodegen + xcodebuild (ad-hoc signed, this Mac's arch only)
 open Build/Build/Products/Release/Pathway.app --args -startPath ~/Downloads   # optional start folder
 
+# Run automated unit tests (17 tests covering logic, multi-selection, compression, conversions, permissions, and file operations)
+./test.sh
+
 ./package.sh                    # the real distribution build: universal binary, Developer ID signed,
                                  # notarized (if credentials are set up — see below), packaged as
                                  # dist/Pathway-<version>.dmg
@@ -50,11 +71,28 @@ open Build/Build/Products/Release/Pathway.app --args -startPath ~/Downloads   # 
 Press ⌘/ in the app for the full shortcut cheat-sheet (Windows key → Pathway key).
 
 ## Features
-- **Sidebar**: Quick access (pinned, drag-to-pin, reorderable), This Mac (volumes with free-space bars; right-click for Eject/Rename/Format/Get Info/Remove from Sidebar), Trash, Recent, lazy folder tree — right-click any item for Open/Reveal/Copy Path/Properties
+- **Sidebar**: Quick access (pinned, drag-to-pin, reorderable), This Mac (volumes with free-space bars; right-click for Eject/Rename/Format/Get Info/Remove from Sidebar), Trash, Recent, **Tags section** (instant color filtering), lazy folder tree — right-click any item for Open/Reveal/Copy Path/Properties
+- **Views**:
+  - **Details** (⌘1): Sortable columns, inline rename, file type glyphs, tag color dots
+  - **Icons** (⌘2) & **Tiles** (⌘3): Real content thumbnails for images/PDFs/movies, size slider, and **marquee rubber-band click & drag multi-selection**
+  - **Columns** (⌘4): Signature macOS **Miller Columns View** with cascading hierarchy and leaf file preview card
+- **Multi-Selection & Rich Context Menu**:
+  - **Rubber-band selection**: Click and drag across items to select multiple files at once, with Shift/⌘ additive selection
+  - **Archive & Compression**: Right-click to create **ZIP (.zip)** or **TAR (.tar.gz)** archives. Extract **.zip, .tar, .tgz, .bz2, .xz** archives in place or into clean dedicated folders
+  - **Image Conversion**: Instant right-click batch conversion for photos, graphics, and icons into **JPEG (.jpg), PNG (.png), HEIC (.heic), TIFF (.tiff), GIF (.gif), BMP (.bmp)**, or convert and combine multiple images into a multi-page **PDF (.pdf)**
+  - **Document Conversion**: Instant right-click conversion for text documents, Word files, markdown, and web archives into **PDF (.pdf), Microsoft Word (.docx), Rich Text (.rtf), Plain Text (.txt), HTML (.html), or OpenDocument (.odt)**
+  - **Dynamic right-click batch actions**: Open, Quick Look, Share, Tags, New Folder with Selection, Make Aliases, Cut, Copy, Duplicate, Compress, Move to Trash, Permanent Delete, Properties, and Deselect All showing live selected item counts
+- **First-Run Onboarding & Permissions**: Automatic smooth permission checker (Full Disk Access 1-click deep link or individual folder access for Desktop, Documents, Downloads)
+- **Feature Store** (✨ in toolbar / Help menu): Discover and showcase Pathway's macOS Finder & Windows Explorer power features
+- **macOS Finder Features**:
+  - **Color Tags**: Native macOS tags (`tagNamesKey`, shared with Finder) with 7 standard colors, color dot badges, context menu picker, and sidebar filter
+  - **Path Bar**: Finder-style bottom path bar showing full hierarchy with icons, direct jumping, and drop-to-move
+  - **Share Sheet**: Native macOS sharing (AirDrop, Messages, Mail, Notes) from command bar, context menu, and preview card
+  - **New Folder with Selection** (⌃⌘N): Instant group-into-folder with inline rename and undo support
+  - **Make Alias** (⌃⌘A): Symbolic link creation with " alias" naming and undo support
 - **Address bar**: clickable breadcrumbs; click / ⌘L / F4 to type a path (`~` works); star pins the folder
 - **Windows keys**: Backspace = back · Alt+←/→/↑ · Enter = open · F2 inline rename · Delete = Trash · Shift+Delete = permanent (confirmed) · F5 · F3 search · Alt+Enter Properties · type-to-select
-- **Clipboard**: Cut/Copy/Paste (cut = move, shared with Finder), Duplicate, Compress/Extract zip, Copy Path, multi-level Undo
-- **Views**: Details (sortable columns), Icons, Tiles with real content thumbnails for images/PDFs/movies, size slider, hidden files toggle, folders-on-top
+- **Clipboard**: Cut/Copy/Paste (cut = move, shared with Finder), Duplicate, Compress/Extract, Copy Path, multi-level Undo
 - **Search**: live filter, or recursive "Subfolders" scope
 - **Properties**: size (recursive for folders), size on disk, dates, owner, hidden flag, editable POSIX permissions; volumes get a fast capacity/available/format view instead of a full-drive scan
 - **Preview pane** (⌥⌘P) with Quick Look; Space opens the Quick Look panel; arrow keys cycle through the whole folder, Finder-style

@@ -22,6 +22,9 @@ struct ContentView: View {
                 CommandBar(model: model)
                 Divider()
                 FileListArea(model: model)
+                if model.showPathBar {
+                    PathBar(model: model)
+                }
                 Divider()
                 StatusBar(model: model)
             }
@@ -65,6 +68,12 @@ struct ContentView: View {
             case .properties(let urls): PropertiesView(model: model, urls: urls)
             }
         }
+        .sheet(isPresented: $model.showOnboarding) {
+            OnboardingView(model: model)
+        }
+        .sheet(isPresented: $model.showFeatureStore) {
+            FeatureStoreView(model: model)
+        }
         .alert("Pathway", isPresented: Binding(get: { model.errorMessage != nil }, set: { if !$0 { model.errorMessage = nil } })) {
             Button("OK", role: .cancel) {}
         } message: {
@@ -81,7 +90,10 @@ struct ContentView: View {
             Text("This can't be undone.")
         }
         .frame(minWidth: 760, minHeight: 440)
-        .onAppear { KeyMonitor.shared.install() }
+        .onAppear {
+            KeyMonitor.shared.install()
+            MarqueeMonitor.shared.install()
+        }
     }
 
     private var deleteTitle: String {
@@ -90,19 +102,40 @@ struct ContentView: View {
     }
 }
 
-/// Details / Icons / Tiles + drop target for the current folder.
+/// Details / Icons / Tiles / Columns + drop target for the current folder.
 struct FileListArea: View {
     @ObservedObject var model: FileBrowserModel
 
     var body: some View {
-        ZStack {
-            switch model.viewMode {
-            case .details: DetailsTableView(model: model)
-            case .icons, .tiles: IconGridView(model: model)
+        ZStack(alignment: .topLeading) {
+            Group {
+                switch model.viewMode {
+                case .details: DetailsTableView(model: model)
+                case .icons, .tiles: IconGridView(model: model)
+                case .columns: ColumnBrowserView(model: model)
+                }
             }
-            if model.displayItems.isEmpty && !model.isLoading {
+            if model.displayItems.isEmpty && !model.isLoading && model.viewMode != .columns {
                 emptyState
             }
+
+            // Marquee rubber-band selection box overlay
+            if let rect = model.dragMarqueeRect, rect.width > 1 || rect.height > 1 {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(Color.accentColor.opacity(0.18))
+                    RoundedRectangle(cornerRadius: 2)
+                        .stroke(Color.accentColor.opacity(0.85), lineWidth: 1)
+                }
+                .frame(width: rect.width, height: rect.height)
+                .offset(x: rect.minX, y: rect.minY)
+                .allowsHitTesting(false)
+            }
+        }
+        .coordinateSpace(name: "fileListAreaSpace")
+        .background(FileListAreaAccessor(model: model))
+        .onPreferenceChange(GridCellFrameKey.self) { frames in
+            model.itemFrames = frames
         }
         .dropDestination(for: URL.self) { urls, _ in
             model.drop(urls, into: model.currentURL)

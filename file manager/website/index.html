@@ -6,11 +6,26 @@
   <title>Pathway, the file manager your Mac was missing</title>
   <meta name="description" content="Explorer's muscle memory meets macOS elegance. Enter opens, F2 renames, true Cut & Paste, and live folder sizes in List view. Native SwiftUI, Universal Binary.">
   
-  <!-- Open Graph -->
-  <meta property="og:title" content="Pathway for Mac">
-  <meta property="og:description" content="Windows Explorer's muscle memory. macOS native elegance.">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121316" media="(prefers-color-scheme: dark)">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Pathway">
+  <meta property="og:title" content="Pathway — The file manager your Mac was missing">
+  <meta property="og:description" content="Windows Explorer's muscle memory meets macOS elegance. Enter opens, F2 renames, true Cut & Paste, and live folder sizes in List view. Native SwiftUI, Universal Binary.">
   <meta property="og:image" content="assets/social-banner.jpg?v=2">
+  
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pathway — The file manager your Mac was missing">
+  <meta name="twitter:description" content="Windows Explorer's muscle memory meets macOS elegance. Enter opens, F2 renames, true Cut & Paste, and live folder sizes.">
+  <meta name="twitter:image" content="assets/social-banner.jpg?v=2">
+
+  <!-- Favicons & App Manifest -->
+  <link rel="icon" type="image/png" href="assets/app-icon.png">
+  <link rel="apple-touch-icon" href="assets/app-icon.png">
+  <link rel="manifest" href="site.webmanifest">
 
   <!-- Google Fonts: Inter Tight & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +33,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
-  <link rel="icon" type="image/png" href="assets/app-icon.png">
+
+  <!-- Schema.org SoftwareApplication Structured Data for Search Engines -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Pathway",
+    "operatingSystem": "macOS 14.0+, macOS 15.0+",
+    "applicationCategory": "UtilitiesApplication",
+    "description": "The file manager your Mac was missing. Windows Explorer ergonomics with native macOS SwiftUI speed.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0.00",
+      "priceCurrency": "USD"
+    },
+    "downloadUrl": "https://github.com/GopiKrishnaRakesh/indiesuite-mac/releases/latest/download/Pathway-1.0.0.dmg"
+  }
+  </script>
 </head>
 <body>
 
@@ -459,7 +491,6 @@
         <a href="#features" class="footer-link">Features</a>
         <a href="#setup" class="footer-link">Setup</a>
         <a href="https://github.com/GopiKrishnaRakesh/indiesuite-mac/tree/main/file%20manager" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>
-        <a href="assets/instagram/slide-1-cover.jpg" target="_blank" class="footer-link">Instagram Carousel (6 Slides)</a>
         <a href="https://github.com/GopiKrishnaRakesh/indiesuite-mac/releases/latest/download/Pathway-1.0.0.dmg" class="footer-link" style="color: var(--accent-blue); font-weight: 600;">Download DMG</a>
       </nav>
     </div>

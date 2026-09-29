@@ -93,6 +93,9 @@ struct ContentView: View {
         .onAppear {
             KeyMonitor.shared.install()
             MarqueeMonitor.shared.install()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                AppInstallHelper.checkAndPromptToInstall()
+            }
         }
     }
 

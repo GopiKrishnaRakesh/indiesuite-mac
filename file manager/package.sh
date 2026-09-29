@@ -79,9 +79,11 @@ rm -rf "$STAGING"
 if xcrun notarytool history --keychain-profile "$NOTARY_PROFILE" >/dev/null 2>&1; then
     echo "==> Notarizing (profile: $NOTARY_PROFILE)"
     xcrun notarytool submit "$DMG_PATH" --keychain-profile "$NOTARY_PROFILE" --wait
-    echo "==> Stapling ticket"
+    echo "==> Stapling ticket to DMG"
     xcrun stapler staple "$DMG_PATH"
     xcrun stapler validate "$DMG_PATH"
+    echo "==> Stapling ticket to App bundle"
+    xcrun stapler staple "$APP_PATH" 2>/dev/null || true
     echo ""
     echo "Built and notarized: $(pwd)/$DMG_PATH"
 else
@@ -92,3 +94,13 @@ else
     echo "Signed with a Developer ID certificate. NOT notarized -- no '$NOTARY_PROFILE' credentials"
     echo "found in the keychain. See the note at the top of this script to set them up."
 fi
+
+echo "==> Creating canonical aliases and standalone ZIP distribution"
+cp -f "$DMG_PATH" "$DIST_DIR/${APP_NAME}.dmg"
+ditto -c -k --keepParent "$APP_PATH" "$DIST_DIR/${APP_NAME}-${VERSION}.zip"
+cp -f "$DIST_DIR/${APP_NAME}-${VERSION}.zip" "$DIST_DIR/${APP_NAME}.zip"
+
+echo ""
+echo "✨ Standalone & Installable Packages Ready in $(pwd)/$DIST_DIR:"
+ls -lh "$DIST_DIR"
+

@@ -9,16 +9,18 @@ Native SwiftUI, no sandbox, no dependencies. Explorer's workflow, Mac's look.
 curl -fsSL https://raw.githubusercontent.com/GopiKrishnaRakesh/indiesuite-mac/main/file%20manager/install.sh | bash
 ```
 
-### Option B: Build & Run from Git Repo
+### Option B: Build & Install from Source
 ```bash
 git clone https://github.com/GopiKrishnaRakesh/indiesuite-mac.git
 cd "indiesuite-mac/file manager"
-./build.sh
-open Build/Build/Products/Release/Pathway.app
+./build.sh --install
 ```
 
-### Option C: Download Pre-built DMG
-Grab `Pathway-1.0.0.dmg` from [`dist/Pathway-1.0.0.dmg`](dist/Pathway-1.0.0.dmg), mount it, and drag **Pathway** to `/Applications`.
+### Option C: Download Pre-built Notarized DMG or ZIP
+- **Disk Image**: Grab `Pathway-1.0.0.dmg` (or `Pathway.dmg`) from [`dist/Pathway.dmg`](dist/Pathway.dmg), open it, and drag **Pathway** to `/Applications`.
+- **Standalone ZIP**: Grab `Pathway.zip` from `dist/Pathway.zip` and extract directly anywhere on your Mac.
+- **In-App Self Move**: If you run Pathway from Downloads or mounted DMG, Pathway automatically offers to move itself to `/Applications`.
+- **Terminal CLI**: In Pathway, choose **Pathway → Install 'pathway' Terminal Command…** to launch Pathway from any terminal with `pathway /path/to/folder`.
 
 ## Installing on another Mac
 
@@ -58,15 +60,15 @@ With Full Disk Access on, Pathway won't prompt for *any* individual folder again
 
 ## Build & run
 ```bash
-./build.sh                      # fast local dev loop: xcodegen + xcodebuild (ad-hoc signed, this Mac's arch only)
+./build.sh                      # fast local dev loop: xcodegen + xcodebuild
+./build.sh --install            # build and directly install to /Applications/Pathway.app
+./install.sh                    # install to /Applications with quarantine clearing and CLI shortcut
 open Build/Build/Products/Release/Pathway.app --args -startPath ~/Downloads   # optional start folder
 
-# Run automated unit tests (17 tests covering logic, multi-selection, compression, conversions, permissions, and file operations)
+# Run automated unit tests (28 tests covering logic, folder sizing, multi-selection, compression, conversions, permissions, and file operations)
 ./test.sh
 
-./package.sh                    # the real distribution build: universal binary, Developer ID signed,
-                                 # notarized (if credentials are set up — see below), packaged as
-                                 # dist/Pathway-<version>.dmg
+./package.sh                    # universal binary, Developer ID signed, Apple notarized, stapled DMG + ZIP in dist/
 ```
 Press ⌘/ in the app for the full shortcut cheat-sheet (Windows key → Pathway key).
 

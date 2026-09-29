@@ -22,6 +22,19 @@ struct PathwayCommands: Commands {
     @Environment(\.openWindow) private var openWindow
 
     var body: some Commands {
+        // App Menu
+        CommandGroup(after: .appInfo) {
+            if !AppInstallHelper.isRunningFromApplications {
+                Button("Move to Applications Folder…") {
+                    AppInstallHelper.promptOrMoveToApplications()
+                }
+            }
+            Button("Install 'pathway' Terminal Command…") {
+                AppInstallHelper.installCommandLineTool()
+            }
+            Divider()
+        }
+
         // File
         CommandGroup(after: .newItem) {
             Button("New Folder") { model?.newFolder() }.keyboardShortcut("n", modifiers: [.command, .shift])
@@ -128,6 +141,10 @@ struct PathwayCommands: Commands {
         CommandGroup(replacing: .help) {
             Button("Feature Store…") { model?.showFeatureStore = true }
             Button("Permissions & Setup Assistant…") { model?.showOnboarding = true }
+            Divider()
+            Button("Install 'pathway' Terminal Command…") {
+                AppInstallHelper.installCommandLineTool()
+            }
             Divider()
             Button("Keyboard Shortcuts") { openWindow(id: "shortcuts") }.keyboardShortcut("/")
         }

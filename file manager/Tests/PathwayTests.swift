@@ -781,6 +781,13 @@ final class PathwayTests: XCTestCase {
         XCTAssertTrue(tagTitles.contains("Blue"))
         XCTAssertTrue(tagTitles.contains("No Tags"))
     }
+
+    @MainActor
+    func testAppInstallHelperProperties() throws {
+        _ = AppInstallHelper.isRunningFromApplications
+        _ = AppInstallHelper.isRunningFromDiskImage
+        AppInstallHelper.checkAndPromptToInstall()
+    }
 }
 
 

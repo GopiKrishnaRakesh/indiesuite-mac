@@ -63,7 +63,11 @@ struct PreviewPane: View {
             Divider()
 
             row("Type", item.kind)
-            if !item.isFolder { row("Size", Fmt.exactBytes(item.size)) }
+            if !item.isFolder {
+                row("Size", Fmt.exactBytes(item.size))
+            } else if let fs = model.folderSizes[item.url.path] ?? item.folderSize {
+                row("Size", Fmt.exactBytes(fs))
+            }
             row("Modified", Fmt.date(item.modified))
             row("Created", Fmt.date(item.created))
             row("Location", item.url.deletingLastPathComponent().path)

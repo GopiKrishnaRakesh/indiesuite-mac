@@ -4,41 +4,62 @@ import Foundation
 actor FolderSizeCalculator {
     static let shared = FolderSizeCalculator()
 
-    private var cache: [URL: (size: Int64, modDate: Date)] = [:]
+    private var cache: [String: (size: Int64, modDate: Date?)] = [:]
 
-    func size(of folderURL: URL) async -> Int64 {
-        let stdURL = folderURL.standardizedFileURL
-        let modDate = (try? stdURL.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date()
-
-        if let cached = cache[stdURL], cached.modDate == modDate {
+    func cachedSize(for path: String, modDate: Date?) -> Int64? {
+        if let cached = cache[path], cached.modDate == modDate {
             return cached.size
         }
+        return nil
+    }
 
-        let keys: [URLResourceKey] = [.fileSizeKey, .isDirectoryKey, .isPackageKey]
-        guard let enumerator = FileManager.default.enumerator(
-            at: stdURL,
-            includingPropertiesForKeys: keys,
-            options: [.skipsPackageDescendants],
-            errorHandler: nil
-        ) else { return 0 }
-
-        var total: Int64 = 0
-        let keySet = Set(keys)
-
-        while let fileURL = enumerator.nextObject() as? URL {
-            if Task.isCancelled { return total }
-            guard let values = try? fileURL.resourceValues(forKeys: keySet) else { continue }
-            // Skip directory entries themselves, count file sizes
-            if values.isDirectory != true || values.isPackage == true {
-                total += Int64(values.fileSize ?? 0)
-            }
-        }
-
-        cache[stdURL] = (total, modDate)
-        return total
+    func store(size: Int64, modDate: Date?, for path: String) {
+        cache[path] = (size, modDate)
     }
 
     func clearCache() {
         cache.removeAll()
+    }
+
+    func remove(path: String) {
+        cache.removeValue(forKey: path)
+    }
+
+    nonisolated func size(of folderURL: URL) async -> Int64 {
+        let path = folderURL.path
+        let resolvedURL = folderURL.resolvingSymlinksInPath()
+        let modDate = (try? resolvedURL.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate
+
+        if let cached = await cachedSize(for: path, modDate: modDate) {
+            return cached
+        }
+
+        let keys: [URLResourceKey] = [.fileSizeKey, .totalFileSizeKey, .isDirectoryKey]
+        guard let enumerator = FileManager.default.enumerator(
+            at: resolvedURL,
+            includingPropertiesForKeys: keys,
+            options: [],
+            errorHandler: { _, _ in true }
+        ) else { return 0 }
+
+        var total: Int64 = 0
+        let keySet = Set(keys)
+        var count = 0
+
+        while let fileURL = enumerator.nextObject() as? URL {
+            if Task.isCancelled { return total }
+            count += 1
+            if count % 200 == 0 {
+                await Task.yield()
+                if Task.isCancelled { return total }
+            }
+            guard let values = try? fileURL.resourceValues(forKeys: keySet) else { continue }
+            if values.isDirectory != true {
+                total += Int64(values.fileSize ?? values.totalFileSize ?? 0)
+            }
+        }
+
+        await store(size: total, modDate: modDate, for: path)
+        return total
     }
 }

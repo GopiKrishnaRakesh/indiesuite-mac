@@ -73,6 +73,18 @@ struct RenameField: View {
     }
 }
 
+struct SizeCell: View {
+    let item: FileItem
+    @ObservedObject var model: FileBrowserModel
+
+    var body: some View {
+        Text(model.displaySize(for: item))
+            .monospacedDigit()
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .trailing)
+    }
+}
+
 struct DetailsTableView: View {
     @ObservedObject var model: FileBrowserModel
 
@@ -91,10 +103,7 @@ struct DetailsTableView: View {
             }
             .width(min: 80, ideal: 140)
             TableColumn("Size", sortUsing: KeyPathComparator(\FileItem.sizeSort)) { item in
-                Text(item.displaySize)
-                    .monospacedDigit()
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
+                SizeCell(item: item, model: model)
             }
             .width(min: 60, ideal: 90)
         } rows: {
@@ -244,7 +253,7 @@ private struct GridCell: View {
                     VStack(alignment: .leading, spacing: 1) {
                         label.font(.system(size: 12, weight: .medium))
                         Text(item.kind).font(.system(size: 10)).foregroundStyle(.secondary).lineLimit(1)
-                        Text(item.displaySize).font(.system(size: 10)).foregroundStyle(.secondary)
+                        Text(model.displaySize(for: item)).font(.system(size: 10)).foregroundStyle(.secondary)
                     }
                     Spacer(minLength: 0)
                 }

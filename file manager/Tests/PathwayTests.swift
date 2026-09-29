@@ -632,6 +632,57 @@ final class PathwayTests: XCTestCase {
     }
 
     @MainActor
+    func testBrowserModelFolderSizeCalculationAndSorting() async throws {
+        let parentDir = tempDir.appendingPathComponent("BrowserSizeTest")
+        try FileManager.default.createDirectory(at: parentDir, withIntermediateDirectories: true)
+
+        let smallFolder = parentDir.appendingPathComponent("SmallFolder")
+        try FileManager.default.createDirectory(at: smallFolder, withIntermediateDirectories: true)
+        try Data(repeating: 0x41, count: 1024 * 50).write(to: smallFolder.appendingPathComponent("file.bin")) // 50 KB
+
+        let largeFolder = parentDir.appendingPathComponent("LargeFolder")
+        try FileManager.default.createDirectory(at: largeFolder, withIntermediateDirectories: true)
+        try Data(repeating: 0x42, count: 1024 * 500).write(to: largeFolder.appendingPathComponent("file.bin")) // 500 KB
+
+        let emptyFolder = parentDir.appendingPathComponent("EmptyFolder")
+        try FileManager.default.createDirectory(at: emptyFolder, withIntermediateDirectories: true)
+
+        let model = FileBrowserModel(start: parentDir)
+        // Wait for directory read and folder size calculations
+        for _ in 0..<30 {
+            if model.folderSizes.count >= 3 { break }
+            try await Task.sleep(for: .milliseconds(50))
+        }
+
+        XCTAssertEqual(model.folderSizes.count, 3)
+        XCTAssertEqual(model.folderSizes[smallFolder.path], 1024 * 50)
+        XCTAssertEqual(model.folderSizes[largeFolder.path], 1024 * 500)
+        XCTAssertEqual(model.folderSizes[emptyFolder.path], 0)
+
+        guard let smallItem = model.displayItems.first(where: { $0.name == "SmallFolder" }),
+              let largeItem = model.displayItems.first(where: { $0.name == "LargeFolder" }),
+              let emptyItem = model.displayItems.first(where: { $0.name == "EmptyFolder" }) else {
+            XCTFail("Missing folder items in displayItems")
+            return
+        }
+
+        XCTAssertNotEqual(model.displaySize(for: smallItem), "—")
+        XCTAssertTrue(model.displaySize(for: smallItem).contains("50") || model.displaySize(for: smallItem).contains("KB"))
+        XCTAssertNotEqual(model.displaySize(for: largeItem), "—")
+        XCTAssertTrue(model.displaySize(for: largeItem).contains("500") || model.displaySize(for: largeItem).contains("KB"))
+        XCTAssertEqual(model.displaySize(for: emptyItem), "Zero bytes")
+
+        // Test sorting by Size Descending
+        model.setSort(.size)
+        model.setSortDirection(ascending: false)
+        XCTAssertEqual(model.displayItems.first?.name, "LargeFolder")
+
+        // Test sorting by Size Ascending
+        model.setSortDirection(ascending: true)
+        XCTAssertEqual(model.displayItems.first?.name, "EmptyFolder")
+    }
+
+    @MainActor
     func testSortByAllFieldsAndAscendingDescending() async throws {
         let f1 = tempDir.appendingPathComponent("A_small.txt")
         let f2 = tempDir.appendingPathComponent("Z_large.txt")

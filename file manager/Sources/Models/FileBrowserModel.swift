@@ -139,12 +139,16 @@ final class FileBrowserModel: ObservableObject {
     @Published var groupBy: GroupByField {
         didSet { defaults.set(groupBy.rawValue, forKey: "groupBy"); rebuild() }
     }
-    @Published var folderSizes: [URL: Int64] = [:]
+    @Published var folderSizes: [String: Int64] = [:]
     @Published var calculateFolderSizes: Bool {
         didSet {
             defaults.set(calculateFolderSizes, forKey: "calculateFolderSizes")
             if calculateFolderSizes {
                 triggerFolderSizeCalculations(for: items.filter(\.isFolder))
+            } else {
+                folderSizeTask?.cancel()
+                folderSizes.removeAll()
+                rebuild()
             }
         }
     }
@@ -202,7 +206,10 @@ final class FileBrowserModel: ObservableObject {
         navigate(to: start, mode: .push, force: true)
     }
 
-    deinit { watcher?.cancel() }
+    deinit {
+        watcher?.cancel()
+        folderSizeTask?.cancel()
+    }
 
     // MARK: Derived
     var canGoBack: Bool { !backStack.isEmpty }
@@ -214,7 +221,11 @@ final class FileBrowserModel: ObservableObject {
     var isInTrash: Bool { FileOps.isInside(currentURL, of: SidebarStore.trash) }
     var title: String { currentURL.path == "/" ? FileManager.default.displayName(atPath: "/") : currentURL.lastPathComponent }
     var canUndo: Bool { !undoStack.isEmpty }
-    var selectionSize: Int64 { selectedItems.filter { !$0.isFolder }.reduce(0) { $0 + $1.size } }
+    var selectionSize: Int64 {
+        selectedItems.reduce(0) { total, item in
+            total + (item.isFolder ? (folderSizes[item.url.path] ?? item.folderSize ?? 0) : item.size)
+        }
+    }
 
     // MARK: - Navigation
     func navigate(to target: URL, mode: NavMode = .push, select: URL? = nil, force: Bool = false) {
@@ -238,6 +249,7 @@ final class FileBrowserModel: ObservableObject {
         anchor = nil; cursor = nil
         pendingSelection = select
         isLoading = true
+        folderSizeTask?.cancel()
         loadGeneration += 1
         let generation = loadGeneration
         Task {
@@ -254,6 +266,7 @@ final class FileBrowserModel: ObservableObject {
                 startWatching()
                 SidebarStore.shared.noteVisit(dest)
                 focusFileList()
+                triggerFolderSizeCalculations(for: loaded.filter(\.isFolder))
             } catch {
                 guard generation == loadGeneration else { return }
                 if force {
@@ -358,7 +371,7 @@ final class FileBrowserModel: ObservableObject {
             list = list.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         }
         list = list.map { item in
-            if item.isFolder, let fs = folderSizes[item.url] {
+            if item.isFolder, let fs = folderSizes[item.url.path] {
                 var updated = item
                 updated.folderSize = fs
                 return updated
@@ -372,24 +385,65 @@ final class FileBrowserModel: ObservableObject {
         displayItems = list
     }
 
+    func displaySize(for item: FileItem) -> String {
+        if item.isFolder {
+            if let size = folderSizes[item.url.path] ?? item.folderSize {
+                return size == 0 ? "Zero bytes" : Fmt.bytes(size)
+            }
+            return "—"
+        }
+        return Fmt.bytes(item.size)
+    }
+
     private func triggerFolderSizeCalculations(for folders: [FileItem]) {
         guard calculateFolderSizes, !folders.isEmpty else { return }
         folderSizeTask?.cancel()
         folderSizeTask = Task { [weak self] in
-            for folder in folders {
-                if Task.isCancelled { break }
-                let size = await FolderSizeCalculator.shared.size(of: folder.url)
-                if Task.isCancelled { break }
-                await MainActor.run {
-                    guard let self else { return }
-                    self.folderSizes[folder.url] = size
-                    if let idx = self.displayItems.firstIndex(where: { $0.url == folder.url }) {
-                        var updated = self.displayItems[idx]
-                        updated.folderSize = size
-                        self.displayItems[idx] = updated
+            await withTaskGroup(of: (String, Int64)?.self) { group in
+                var iterator = folders.makeIterator()
+                let maxConcurrent = 4
+                var running = 0
+
+                while running < maxConcurrent, let nextFolder = iterator.next() {
+                    let folderURL = nextFolder.url
+                    group.addTask {
+                        if Task.isCancelled { return nil }
+                        let size = await FolderSizeCalculator.shared.size(of: folderURL)
+                        return (folderURL.path, size)
+                    }
+                    running += 1
+                }
+
+                for await result in group {
+                    if Task.isCancelled { break }
+                    if let (path, size) = result {
+                        await MainActor.run {
+                            guard let self else { return }
+                            self.folderSizes[path] = size
+                            if let idx = self.items.firstIndex(where: { $0.url.path == path }) {
+                                var updated = self.items[idx]
+                                updated.folderSize = size
+                                self.items[idx] = updated
+                            }
+                            if let idx = self.displayItems.firstIndex(where: { $0.url.path == path }) {
+                                var updated = self.displayItems[idx]
+                                updated.folderSize = size
+                                self.displayItems[idx] = updated
+                            }
+                        }
+                    }
+
+                    if let nextFolder = iterator.next() {
+                        let folderURL = nextFolder.url
+                        group.addTask {
+                            if Task.isCancelled { return nil }
+                            let size = await FolderSizeCalculator.shared.size(of: folderURL)
+                            return (folderURL.path, size)
+                        }
                     }
                 }
             }
+
             await MainActor.run {
                 guard let self else { return }
                 if self.currentSortField == .size {
@@ -516,7 +570,7 @@ final class FileBrowserModel: ObservableObject {
             var zero: [FileItem] = []
 
             for item in displayItems {
-                let s = item.isFolder ? (folderSizes[item.url] ?? 0) : item.size
+                let s = item.isFolder ? (folderSizes[item.url.path] ?? item.folderSize ?? 0) : item.size
                 if s > 500 * 1024 * 1024 {
                     huge.append(item)
                 } else if s > 100 * 1024 * 1024 {
@@ -596,6 +650,7 @@ final class FileBrowserModel: ObservableObject {
             searchResults = found
             isSearching = false
             rebuild()
+            triggerFolderSizeCalculations(for: found.filter(\.isFolder))
         }
     }
 

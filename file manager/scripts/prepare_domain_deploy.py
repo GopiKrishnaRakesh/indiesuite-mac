@@ -28,6 +28,7 @@ def prepare_deploy():
         "index.html",
         "styles.css",
         "app.js",
+        "privacy.html",
         "site.webmanifest",
         "robots.txt",
         "sitemap.xml",
@@ -47,13 +48,16 @@ def prepare_deploy():
             shutil.copytree(src, dst)
             print(f"  ✓ Copied dir: {item}/")
             
-    # Include latest local DMG copy if present
-    dmg_src = os.path.join(WEBSITE_DIR, "downloads", "Pathway-1.0.0.dmg")
-    if os.path.exists(dmg_src):
+    # Include all local downloads (DMGs and ZIPs)
+    downloads_src = os.path.join(WEBSITE_DIR, "downloads")
+    if os.path.exists(downloads_src):
         dst_downloads = os.path.join(DEPLOY_DIR, "downloads")
         os.makedirs(dst_downloads, exist_ok=True)
-        shutil.copy2(dmg_src, os.path.join(dst_downloads, "Pathway-1.0.0.dmg"))
-        print("  ✓ Included fallback downloads/Pathway-1.0.0.dmg")
+        for f in os.listdir(downloads_src):
+            s = os.path.join(downloads_src, f)
+            if os.path.isfile(s) and not f.startswith("."):
+                shutil.copy2(s, os.path.join(dst_downloads, f))
+                print(f"  ✓ Included downloads/{f}")
 
     # Create ZIP bundle
     if os.path.exists(ZIP_PATH):

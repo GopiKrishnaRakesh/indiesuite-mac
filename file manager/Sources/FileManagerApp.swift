@@ -14,6 +14,10 @@ struct PathwayApp: App {
             ShortcutsView()
         }
         .windowResizability(.contentSize)
+
+        Settings {
+            SettingsView()
+        }
     }
 }
 

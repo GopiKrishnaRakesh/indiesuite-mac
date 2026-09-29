@@ -265,6 +265,7 @@ final class FileBrowserModel: ObservableObject {
                 pendingSelection = nil
                 startWatching()
                 SidebarStore.shared.noteVisit(dest)
+                defaults.set(dest.path, forKey: "lastActiveFolder")
                 focusFileList()
                 triggerFolderSizeCalculations(for: loaded.filter(\.isFolder))
             } catch {

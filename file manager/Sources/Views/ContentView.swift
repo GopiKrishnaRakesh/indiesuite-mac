@@ -10,6 +10,14 @@ struct ContentView: View {
         if let path = UserDefaults.standard.string(forKey: "startPath") {
             return URL(fileURLWithPath: (path as NSString).expandingTildeInPath, isDirectory: true)
         }
+        if UserDefaults.standard.object(forKey: "restoreLastOpenedFolder") as? Bool ?? true,
+           let lastPath = UserDefaults.standard.string(forKey: "lastActiveFolder") {
+            let url = URL(fileURLWithPath: lastPath, isDirectory: true)
+            var isDir: ObjCBool = false
+            if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir), isDir.boolValue {
+                return url
+            }
+        }
         return FileManager.default.homeDirectoryForCurrentUser
     }
 

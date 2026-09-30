@@ -46,6 +46,7 @@ if (!hash_equals($expectedSig, $sig)) {
 // PROTECTED_STORAGE_DIR exactly as before.
 $GITHUB_RELEASE_SOURCES = [
     'murmur' => 'https://github.com/GopiKrishnaRakesh/Murmur/releases/download/v1.0.1/Murmur.dmg',
+    'pathway' => 'https://github.com/GopiKrishnaRakesh/indiesuite-mac/releases/download/pathway-v1.0.0/Pathway-1.0.0.dmg',
 ];
 
 if (isset($GITHUB_RELEASE_SOURCES[$app])) {

@@ -39,6 +39,22 @@ if (!hash_equals($expectedSig, $sig)) {
     dieHeader('Security Verification Failed: Invalid cryptographic token signature.');
 }
 
+// 4b. Apps sourced from a GitHub Release: the purchase gate above (token +
+// HMAC signature + expiry) still applies unchanged — only the origin of the
+// bytes changes, from local disk to GitHub's release CDN. Add an entry here
+// per app as it migrates; anything not listed keeps streaming from
+// PROTECTED_STORAGE_DIR exactly as before.
+$GITHUB_RELEASE_SOURCES = [
+    'murmur' => 'https://github.com/GopiKrishnaRakesh/Murmur/releases/download/v1.0.1/Murmur.dmg',
+];
+
+if (isset($GITHUB_RELEASE_SOURCES[$app])) {
+    header('X-Robots-Tag: noindex, nofollow, noarchive');
+    header('Location: ' . $GITHUB_RELEASE_SOURCES[$app]);
+    http_response_code(302);
+    exit;
+}
+
 // 5. Verify Binary File Existence
 $filename = "{$app}-1.0.0.dmg";
 $filepath = PROTECTED_STORAGE_DIR . '/' . $filename;
